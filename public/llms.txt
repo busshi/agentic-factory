@@ -1,0 +1,28 @@
+# AgenticFactory
+
+> AgenticFactory conçoit et code des agents IA sur-mesure pour automatiser
+> les process métier des PME et des petites startups (jusqu'à 5 personnes).
+> Le positionnement : des agents codés et intégrés aux vrais outils du
+> client (API, base de données, systèmes métier) — pas des scénarios
+> no-code fragiles.
+
+## Cibles
+- PME régionales sans compétence IA/dev en interne
+- Petites startups (≤ 5 personnes) dont l'équipe technique est déjà
+  occupée à faire tourner le produit
+
+## Cas d'usage principaux
+- Automatisation de la facturation et des relances (PME)
+- Tri et réponse automatisée aux emails (PME)
+- Agent de support client autonome, entraîné sur la documentation produit
+  (startup)
+- Agent de qualification des leads inbound (startup)
+
+## Offre
+- Audit gratuit (30 minutes) pour identifier le process le plus
+  chronophage et évaluer s'il vaut la peine d'être automatisé
+- Prise de rendez-vous : https://calendly.com/busshidev/meeting
+
+## Contact
+- Email : contact@agentic-factory.fr
+- LinkedIn : https://www.linkedin.com/in/alexandre-dubar
