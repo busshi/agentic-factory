@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import juliaPhoto from './assets/testimonials/julia-georgi.jpeg'
 import quentinPhoto from './assets/testimonials/quentin-chantelot.jpeg'
@@ -302,7 +302,7 @@ function SceneSupport() {
         </radialGradient>
       </defs>
 
-      <g transform="translate(0 32)">
+      <g transform="translate(0 46)">
         <text x="90" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">question reçue</text>
         <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">analyse</text>
         <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">réponse</text>
@@ -471,7 +471,7 @@ function SceneAppointment() {
         </radialGradient>
       </defs>
 
-      <g transform="translate(0 32)">
+      <g transform="translate(0 46)">
         <text x="86" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">demande</text>
         <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">créneau libre</text>
         <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">confirmé</text>
@@ -619,7 +619,7 @@ function Nav() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="#top" className="font-display font-semibold text-2xl tracking-tight flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue to-violet" />
-          agentic<span className="text-gradient">-factory</span>
+          <span>agentic<span className="text-gradient">-factory</span></span>
         </a>
         <a
           href="https://calendly.com/busshidev/meeting"
@@ -635,6 +635,18 @@ function Nav() {
 }
 
 function Hero() {
+  const heroScenes = [SceneInvoice, SceneEmailSort, SceneAppointment, SceneSupport, SceneLeads, SceneMonitoring]
+  const [heroActive, setHeroActive] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setHeroActive((i) => (i + 1) % heroScenes.length)
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
+
+  const HeroScene = heroScenes[heroActive]
+
   return (
     <section id="top" className="relative pt-40 pb-28 px-6 overflow-hidden">
       <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
@@ -679,9 +691,20 @@ function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 sm:mt-20 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm p-2 sm:p-10"
+          className="mt-10 sm:mt-20 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm p-2 sm:p-10 h-[320px] sm:h-[420px] relative overflow-hidden"
         >
-          <PipelineFlow className="w-full h-auto" />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={heroActive}
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-2 sm:inset-6"
+            >
+              <HeroScene />
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
       </div>
     </section>
@@ -812,6 +835,30 @@ function UseCases() {
 
   const [active, setActive] = useState(0)
   const ActiveScene = cases[active].Scene
+  const carouselRef = useRef(null)
+  const cardRefs = useRef([])
+
+  useEffect(() => {
+    const container = carouselRef.current
+    if (!container) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let best = null
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && (!best || entry.intersectionRatio > best.intersectionRatio)) {
+            best = entry
+          }
+        })
+        if (best) {
+          const idx = Number(best.target.dataset.index)
+          if (!Number.isNaN(idx)) setActive(idx)
+        }
+      },
+      { root: container, threshold: [0.5, 0.75, 0.9] }
+    )
+    cardRefs.current.forEach((el) => el && observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <RevealSection id="cas-usage" className="px-6 py-24 border-t border-line">
@@ -841,10 +888,12 @@ function UseCases() {
         {/* mobile: horizontal swipeable carousel of case cards, tap to
             switch the stage panel above — much easier to browse on a
             phone than a tall stack of full cards */}
-        <div className="sm:hidden flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 mt-6 -mx-6 px-6">
+        <div ref={carouselRef} className="sm:hidden flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 mt-6 -mx-6 px-6">
           {cases.map((c, i) => (
             <button
               key={c.title}
+              ref={(el) => (cardRefs.current[i] = el)}
+              data-index={i}
               onClick={() => setActive(i)}
               className={`snap-start shrink-0 w-[78%] text-left p-5 rounded-2xl border bg-surface/40 transition-colors ${
                 active === i ? 'border-violet/50 bg-surface2/50' : 'border-line'
