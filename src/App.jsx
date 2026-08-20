@@ -659,9 +659,9 @@ function SceneExtraction() {
 
 function SceneCompetitiveWatch() {
   const digests = [
-    ['concurrent A a baissé', 'ses prix de 12%'],
-    ['3 nouveaux avis négatifs', 'sur le support concurrent B'],
-    ['concurrent C lance', 'une fonctionnalité IA'],
+    ['Concurrent A : -12%', 'sur les prix'],
+    ['3 avis négatifs chez', 'le concurrent B'],
+    ['Concurrent C lance', 'une feature IA'],
   ]
   const [dIndex, setDIndex] = useState(0)
 
@@ -680,18 +680,19 @@ function SceneCompetitiveWatch() {
       </defs>
 
       <g transform="translate(0 26)">
-        <text x="60" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">sources surveillées</text>
+        <text x="46" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">sources</text>
         <text x="300" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">digest</text>
 
-        {/* watched sources */}
+        {/* watched sources — pulled in tighter to the left so the digest
+            card on the right has plenty of room for real sentences */}
         {[
-          { y: 40, path: 'M 40 40 C 100 40, 130 90, 172 90' },
-          { y: 100, path: 'M 40 100 C 100 100, 130 100, 172 100' },
-          { y: 160, path: 'M 40 160 C 100 160, 130 110, 172 110' },
+          { y: 40, path: 'M 26 40 C 70 40, 95 88, 132 90' },
+          { y: 100, path: 'M 26 100 C 70 100, 95 100, 132 100' },
+          { y: 160, path: 'M 26 160 C 70 160, 95 112, 132 110' },
         ].map((s, i) => (
           <g key={i}>
-            <circle cx="40" cy={s.y} r="8" fill="none" stroke="#3A4062" strokeWidth="1.4" />
-            <circle cx="40" cy={s.y} r="3" fill="#3A4062" />
+            <circle cx="26" cy={s.y} r="7" fill="none" stroke="#3A4062" strokeWidth="1.4" />
+            <circle cx="26" cy={s.y} r="2.5" fill="#3A4062" />
             <path d={s.path} stroke="#161D33" strokeWidth="1.25" fill="none" />
             <circle r="2.6" fill="#60A5FA">
               <animateMotion dur="2.2s" begin={`${i * 0.6}s`} repeatCount="indefinite" path={s.path} />
@@ -701,19 +702,20 @@ function SceneCompetitiveWatch() {
         ))}
 
         {/* mini agent chip */}
-        <g transform="translate(190 100)">
-          <circle r="28" fill="#A855F7" opacity="0.15" />
-          <circle r="20" fill="none" stroke="url(#sceneGrad8)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+        <g transform="translate(150 100)">
+          <circle r="26" fill="#A855F7" opacity="0.15" />
+          <circle r="19" fill="none" stroke="url(#sceneGrad8)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
             <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3.4s" repeatCount="indefinite" />
           </circle>
-          <rect x="-12" y="-12" width="24" height="24" rx="6" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+          <rect x="-11" y="-11" width="22" height="22" rx="6" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
         </g>
 
-        <path d="M 210 100 C 240 100, 250 100, 262 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        <path d="M 168 100 C 178 100, 182 100, 190 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
 
-        {/* digest card, text rotates through insights */}
+        {/* digest card, much wider now — text rotates through insights,
+            comfortably inside the card at this width */}
         <g>
-          <rect x="262" y="66" width="102" height="68" rx="12" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+          <rect x="190" y="60" width="172" height="80" rx="12" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
           <AnimatePresence mode="wait">
             <motion.g
               key={dIndex}
@@ -722,17 +724,17 @@ function SceneCompetitiveWatch() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <circle cx="276" cy="88" r="2.5" fill="#4ADE80" />
-              <text x="284" y="91" fontFamily="Inter, sans-serif" fontSize="9.5" fill="#C7CCDC">
+              <circle cx="206" cy="82" r="2.5" fill="#4ADE80" />
+              <text x="216" y="86" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">
                 {digests[dIndex][0]}
               </text>
-              <text x="276" y="106" fontFamily="Inter, sans-serif" fontSize="9.5" fill="#C7CCDC">
+              <text x="206" y="104" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">
                 {digests[dIndex][1]}
               </text>
             </motion.g>
           </AnimatePresence>
         </g>
-        <text x="313" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+        <text x="276" y="162" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
           mis à jour chaque jour
         </text>
       </g>
@@ -1051,8 +1053,27 @@ function UseCases() {
     lastInteractionRef.current = Date.now()
   }
 
+  // only the carousel's own horizontal scroll should ever move — if the
+  // section itself is off-screen (e.g. still on the hero), scrollIntoView
+  // would otherwise drag the whole page down to reach it. Track page-level
+  // visibility separately and skip auto-advance entirely while it's hidden.
+  const carouselInViewRef = useRef(false)
+  useEffect(() => {
+    const container = carouselRef.current
+    if (!container) return
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        carouselInViewRef.current = entry.isIntersecting
+      },
+      { threshold: 0.4 }
+    )
+    visibilityObserver.observe(container)
+    return () => visibilityObserver.disconnect()
+  }, [])
+
   useEffect(() => {
     const id = setInterval(() => {
+      if (!carouselInViewRef.current) return
       if (Date.now() - lastInteractionRef.current < 4500) return
       const next = (activeRef.current + 1) % cases.length
       const target = cardRefs.current[next]
