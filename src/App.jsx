@@ -13,6 +13,8 @@ import {
   Server,
   ChevronRight,
   Quote,
+  CalendarCheck,
+  BellRing,
 } from 'lucide-react'
 
 /* ---------------------------------------------------------
@@ -455,6 +457,127 @@ function SceneLeads() {
   )
 }
 
+function SceneAppointment() {
+  return (
+    <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sceneGrad5" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#3B82F6" />
+          <stop offset="100%" stopColor="#A855F7" />
+        </linearGradient>
+        <radialGradient id="coreGradScene3">
+          <stop offset="0%" stopColor="#C084FC" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      <g transform="translate(0 32)">
+        <text x="86" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">demande</text>
+        <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">créneau libre</text>
+        <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">confirmé</text>
+
+        {/* incoming request bubble */}
+        <g>
+          <rect x="24" y="46" width="128" height="50" rx="14" fill="#0B0F1A" stroke="#1C2440" strokeWidth="1.5" />
+          <path d="M 44 96 l -10 14 l 20 -8 z" fill="#0B0F1A" stroke="#1C2440" strokeWidth="1.5" />
+          <text x="40" y="68" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">Vous êtes dispo</text>
+          <text x="40" y="84" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">demain 14h ?</text>
+        </g>
+
+        {/* rail to agent chip */}
+        <path d="M 152 71 C 176 71, 176 90, 195 90" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        <circle r="2.6" fill="#60A5FA">
+          <animateMotion dur="1.4s" repeatCount="indefinite" path="M 152 71 C 176 71, 176 90, 195 90" />
+        </circle>
+
+        {/* mini agent chip, center */}
+        <g transform="translate(210 100)">
+          <circle r="32" fill="url(#coreGradScene3)" opacity="0.45" />
+          <circle r="23" fill="none" stroke="url(#sceneGrad5)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.6">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2.6s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-14" y="-14" width="28" height="28" rx="7" fill="#0B0F1A" stroke="url(#sceneGrad5)" strokeWidth="1.4" />
+          {[-7, -1.5, 4].map((x, i) => (
+            <rect key={i} x={x} y="-6" width="2.2" height="12" rx="1.1" fill="#C084FC">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="0.8s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
+        </g>
+
+        {/* rail to calendar */}
+        <path d="M 242 90 C 262 90, 262 90, 282 90" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        <circle r="2.6" fill="#C084FC">
+          <animateMotion dur="1.4s" begin="1.3s" repeatCount="indefinite" path="M 242 90 C 262 90, 262 90, 282 90" />
+        </circle>
+
+        {/* calendar card confirming the slot */}
+        <g transform="translate(282 66)">
+          <rect width="76" height="46" rx="10" fill="#0B0F1A" stroke="url(#sceneGrad5)" strokeWidth="1.4" />
+          <rect x="0" y="0" width="76" height="13" rx="10" fill="#161D33" />
+          <text x="38" y="10" fontFamily="JetBrains Mono, monospace" fontSize="8" fill="#8992AB" textAnchor="middle">demain</text>
+          <text x="38" y="34" fontFamily="JetBrains Mono, monospace" fontSize="13" fill="#4ADE80" textAnchor="middle">14:00</text>
+          <path d="M 24 38 l 6 6 l 14 -14" fill="none" stroke="#4ADE80" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.5;0.9;1" dur="3s" repeatCount="indefinite" />
+          </path>
+        </g>
+        <text x="320" y="128" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+          rappel programmé
+        </text>
+      </g>
+    </svg>
+  )
+}
+
+function SceneMonitoring() {
+  const wave = 'M 30 110 L 70 108 L 100 112 L 130 106 L 160 110 L 190 60 L 210 130 L 240 108 L 280 110 L 330 109'
+  return (
+    <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sceneGrad6" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#3B82F6" />
+          <stop offset="100%" stopColor="#A855F7" />
+        </linearGradient>
+        <filter id="sceneGlow3" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="3" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+
+      <g transform="translate(0 26)">
+        <text x="60" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">métriques en direct</text>
+        <text x="330" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">alerte</text>
+
+        {/* live waveform */}
+        <path d={wave} stroke="url(#sceneGrad6)" strokeWidth="1.6" fill="none" opacity="0.75" />
+        <path d="M 30 110 L 70 108 L 100 112 L 130 106 L 160 110" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+
+        {/* the anomaly spike */}
+        <circle cx="190" cy="60" r="4" fill="#F87171" filter="url(#sceneGlow3)">
+          <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+
+        {/* rail from spike to alert bell */}
+        <path d="M 194 60 C 250 40, 290 40, 320 70" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        <circle r="2.6" fill="#F87171">
+          <animateMotion dur="1.6s" repeatCount="indefinite" path="M 194 60 C 250 40, 290 40, 320 70" />
+        </circle>
+
+        {/* bell + alert card */}
+        <g transform="translate(320 96)">
+          <circle r="26" fill="none" stroke="url(#sceneGrad6)" strokeWidth="1.2" strokeDasharray="2 6" opacity="0.5">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="5s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-16" y="-16" width="32" height="32" rx="9" fill="#0B0F1A" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
+          <path d="M -6 -6 q 6 -8 12 0 q 0 8 3 10 h -18 q 3 -2 3 -10" fill="none" stroke="#F87171" strokeWidth="1.4" strokeLinejoin="round" />
+        </g>
+        <text x="320" y="146" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+          équipe prévenue
+        </text>
+      </g>
+    </svg>
+  )
+}
+
 function Eyebrow({ children }) {
   return (
     <span className="font-mono text-xs tracking-[0.2em] uppercase text-blue-soft/80 inline-flex items-center gap-2">
@@ -496,7 +619,7 @@ function Nav() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="#top" className="font-display font-semibold text-2xl tracking-tight flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue to-violet" />
-          Agentic<span className="text-gradient">Factory</span>
+          agentic<span className="text-gradient">-factory</span>
         </a>
         <a
           href="https://calendly.com/busshidev/meeting"
@@ -556,7 +679,7 @@ function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-20 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm p-6 sm:p-10"
+          className="mt-10 sm:mt-20 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm p-2 sm:p-10"
         >
           <PipelineFlow className="w-full h-auto" />
         </motion.div>
@@ -658,6 +781,13 @@ function UseCases() {
       Scene: SceneEmailSort,
     },
     {
+      icon: CalendarCheck,
+      tag: 'PME',
+      title: 'Prise de rendez-vous automatisée',
+      text: "Un agent qui propose vos créneaux libres, confirme le rendez-vous et programme le rappel — sans allers-retours par email pour trouver une heure qui convient.",
+      Scene: SceneAppointment,
+    },
+    {
       icon: Bot,
       tag: 'Startup',
       title: 'Support client autonome',
@@ -670,6 +800,13 @@ function UseCases() {
       title: 'Qualification des leads inbound',
       text: "Chaque lead entrant (site, formulaire, waitlist) est enrichi et priorisé automatiquement avant qu'un humain n'y touche. L'équipe commerciale ne voit que ce qui vaut vraiment un call.",
       Scene: SceneLeads,
+    },
+    {
+      icon: BellRing,
+      tag: 'Startup',
+      title: 'Veille & alerting produit',
+      text: "Un agent qui surveille vos métriques en continu et ne prévient l'équipe que sur une vraie anomalie — fini le bruit de notifications qu'on finit par ignorer.",
+      Scene: SceneMonitoring,
     },
   ]
 
@@ -684,7 +821,7 @@ function UseCases() {
           Adapté à votre structure, pas un template générique
         </h2>
 
-        {/* stage panel — shows the illustrated scene for the hovered/focused card */}
+        {/* stage panel — shows the illustrated scene for the hovered/focused/tapped card */}
         <div className="mt-12 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm h-[300px] sm:h-[400px] relative overflow-hidden">
           <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
           <AnimatePresence mode="wait">
@@ -701,7 +838,32 @@ function UseCases() {
           </AnimatePresence>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-5 mt-6">
+        {/* mobile: horizontal swipeable carousel of case cards, tap to
+            switch the stage panel above — much easier to browse on a
+            phone than a tall stack of full cards */}
+        <div className="sm:hidden flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 mt-6 -mx-6 px-6">
+          {cases.map((c, i) => (
+            <button
+              key={c.title}
+              onClick={() => setActive(i)}
+              className={`snap-start shrink-0 w-[78%] text-left p-5 rounded-2xl border bg-surface/40 transition-colors ${
+                active === i ? 'border-violet/50 bg-surface2/50' : 'border-line'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <c.icon className="w-5 h-5 text-violet-soft" strokeWidth={1.6} />
+                <span className="font-mono text-[11px] tracking-wider uppercase text-muted2 border border-line rounded-full px-2.5 py-0.5">
+                  {c.tag}
+                </span>
+              </div>
+              <h3 className="font-display font-medium text-lg mt-3">{c.title}</h3>
+              <p className="text-muted text-sm leading-relaxed mt-2">{c.text}</p>
+            </button>
+          ))}
+        </div>
+
+        {/* desktop/tablet: full grid, hover or focus swaps the stage panel */}
+        <div className="hidden sm:grid sm:grid-cols-2 gap-5 mt-6">
           {cases.map((c, i) => (
             <motion.div
               key={c.title}
@@ -909,7 +1071,7 @@ function Footer() {
     <footer className="px-6 py-10 border-t border-line">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted2">
         <span className="font-mono">
-          Agentic<span className="text-gradient">Factory</span>
+          agentic<span className="text-gradient">-factory</span>
         </span>
         <div className="flex items-center gap-6">
           <a href="https://www.linkedin.com/in/alexandre-dubar" target="_blank" rel="noreferrer" className="hover:text-text transition-colors">
