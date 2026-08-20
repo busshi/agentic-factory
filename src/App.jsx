@@ -304,7 +304,7 @@ function SceneSupport() {
         </radialGradient>
       </defs>
 
-      <g transform="translate(0 46)">
+      <g transform="translate(0 31)">
         <text x="90" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">question reçue</text>
         <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">analyse</text>
         <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">réponse</text>
@@ -407,7 +407,7 @@ function SceneLeads() {
         </filter>
       </defs>
 
-      <g transform="translate(-10 26)">
+      <g transform="translate(2 26)">
         <text x="42" y="20" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">leads bruts</text>
         <text x="300" y="20" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">priorisés</text>
 
@@ -442,18 +442,46 @@ function SceneLeads() {
         {/* rail into the ranked list */}
         <path d="M 216 100 C 240 100, 250 100, 260 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
 
-        {/* sorted, readable priority list — highest score on top, static and legible */}
-        {ranked.map((r, i) => (
-          <g key={i}>
-            <rect x="260" y={r.y - 7} width={maxBarWidth} height="14" rx="4" fill="#111729" stroke="#1C2440" strokeWidth="1" />
-            <rect x="260" y={r.y - 7} width={(r.score / 100) * maxBarWidth} height="14" rx="4" fill={r.color} opacity="0.85">
-              <animate attributeName="opacity" values="0.55;0.95;0.55" dur="2.4s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
-            </rect>
-            <text x={260 + maxBarWidth + 12} y={r.y + 4} fontFamily="JetBrains Mono, monospace" fontSize="11" fill={r.color} textAnchor="start">
-              {r.score}
-            </text>
-          </g>
-        ))}
+        {/* sorted, readable priority list — each bar grows in sync with a
+            colored particle leaving the agent chip and reaching it, so the
+            score visibly builds up "live" instead of sitting there static */}
+        {ranked.map((r, i) => {
+          const particlePath = `M 206 100 C 230 100, 245 ${r.y}, 260 ${r.y}`
+          const begin = `${i * 0.9}s`
+          return (
+            <g key={i}>
+              <path d={particlePath} stroke="#161D33" strokeWidth="1" fill="none" opacity="0.5" />
+              <circle r="3" fill={r.color} filter="url(#sceneGlow2)">
+                <animateMotion
+                  dur="3.6s"
+                  begin={begin}
+                  repeatCount="indefinite"
+                  keyPoints="0;0;1;1"
+                  keyTimes="0;0.30;0.40;1"
+                  path={particlePath}
+                />
+                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.28;0.32;0.42;0.46" dur="3.6s" begin={begin} repeatCount="indefinite" />
+              </circle>
+
+              <rect x="260" y={r.y - 7} width={maxBarWidth} height="14" rx="4" fill="#111729" stroke="#1C2440" strokeWidth="1" />
+              <rect x="260" y={r.y - 7} height="14" rx="4" fill={r.color}>
+                <animate
+                  attributeName="width"
+                  values={`0;0;${(r.score / 100) * maxBarWidth};${(r.score / 100) * maxBarWidth};0`}
+                  keyTimes="0;0.40;0.50;0.9;1"
+                  dur="3.6s"
+                  begin={begin}
+                  repeatCount="indefinite"
+                />
+                <animate attributeName="opacity" values="0.7;0.95;0.95;0.7" keyTimes="0;0.5;0.9;1" dur="3.6s" begin={begin} repeatCount="indefinite" />
+              </rect>
+              <text x={260 + maxBarWidth + 12} y={r.y + 4} fontFamily="JetBrains Mono, monospace" fontSize="11" fill={r.color} textAnchor="start">
+                <animate attributeName="opacity" values="0.3;0.3;1;1;0.3" keyTimes="0;0.4;0.5;0.9;1" dur="3.6s" begin={begin} repeatCount="indefinite" />
+                {r.score}
+              </text>
+            </g>
+          )
+        })}
       </g>
     </svg>
   )
@@ -473,7 +501,7 @@ function SceneAppointment() {
         </radialGradient>
       </defs>
 
-      <g transform="translate(0 46)">
+      <g transform="translate(0 31)">
         <text x="86" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">demande</text>
         <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">créneau libre</text>
         <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">confirmé</text>
@@ -518,9 +546,13 @@ function SceneAppointment() {
           <rect x="0" y="0" width="76" height="13" rx="10" fill="#161D33" />
           <text x="38" y="10" fontFamily="JetBrains Mono, monospace" fontSize="8" fill="#8992AB" textAnchor="middle">demain</text>
           <text x="38" y="34" fontFamily="JetBrains Mono, monospace" fontSize="13" fill="#4ADE80" textAnchor="middle">14:00</text>
-          <path d="M 24 38 l 6 6 l 14 -14" fill="none" stroke="#4ADE80" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          {/* confirmation badge — sits on the gradient border, top-right
+              corner, rather than overlapping the time text */}
+          <g transform="translate(76 0)">
             <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.5;0.9;1" dur="3s" repeatCount="indefinite" />
-          </path>
+            <circle r="9" fill="#0B0F1A" stroke="#4ADE80" strokeWidth="1.6" />
+            <path d="M -4 0 l 3 3.5 l 6 -7" fill="none" stroke="#4ADE80" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </g>
         </g>
         <text x="320" y="128" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
           rappel programmé
@@ -531,7 +563,13 @@ function SceneAppointment() {
 }
 
 function SceneMonitoring() {
-  const wave = 'M 30 110 L 70 108 L 100 112 L 130 106 L 160 110 L 190 60 L 210 130 L 240 108 L 280 110 L 330 109'
+  const signals = [
+    { y: 40, color: '#60A5FA', label: 'latence' },
+    { y: 100, color: '#FBBF24', label: 'erreurs' },
+    { y: 160, color: '#4ADE80', label: 'trafic' },
+  ]
+  const wave = 'M 168 105 L 186 103 L 200 107 L 215 101 L 230 105 L 245 65 L 258 125 L 275 103 L 300 104'
+
   return (
     <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -539,6 +577,10 @@ function SceneMonitoring() {
           <stop offset="0%" stopColor="#3B82F6" />
           <stop offset="100%" stopColor="#A855F7" />
         </linearGradient>
+        <radialGradient id="coreGradScene4">
+          <stop offset="0%" stopColor="#C084FC" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
+        </radialGradient>
         <filter id="sceneGlow3" x="-80%" y="-80%" width="260%" height="260%">
           <feGaussianBlur stdDeviation="3" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
@@ -546,33 +588,60 @@ function SceneMonitoring() {
       </defs>
 
       <g transform="translate(0 26)">
-        <text x="60" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">métriques en direct</text>
+        <text x="42" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">signaux</text>
         <text x="330" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">alerte</text>
 
-        {/* live waveform */}
-        <path d={wave} stroke="url(#sceneGrad6)" strokeWidth="1.6" fill="none" opacity="0.75" />
-        <path d="M 30 110 L 70 108 L 100 112 L 130 106 L 160 110" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        {/* multiple colored metric sources, each a tiny sparkline, all
+            feeding into the agent — it's the one that decides which
+            signal actually deserves a response */}
+        {signals.map((s, i) => {
+          const path = `M 46 ${s.y} C 80 ${s.y}, 100 100, 125 100`
+          return (
+            <g key={i}>
+              <path d={`M -10 4 L -3 -4 L 3 2 L 10 -5`} transform={`translate(30 ${s.y})`} stroke={s.color} strokeWidth="1.4" fill="none" opacity="0.85" />
+              <path d={path} stroke="#161D33" strokeWidth="1.1" fill="none" />
+              <circle r="2.6" fill={s.color} filter="url(#sceneGlow3)">
+                <animateMotion dur="2.4s" begin={`${i * 0.7}s`} repeatCount="indefinite" path={path} />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.4s" begin={`${i * 0.7}s`} repeatCount="indefinite" />
+              </circle>
+            </g>
+          )
+        })}
 
-        {/* the anomaly spike */}
-        <circle cx="190" cy="60" r="4" fill="#F87171" filter="url(#sceneGlow3)">
+        {/* mini agent chip = the triage engine, deciding which signal matters */}
+        <g transform="translate(148 100)">
+          <circle r="28" fill="url(#coreGradScene4)" opacity="0.45" />
+          <circle r="20" fill="none" stroke="url(#sceneGrad6)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-12" y="-12" width="24" height="24" rx="6" fill="#0B0F1A" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
+        </g>
+
+        {/* rail from chip to the chosen response */}
+        <path d="M 166 100 C 168 100, 168 105, 168 105" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+
+        {/* the response the agent picked — waveform with the one real
+            anomaly, escalated */}
+        <path d={wave} stroke="url(#sceneGrad6)" strokeWidth="1.6" fill="none" opacity="0.8" />
+
+        <circle cx="245" cy="65" r="4" fill="#F87171" filter="url(#sceneGlow3)">
           <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" />
         </circle>
 
-        {/* rail from spike to alert bell */}
-        <path d="M 194 60 C 250 40, 290 40, 320 70" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        <path d="M 249 65 C 280 48, 300 48, 320 74" stroke="#1C2440" strokeWidth="1.25" fill="none" />
         <circle r="2.6" fill="#F87171">
-          <animateMotion dur="1.6s" repeatCount="indefinite" path="M 194 60 C 250 40, 290 40, 320 70" />
+          <animateMotion dur="1.6s" repeatCount="indefinite" path="M 249 65 C 280 48, 300 48, 320 74" />
         </circle>
 
         {/* bell + alert card */}
-        <g transform="translate(320 96)">
+        <g transform="translate(320 100)">
           <circle r="26" fill="none" stroke="url(#sceneGrad6)" strokeWidth="1.2" strokeDasharray="2 6" opacity="0.5">
             <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="5s" repeatCount="indefinite" />
           </circle>
           <rect x="-16" y="-16" width="32" height="32" rx="9" fill="#0B0F1A" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
           <path d="M -6 -6 q 6 -8 12 0 q 0 8 3 10 h -18 q 3 -2 3 -10" fill="none" stroke="#F87171" strokeWidth="1.4" strokeLinejoin="round" />
         </g>
-        <text x="320" y="146" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+        <text x="320" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
           équipe prévenue
         </text>
       </g>
