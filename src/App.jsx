@@ -15,6 +15,8 @@ import {
   Quote,
   CalendarCheck,
   BellRing,
+  FileSearch,
+  Radar,
 } from 'lucide-react'
 
 /* ---------------------------------------------------------
@@ -578,6 +580,166 @@ function SceneMonitoring() {
   )
 }
 
+function SceneExtraction() {
+  return (
+    <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sceneGrad7" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#3B82F6" />
+          <stop offset="100%" stopColor="#A855F7" />
+        </linearGradient>
+        <filter id="sceneGlow4" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="3" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+
+      <g transform="translate(0 26)">
+        <text x="66" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">document scanné</text>
+        <text x="310" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">données structurées</text>
+
+        {/* scanned document, with a scan-line sweeping down it on loop */}
+        <g transform="translate(50 100)">
+          <rect x="-38" y="-56" width="76" height="112" rx="8" fill="#0B0F1A" stroke="#1C2440" strokeWidth="1.5" />
+          {[-38, -22, -6, 10, 26].map((y, i) => (
+            <rect key={i} x="-26" y={y} width="52" height="4" rx="2" fill="#1C2440" />
+          ))}
+          <rect x="-38" y="-56" width="76" height="6" fill="url(#sceneGrad7)" opacity="0.8">
+            <animate attributeName="y" values="-56;50;-56" dur="2.6s" repeatCount="indefinite" />
+          </rect>
+        </g>
+
+        {/* rail to agent chip */}
+        <path d="M 92 100 C 130 100, 150 100, 172 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        <circle r="2.6" fill="#60A5FA" filter="url(#sceneGlow4)">
+          <animateMotion dur="1.5s" repeatCount="indefinite" path="M 92 100 C 130 100, 150 100, 172 100" />
+        </circle>
+
+        {/* mini agent chip */}
+        <g transform="translate(190 100)">
+          <circle r="30" fill="#A855F7" opacity="0.15" />
+          <circle r="21" fill="none" stroke="url(#sceneGrad7)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-13" y="-13" width="26" height="26" rx="7" fill="#0B0F1A" stroke="url(#sceneGrad7)" strokeWidth="1.4" />
+          {[-6, -1, 4].map((x, i) => (
+            <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="#C084FC">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="0.9s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
+        </g>
+
+        {/* rail to structured output */}
+        <path d="M 208 100 C 240 100, 250 100, 262 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+
+        {/* structured fields appearing one by one */}
+        {[
+          { label: 'client', value: 'SARL Dupont', y: 56 },
+          { label: 'montant', value: '1 240 €', y: 88 },
+          { label: 'date', value: '12/03', y: 120 },
+        ].map((f, i) => (
+          <g key={i}>
+            <rect x="262" y={f.y - 14} width="100" height="28" rx="6" fill="#111729" stroke="#1C2440" strokeWidth="1">
+              <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur="3.2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
+            </rect>
+            <text x="272" y={f.y - 2} fontFamily="JetBrains Mono, monospace" fontSize="8" fill="#5C6480">
+              <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur="3.2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
+              {f.label}
+            </text>
+            <text x="272" y={f.y + 10} fontFamily="JetBrains Mono, monospace" fontSize="10" fill="#C084FC">
+              <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur="3.2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
+              {f.value}
+            </text>
+          </g>
+        ))}
+      </g>
+    </svg>
+  )
+}
+
+function SceneCompetitiveWatch() {
+  const digests = [
+    ['concurrent A a baissé', 'ses prix de 12%'],
+    ['3 nouveaux avis négatifs', 'sur le support concurrent B'],
+    ['concurrent C lance', 'une fonctionnalité IA'],
+  ]
+  const [dIndex, setDIndex] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setDIndex((i) => (i + 1) % digests.length), 4200)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sceneGrad8" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#3B82F6" />
+          <stop offset="100%" stopColor="#A855F7" />
+        </linearGradient>
+      </defs>
+
+      <g transform="translate(0 26)">
+        <text x="60" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">sources surveillées</text>
+        <text x="300" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">digest</text>
+
+        {/* watched sources */}
+        {[
+          { y: 40, path: 'M 40 40 C 100 40, 130 90, 172 90' },
+          { y: 100, path: 'M 40 100 C 100 100, 130 100, 172 100' },
+          { y: 160, path: 'M 40 160 C 100 160, 130 110, 172 110' },
+        ].map((s, i) => (
+          <g key={i}>
+            <circle cx="40" cy={s.y} r="8" fill="none" stroke="#3A4062" strokeWidth="1.4" />
+            <circle cx="40" cy={s.y} r="3" fill="#3A4062" />
+            <path d={s.path} stroke="#161D33" strokeWidth="1.25" fill="none" />
+            <circle r="2.6" fill="#60A5FA">
+              <animateMotion dur="2.2s" begin={`${i * 0.6}s`} repeatCount="indefinite" path={s.path} />
+              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.2s" begin={`${i * 0.6}s`} repeatCount="indefinite" />
+            </circle>
+          </g>
+        ))}
+
+        {/* mini agent chip */}
+        <g transform="translate(190 100)">
+          <circle r="28" fill="#A855F7" opacity="0.15" />
+          <circle r="20" fill="none" stroke="url(#sceneGrad8)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3.4s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-12" y="-12" width="24" height="24" rx="6" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+        </g>
+
+        <path d="M 210 100 C 240 100, 250 100, 262 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+
+        {/* digest card, text rotates through insights */}
+        <g>
+          <rect x="262" y="66" width="102" height="68" rx="12" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+          <AnimatePresence mode="wait">
+            <motion.g
+              key={dIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <circle cx="276" cy="88" r="2.5" fill="#4ADE80" />
+              <text x="284" y="91" fontFamily="Inter, sans-serif" fontSize="9.5" fill="#C7CCDC">
+                {digests[dIndex][0]}
+              </text>
+              <text x="276" y="106" fontFamily="Inter, sans-serif" fontSize="9.5" fill="#C7CCDC">
+                {digests[dIndex][1]}
+              </text>
+            </motion.g>
+          </AnimatePresence>
+        </g>
+        <text x="313" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+          mis à jour chaque jour
+        </text>
+      </g>
+    </svg>
+  )
+}
+
 function Eyebrow({ children }) {
   return (
     <span className="font-mono text-xs tracking-[0.2em] uppercase text-blue-soft/80 inline-flex items-center gap-2">
@@ -635,7 +797,7 @@ function Nav() {
 }
 
 function Hero() {
-  const heroScenes = [SceneInvoice, SceneEmailSort, SceneAppointment, SceneSupport, SceneLeads, SceneMonitoring]
+  const heroScenes = [SceneInvoice, SceneEmailSort, SceneAppointment, SceneSupport, SceneLeads, SceneMonitoring, SceneExtraction, SceneCompetitiveWatch]
   const [heroActive, setHeroActive] = useState(0)
 
   useEffect(() => {
@@ -831,6 +993,20 @@ function UseCases() {
       text: "Un agent qui surveille vos métriques en continu et ne prévient l'équipe que sur une vraie anomalie — fini le bruit de notifications qu'on finit par ignorer.",
       Scene: SceneMonitoring,
     },
+    {
+      icon: FileSearch,
+      tag: 'PME',
+      title: 'Extraction de données depuis vos documents',
+      text: "Factures, bons de commande, devis scannés : un agent qui lit vos documents et en extrait les données utiles directement dans votre tableur ou votre logiciel de gestion.",
+      Scene: SceneExtraction,
+    },
+    {
+      icon: Radar,
+      tag: 'Startup',
+      title: 'Veille concurrentielle automatisée',
+      text: "Un agent qui surveille en continu vos concurrents (prix, avis, nouvelles fonctionnalités) et vous livre un résumé chaque jour, plutôt qu'une heure de recherche manuelle.",
+      Scene: SceneCompetitiveWatch,
+    },
   ]
 
   const [active, setActive] = useState(0)
@@ -860,6 +1036,33 @@ function UseCases() {
     return () => observer.disconnect()
   }, [])
 
+  // keep a ref mirroring `active` so the auto-advance interval always reads
+  // the latest value without needing to be recreated on every change
+  const activeRef = useRef(active)
+  useEffect(() => {
+    activeRef.current = active
+  }, [active])
+
+  // mobile auto-advance: scrolls to the next card every 5s, but only if the
+  // person hasn't touched the carousel in the last few seconds — a manual
+  // swipe always wins and pauses the auto-advance for a while
+  const lastInteractionRef = useRef(0)
+  const markInteraction = () => {
+    lastInteractionRef.current = Date.now()
+  }
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (Date.now() - lastInteractionRef.current < 4500) return
+      const next = (activeRef.current + 1) % cases.length
+      const target = cardRefs.current[next]
+      if (target && typeof target.scrollIntoView === 'function') {
+        target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+      }
+    }, 5000)
+    return () => clearInterval(id)
+  }, [cases.length])
+
   return (
     <RevealSection id="cas-usage" className="px-6 py-24 border-t border-line">
       <div className="max-w-6xl mx-auto">
@@ -888,13 +1091,22 @@ function UseCases() {
         {/* mobile: horizontal swipeable carousel of case cards, tap to
             switch the stage panel above — much easier to browse on a
             phone than a tall stack of full cards */}
-        <div ref={carouselRef} className="sm:hidden flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 mt-6 -mx-6 px-6">
+        <div
+          ref={carouselRef}
+          onTouchStart={markInteraction}
+          onTouchEnd={markInteraction}
+          onPointerDown={markInteraction}
+          className="sm:hidden flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 mt-6 -mx-6 px-6"
+        >
           {cases.map((c, i) => (
             <button
               key={c.title}
               ref={(el) => (cardRefs.current[i] = el)}
               data-index={i}
-              onClick={() => setActive(i)}
+              onClick={() => {
+                markInteraction()
+                setActive(i)
+              }}
               className={`snap-start shrink-0 w-[78%] text-left p-5 rounded-2xl border bg-surface/40 transition-colors ${
                 active === i ? 'border-violet/50 bg-surface2/50' : 'border-line'
               }`}
