@@ -4,6 +4,7 @@ import { Routes, Route, Navigate, Link as RouterLink } from 'react-router-dom'
 import { getT } from './i18n.jsx'
 import juliaPhoto from './assets/testimonials/julia-georgi.jpeg'
 import quentinPhoto from './assets/testimonials/quentin-chantelot.jpeg'
+import busshidevLogo from './assets/brand/busshidev-logo.png'
 import {
   ArrowRight,
   Terminal,
@@ -1277,36 +1278,89 @@ function UseCases({ lang, t }) {
           ))}
         </div>
 
-        {/* desktop/tablet: full grid, hover or focus swaps the stage panel */}
-        <div className="hidden sm:grid sm:grid-cols-2 gap-5 mt-6">
-          {cases.map((c, i) => (
-            <motion.div
-              key={c.title}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: (i % 2) * 0.1 }}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-              tabIndex={0}
-              className={`group p-7 rounded-2xl border bg-surface/40 hover:bg-surface2/60 transition-colors relative overflow-hidden cursor-default ${
-                active === i ? 'border-violet/50' : 'border-line'
-              }`}
-            >
-              <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-gradient-to-br from-blue/10 to-violet/10 blur-2xl group-hover:opacity-100 opacity-0 transition-opacity" />
-              <div className="flex items-center gap-3">
-                <c.icon className="w-5 h-5 text-violet-soft" strokeWidth={1.6} />
-                <span className="font-mono text-[11px] tracking-wider uppercase text-muted2 border border-line rounded-full px-2.5 py-0.5">
-                  {c.tag}
-                </span>
-              </div>
-              <h3 className="font-display font-medium text-xl mt-4">{c.title}</h3>
-              <p className="text-muted text-sm leading-relaxed mt-2">{c.text}</p>
-            </motion.div>
-          ))}
+        {/* tablet and up: two carousels, one per audience (PME / Startup).
+            Stacked full-width from sm, side-by-side from lg. Each one
+            scrolls independently on manual swipe/drag, with a thin
+            progress bar below it, and both feed the same shared stage
+            panel above. */}
+        <div className="hidden sm:grid sm:grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+          {[t.useCases.tagPME, t.useCases.tagStartup].map((tag) => {
+            const columnCases = cases
+              .map((c, i) => ({ ...c, idx: i }))
+              .filter((c) => c.tag === tag)
+            return (
+              <CategoryCarousel
+                key={tag}
+                tag={tag}
+                items={columnCases}
+                active={active}
+                setActive={setActive}
+              />
+            )
+          })}
         </div>
       </div>
     </RevealSection>
+  )
+}
+
+/* One horizontally-scrolling column of use-case cards for a given
+   audience (PME or Startup). Purely manual (swipe/drag/wheel) — a thin
+   progress bar below the row tracks scroll position, both as a subtle
+   invitation to scroll and as feedback on how far through the column
+   you are. */
+function CategoryCarousel({ tag, items, active, setActive }) {
+  const scrollRef = useRef(null)
+  const [progress, setProgress] = useState(0)
+
+  const updateProgress = () => {
+    const el = scrollRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    const raw = max > 0 ? el.scrollLeft / max : 0
+    // smoothstep: lent au début (évite que la barre paraisse déjà pleine
+    // dès la 2e carte) et lent en fin de course (évite le saut brutal à
+    // l'approche de la dernière carte) — accélère seulement au milieu.
+    setProgress(raw * raw * (3 - 2 * raw))
+  }
+
+  useEffect(() => {
+    updateProgress()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length])
+
+  return (
+    <div>
+      <p className="font-mono text-xs tracking-widest uppercase text-muted2 mb-4">{tag}</p>
+      <div
+        ref={scrollRef}
+        onScroll={updateProgress}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-2 px-2"
+      >
+        {items.map((c) => (
+          <div
+            key={c.title}
+            onMouseEnter={() => setActive(c.idx)}
+            onFocus={() => setActive(c.idx)}
+            tabIndex={0}
+            className={`group snap-start shrink-0 w-[260px] p-6 rounded-2xl border bg-surface/40 hover:bg-surface2/60 transition-colors relative overflow-hidden cursor-default ${
+              active === c.idx ? 'border-violet/50' : 'border-line'
+            }`}
+          >
+            <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-gradient-to-br from-blue/10 to-violet/10 blur-2xl group-hover:opacity-100 opacity-0 transition-opacity" />
+            <c.icon className="w-5 h-5 text-violet-soft" strokeWidth={1.6} />
+            <h3 className="font-display font-medium text-lg mt-4">{c.title}</h3>
+            <p className="text-muted text-sm leading-relaxed mt-2">{c.text}</p>
+          </div>
+        ))}
+      </div>
+      <div className="h-1 rounded-full bg-line/60 overflow-hidden mt-1">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-blue to-violet transition-[width] duration-500 ease-out"
+          style={{ width: `${Math.max(progress * 100, 8)}%` }}
+        />
+      </div>
+    </div>
   )
 }
 
@@ -1463,21 +1517,52 @@ function FinalCTA({ t }) {
   )
 }
 
-function Footer() {
+function Footer({ t }) {
   return (
     <footer className="px-6 py-10 border-t border-line">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted2">
         <span className="font-mono">
           <span className="text-gradient">agentic-factory</span>
         </span>
-        <div className="flex items-center gap-6">
-          <a href="https://www.linkedin.com/in/alexandre-dubar" target="_blank" rel="noreferrer" className="hover:text-text transition-colors">
-            LinkedIn
+        <div className="flex items-center gap-5">
+          <a
+            href="https://www.linkedin.com/in/alexandre-dubar"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+            className="hover:text-text transition-colors"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="1" width="22" height="22" rx="4" stroke="currentColor" strokeWidth="1.6" />
+              <circle cx="7.2" cy="7.5" r="1.4" fill="currentColor" />
+              <rect x="6" y="10.5" width="2.4" height="8" fill="currentColor" />
+              <path d="M11.5 18.5v-5.2c0-1.8 1-2.9 2.6-2.9 1.5 0 2.4 1 2.4 2.9v5.2h-2.4v-4.7c0-.8-.3-1.3-1-1.3s-1.1.5-1.1 1.3v4.7h-2.5z" fill="currentColor" />
+            </svg>
           </a>
-          <a href="mailto:contact@agentic-factory.fr" className="hover:text-text transition-colors">
-            contact@agentic-factory.fr
+          <a
+            href="mailto:contact@agentic-factory.fr"
+            aria-label="Email"
+            className="hover:text-text transition-colors"
+          >
+            <Mail className="w-[18px] h-[18px]" strokeWidth={1.6} />
           </a>
         </div>
+      </div>
+      <div className="max-w-6xl mx-auto mt-6 flex flex-col items-center gap-4">
+        <div className="w-10 h-px bg-line/60" />
+        <a
+          href="https://busshidev.fr"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center gap-2 opacity-50 hover:opacity-90 transition-opacity"
+        >
+          <span className="font-mono text-xs text-muted2">{t.footer.byBusshidev}</span>
+          <img
+            src={busshidevLogo}
+            alt="BusshiDev"
+            className="h-9 w-auto invert"
+          />
+        </a>
       </div>
     </footer>
   )
@@ -1513,7 +1598,7 @@ function Site({ lang }) {
       <Testimonials t={t} />
       <TrustLogos t={t} />
       <FinalCTA t={t} />
-      <Footer />
+      <Footer t={t} />
     </div>
   )
 }

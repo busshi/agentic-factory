@@ -28,7 +28,7 @@ npm run preview
 - `src/i18n.jsx` — dictionnaire de traduction FR/EN pour tout le texte du
   site (nav, hero, sections, CTA). C'est le seul fichier à modifier pour
   corriger ou enrichir une traduction de contenu "de page".
-- `src/assets/testimonials/` — photos de témoignants
+- `src/assets/testimonials/` — photos de Quentin Chantelot et Julia Georgi
 - `tailwind.config.js` — la palette de couleurs (noir + dégradé bleu/violet),
   les polices (Space Grotesk / Inter / JetBrains Mono) et les animations
   (dont le marquee de la section logos)
@@ -50,7 +50,8 @@ npm run preview
 - Le texte des animations (labels courts, questions qui tournent) est aussi
   traduit — chaque composant `Scene*` accepte une prop `lang`.
 - Les témoignages LinkedIn sont traduits en anglais sur `/en` (traduction
-  fidèle du sens, pas une citation alternative
+  fidèle du sens, pas une citation alternative) — à valider auprès de
+  Quentin et Julia si tu veux une formulation "officielle" en anglais.
 
 ### Limite SEO importante à connaître
 
@@ -65,7 +66,9 @@ apparaître avec des métadonnées françaises dans ces cas précis.
 
 Pour un SEO international irréprochable, l'étape suivante serait du
 prerendering ou du SSR par route (ex. `vite-plugin-ssr`, Next.js, ou un
-service de prerendering comme Prerender.io).
+service de prerendering comme Prerender.io). Je ne l'ai pas mis en place
+ici — ça change l'architecture du projet, donc mieux vaut le faire en
+connaissance de cause plutôt que je le décide à ta place.
 
 ## SEO / GEO
 
@@ -83,9 +86,18 @@ service de prerendering comme Prerender.io).
   en français uniquement, à dupliquer en anglais si tu veux couvrir GEO pour
   les deux langues.
 - **`sitemap.xml`** / **`robots.txt`** : couvrent `/fr` et `/en`.
+- **Fondations, pas garantie** : ces balises posent une base technique
+  propre. Le classement effectif dépendra aussi de contenu publié dans la
+  durée et de backlinks — pas de raccourci possible sur ce point.
 
 ## À faire avant mise en ligne
 
+- **Logos clients** : affichés en "chips" stylées avec un défilement en
+  marquee (grayscale → couleur au survol/pause) en attendant de vrais
+  fichiers logo. Pour intégrer les logos officiels (PriceBee/XBE, Notice,
+  Octolo, La Poste, Ministère de l'Éducation nationale), vérifie d'abord
+  l'autorisation d'usage commercial — particulièrement sensible pour les
+  logos institutionnels.
 - **`og-image.png`** : à créer, voir section SEO/GEO ci-dessus.
 - **CTA de contact** : pointe vers https://calendly.com/busshidev/meeting
   (Hero, Nav, CTA final).
@@ -96,3 +108,9 @@ service de prerendering comme Prerender.io).
   un autre hébergeur statique, configure une règle équivalente ("toute
   route sert index.html").
 
+## Note technique
+
+Ce projet n'a pas pu être installé/buildé dans l'environnement de génération
+(pas d'accès réseau côté sandbox). Le code a été relu attentivement mais
+lance `npm install && npm run dev` en premier pour repérer une éventuelle
+coquille avant d'aller plus loin.
