@@ -5,6 +5,12 @@ import { getT } from './i18n.jsx'
 import juliaPhoto from './assets/testimonials/julia-georgi.jpeg'
 import quentinPhoto from './assets/testimonials/quentin-chantelot.jpeg'
 import busshidevLogo from './assets/brand/busshidev-logo.png'
+import laPosteLogo from './assets/logos/la-poste.jpeg'
+import ministereLogo from './assets/logos/ministere-education-nationale.png'
+import noticeLogo from './assets/logos/notice.jpeg'
+import octoloLogo from './assets/logos/octolo.svg'
+import pricebeeLogo from './assets/logos/pricebee.jpg'
+import stationFLogo from './assets/logos/station-f.png'
 import {
   ArrowRight,
   Terminal,
@@ -1367,7 +1373,8 @@ function CategoryCarousel({ tag, items, active, setActive }) {
 
 function Credibility({ t }) {
   const stack = [
-    'TypeScript', 'React / Next.js', 'NestJS', 'Node.js', 'Python / Django', 'GraphQL', 'PostgreSQL', 'Docker',
+    'TypeScript', 'React / Next.js', 'NestJS', 'Node.js', 'Python / Django', 'GraphQL',
+    'PostgreSQL', 'MongoDB', 'Docker', 'CI/CD', 'Camunda / BPMN',
   ]
 
   return (
@@ -1460,12 +1467,20 @@ function Testimonials({ t }) {
    logos (especially institutional ones) requires the client's explicit
    authorization to use them commercially. */
 function TrustLogos({ t }) {
+  // "invert" flags logos whose file is dark ink on a white background — a
+  // CSS invert flips them to light ink so they read on the dark chip, same
+  // trick already used for the BusshiDev footer logo. Octolo (white
+  // wordmark) and PriceBee (own navy tile) are already designed for a dark
+  // background. The ministère logo is tricolour (bleu-blanc-rouge) so
+  // invert would distort its actual colors — its white background was
+  // keyed out to real alpha transparency instead.
   const logos = [
-    { name: 'PriceBee', note: 'racheté par XBE' },
-    { name: 'Notice' },
-    { name: 'Octolo' },
-    { name: 'La Poste' },
-    { name: "Ministère de l'Éducation nationale" },
+    { name: 'PriceBee', src: pricebeeLogo },
+    { name: 'Notice', src: noticeLogo, invert: true },
+    { name: 'Octolo', src: octoloLogo },
+    { name: 'La Poste', src: laPosteLogo, invert: true },
+    { name: "Ministère de l'Éducation nationale", src: ministereLogo, scale: true },
+    { name: 'Station F', src: stationFLogo, invert: true },
   ]
   const track = [...logos, ...logos]
 
@@ -1476,14 +1491,18 @@ function TrustLogos({ t }) {
           {t.trustLogos.title}
         </p>
       </div>
-      <div className="relative mt-8 group [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+      <div className="relative mt-8 max-w-6xl mx-auto group overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
         <div className="flex w-max gap-3.5 animate-marquee group-hover:[animation-play-state:paused]">
           {track.map((l, i) => (
             <div
               key={`${l.name}-${i}`}
-              className="flex items-center justify-center px-6 py-4 rounded-xl border border-line bg-surface2/40 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 hover:border-violet/40 transition-all min-w-[140px] shrink-0"
+              className="flex items-center justify-center h-20 min-w-[130px] px-6 rounded-xl border border-line bg-surface2/40 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 hover:border-violet/40 transition-all shrink-0"
             >
-              <span className="font-display text-base text-text whitespace-nowrap">{l.name}</span>
+              <img
+                src={l.src}
+                alt={l.name}
+                className={`${l.scale ? 'h-14' : 'h-10'} w-auto max-w-[150px] object-contain ${l.invert ? 'invert' : ''}`}
+              />
             </div>
           ))}
         </div>
