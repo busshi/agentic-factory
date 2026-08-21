@@ -22,12 +22,22 @@ npm run preview
 
 ## Structure
 
-- `src/App.jsx` — toutes les sections du site (Hero, Problème, Proposition de
-  valeur, Cas d'usage, Crédibilité, Témoignages, Logos clients, CTA final) +
-  le routing (`/`, `/fr`, `/en`)
-- `src/i18n.jsx` — dictionnaire de traduction FR/EN pour tout le texte du
-  site (nav, hero, sections, CTA). C'est le seul fichier à modifier pour
-  corriger ou enrichir une traduction de contenu "de page".
+- `src/App.tsx` — routing uniquement (`/`, `/fr`, `/en`) ; le rendu du site
+  vit dans `src/components/layout/Site.tsx`
+- `src/components/` — un composant par fichier, en TypeScript :
+  - `layout/` — `Site`, `Nav`, `Footer` (l'ossature de la page)
+  - `sections/` — chaque section du site (Hero, Problem, ValueProp,
+    UseCases + CategoryCarousel, Credibility, Testimonials, TrustLogos,
+    FinalCTA)
+  - `scenes/` — les 8 animations SVG affichées dans le panneau "cas
+    d'usage" (une par cas)
+  - `ui/` — petits éléments partagés (`Eyebrow`, `RevealSection`)
+- `src/i18n.tsx` — dictionnaire de traduction FR/EN pour tout le texte du
+  site (nav, hero, sections, CTA), avec le type `Translation` qui décrit sa
+  forme exacte. C'est le seul fichier à modifier pour corriger ou enrichir
+  une traduction de contenu "de page".
+- Le projet est en TypeScript strict (`tsconfig.json`, pas de `any`) —
+  `npm run type-check` lance `tsc --noEmit` sans lancer de build.
 - `src/assets/testimonials/` — photos de Quentin Chantelot et Julia Georgi
 - `tailwind.config.js` — la palette de couleurs (noir + dégradé bleu/violet),
   les polices (Space Grotesk / Inter / JetBrains Mono) et les animations

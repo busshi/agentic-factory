@@ -1,0 +1,62 @@
+import type { SceneProps } from './types'
+
+export function SceneInvoice({ lang = 'fr' }: SceneProps) {
+  const s = {
+    fr: { pending: 'en attente', done: 'relancée ✓', sent: 'relance envoyée' },
+    en: { pending: 'pending', done: 'followed up ✓', sent: 'follow-up sent' },
+  }[lang]
+  return (
+    <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sceneGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#3B82F6" />
+          <stop offset="100%" stopColor="#A855F7" />
+        </linearGradient>
+      </defs>
+      {/* invoice card */}
+      <rect x="40" y="34" width="130" height="154" rx="10" fill="#0B0F1A" stroke="#1C2440" strokeWidth="1.5" />
+      <rect x="58" y="56" width="70" height="6" rx="3" fill="#2A3352" />
+      <rect x="58" y="72" width="94" height="4" rx="2" fill="#1C2440" />
+      <rect x="58" y="84" width="94" height="4" rx="2" fill="#1C2440" />
+      <rect x="58" y="96" width="60" height="4" rx="2" fill="#1C2440" />
+      <rect x="58" y="140" width="94" height="1" fill="#1C2440" />
+      <rect x="58" y="152" width="40" height="5" rx="2" fill="#2A3352" />
+      <text x="122" y="157" fontFamily="JetBrains Mono, monospace" fontSize="12" fill="#C084FC" textAnchor="end">
+        1 240 €
+      </text>
+      {/* status pill morphing */}
+      <g>
+        <rect x="52" y="112" width="76" height="18" rx="9" fill="none" stroke="url(#sceneGrad)" strokeWidth="1">
+          <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.35;0.4;0.95;1" dur="4s" repeatCount="indefinite" />
+        </rect>
+        <text x="90" y="124" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#8992AB" textAnchor="middle">
+          <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.35;0.4;0.95;1" dur="4s" repeatCount="indefinite" />
+          {s.pending}
+        </text>
+        <rect x="52" y="112" width="76" height="18" rx="9" fill="none" stroke="#4ADE80" strokeWidth="1">
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.45;0.95;1" dur="4s" repeatCount="indefinite" />
+        </rect>
+        <text x="90" y="124" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#4ADE80" textAnchor="middle">
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.45;0.95;1" dur="4s" repeatCount="indefinite" />
+          {s.done}
+        </text>
+      </g>
+
+      {/* rail to envelope */}
+      <path d="M 170 100 C 220 100, 250 100, 300 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+      <circle r="2.6" fill="#C084FC">
+        <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M 170 100 C 220 100, 250 100, 300 100" />
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+      </circle>
+
+      {/* envelope icon */}
+      <g transform="translate(300 100)">
+        <rect x="-24" y="-17" width="48" height="34" rx="5" fill="#0B0F1A" stroke="url(#sceneGrad)" strokeWidth="1.4" />
+        <path d="M -24 -14 L 0 4 L 24 -14" stroke="url(#sceneGrad)" strokeWidth="1.2" fill="none" />
+      </g>
+      <text x="300" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+        {s.sent}
+      </text>
+    </svg>
+  )
+}

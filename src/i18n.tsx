@@ -1,8 +1,74 @@
 // Central translation dictionary. Two locales: fr (default/canonical) and
 // en. Threaded through every section and scene component via a `lang`
-// prop — see src/App.jsx.
+// prop — see src/App.tsx.
 
-export const translations = {
+import type { ReactNode } from 'react'
+
+export type Lang = 'fr' | 'en'
+
+export interface CopyBlock {
+  title: string
+  text: string
+}
+
+export interface TestimonialQuote {
+  text: string
+  name: string
+  role: string
+  context: string
+}
+
+export interface Translation {
+  meta: { htmlLang: string }
+  nav: { cta: string }
+  hero: {
+    eyebrow: string
+    titleA: string
+    titleB: string
+    subtitle: string
+    ctaPrimary: string
+    ctaSecondary: string
+  }
+  problem: {
+    eyebrow: string
+    title: ReactNode
+    p1: string
+    p2: string
+  }
+  valueProp: {
+    eyebrow: string
+    title: string
+    cards: CopyBlock[]
+  }
+  useCases: {
+    eyebrow: string
+    title: string
+    tagPME: string
+    tagStartup: string
+    cases: CopyBlock[]
+  }
+  credibility: {
+    eyebrow: string
+    title: string
+    text: string
+    linkedinCta: string
+    stackLabel: string
+  }
+  testimonials: {
+    eyebrow: string
+    quotes: TestimonialQuote[]
+  }
+  trustLogos: { title: string }
+  finalCta: {
+    eyebrow: string
+    title: string
+    text: string
+    cta: string
+  }
+  footer: { byBusshidev: string }
+}
+
+export const translations: Record<Lang, Translation> = {
   fr: {
     meta: {
       htmlLang: 'fr',
@@ -12,7 +78,7 @@ export const translations = {
     },
     hero: {
       eyebrow: 'Agents IA',
-      titleA: 'Vos tâches répétitives méritent mieux qu\u2019un stagiaire.',
+      titleA: 'Vos tâches répétitives méritent mieux qu’un stagiaire.',
       titleB: 'Elles méritent un agent.',
       subtitle:
         'Des agents IA codés sur-mesure, branchés sur vos outils réels — pas des scénarios no-code qui lâchent au premier imprévu. Moins de tâches répétitives, plus de temps pour ce qui compte vraiment.',
@@ -254,6 +320,6 @@ export const translations = {
   },
 }
 
-export function getT(lang) {
+export function getT(lang: Lang): Translation {
   return translations[lang] || translations.fr
 }
