@@ -20,6 +20,7 @@ import {
   BellRing,
   FileSearch,
   Radar,
+  Linkedin,
 } from 'lucide-react'
 
 /* ---------------------------------------------------------
@@ -1532,12 +1533,7 @@ function Footer({ t }) {
             aria-label="LinkedIn"
             className="hover:text-text transition-colors"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="1" y="1" width="22" height="22" rx="4" stroke="currentColor" strokeWidth="1.6" />
-              <circle cx="7.2" cy="7.5" r="1.4" fill="currentColor" />
-              <rect x="6" y="10.5" width="2.4" height="8" fill="currentColor" />
-              <path d="M11.5 18.5v-5.2c0-1.8 1-2.9 2.6-2.9 1.5 0 2.4 1 2.4 2.9v5.2h-2.4v-4.7c0-.8-.3-1.3-1-1.3s-1.1.5-1.1 1.3v4.7h-2.5z" fill="currentColor" />
-            </svg>
+            <Linkedin className="w-[18px] h-[18px]" strokeWidth={1.6} />
           </a>
           <a
             href="mailto:contact@agentic-factory.fr"
