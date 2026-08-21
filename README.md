@@ -1,126 +1,117 @@
-# agentic-factory — Site vitrine
+# agentic-factory.fr — Marketing site
 
-Site vitrine React (Vite + Tailwind + Framer Motion + React Router) pour
-agentic-factory, disponible en français et en anglais.
+React marketing site (Vite + TypeScript + Tailwind + Framer Motion + React
+Router) for agentic-factory.fr, available in French and English.
 
-## Installation
+## Getting started
 
 ```bash
 npm install
 npm run dev
 ```
 
-Le site sera disponible sur http://localhost:5173 — la racine `/` redirige
-automatiquement vers `/fr` ou `/en` selon la langue du navigateur.
+The site runs at http://localhost:5173 — the root `/` redirects
+automatically to `/fr` or `/en` based on the browser's language.
 
-## Build de production
+## Production build
 
 ```bash
-npm run build
+npm run build   # runs a type-check (tsc --noEmit) before building
 npm run preview
 ```
 
-## Structure
+Other useful scripts:
 
-- `src/App.tsx` — routing uniquement (`/`, `/fr`, `/en`) ; le rendu du site
-  vit dans `src/components/layout/Site.tsx`
-- `src/components/` — un composant par fichier, en TypeScript :
-  - `layout/` — `Site`, `Nav`, `Footer` (l'ossature de la page)
-  - `sections/` — chaque section du site (Hero, Problem, ValueProp,
+```bash
+npm run type-check   # tsc --noEmit only, no build
+```
+
+## Project structure
+
+- `src/App.tsx` — routing only (`/`, `/fr`, `/en`); the page itself is
+  rendered by `src/components/layout/Site.tsx`
+- `src/components/` — one component per file, in TypeScript:
+  - `layout/` — `Site`, `Nav`, `Footer` (the page shell)
+  - `sections/` — each section of the site (Hero, Problem, ValueProp,
     UseCases + CategoryCarousel, Credibility, Testimonials, TrustLogos,
     FinalCTA)
-  - `scenes/` — les 8 animations SVG affichées dans le panneau "cas
-    d'usage" (une par cas)
-  - `ui/` — petits éléments partagés (`Eyebrow`, `RevealSection`)
-- `src/i18n.tsx` — dictionnaire de traduction FR/EN pour tout le texte du
-  site (nav, hero, sections, CTA), avec le type `Translation` qui décrit sa
-  forme exacte. C'est le seul fichier à modifier pour corriger ou enrichir
-  une traduction de contenu "de page".
-- Le projet est en TypeScript strict (`tsconfig.json`, pas de `any`) —
-  `npm run type-check` lance `tsc --noEmit` sans lancer de build.
-- `src/assets/testimonials/` — photos de Quentin Chantelot et Julia Georgi
-- `tailwind.config.js` — la palette de couleurs (noir + dégradé bleu/violet),
-  les polices (Space Grotesk / Inter / JetBrains Mono) et les animations
-  (dont le marquee de la section logos)
-- `src/index.css` — styles globaux, effet de grain, respect de
-  `prefers-reduced-motion`
-- `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` — SEO et GEO
-  (voir section dédiée ci-dessous)
-- `public/_redirects` (Netlify) et `vercel.json` (Vercel) — nécessaires pour
-  que `/fr` et `/en` fonctionnent au rechargement direct (voir section
-  Déploiement)
+  - `scenes/` — the 8 SVG animations shown in the "use cases" stage panel
+    (one per case)
+  - `ui/` — small shared elements (`Eyebrow`, `RevealSection`)
+- `src/i18n.tsx` — FR/EN translation dictionary for all page text (nav,
+  hero, sections, CTAs), with a `Translation` type describing its exact
+  shape. This is the only file to touch to fix or extend page copy.
+- The project is TypeScript in strict mode (`tsconfig.json`, no `any`).
+- `tailwind.config.js` — color palette (near-black + blue/violet gradient),
+  fonts (Space Grotesk / Inter / JetBrains Mono), and animations (including
+  the logo marquee)
+- `src/index.css` — global styles, grain overlay, `prefers-reduced-motion`
+  handling
+- `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` — SEO and
+  GEO (see dedicated section below)
+- `public/_redirects` (Netlify) and `vercel.json` (Vercel) — needed for
+  `/fr` and `/en` to work on a direct page reload (see Deployment section)
 
-## Internationalisation (FR / EN)
+## Internationalization (FR / EN)
 
-- `/` détecte `navigator.language` et redirige vers `/fr` ou `/en`.
-- Une fois sur une URL de langue, celle-ci fait foi — pas de redirection
-  automatique supplémentaire, donc un lien partagé affiche toujours la
-  langue prévue par l'expéditeur.
-- Le sélecteur de langue dans la nav (FR/EN) bascule manuellement.
-- Le texte des animations (labels courts, questions qui tournent) est aussi
-  traduit — chaque composant `Scene*` accepte une prop `lang`.
-- Les témoignages LinkedIn sont traduits en anglais sur `/en` (traduction
-  fidèle du sens, pas une citation alternative) — à valider auprès de
-  Quentin et Julia si tu veux une formulation "officielle" en anglais.
+- `/` detects `navigator.language` and redirects to `/fr` or `/en`.
+- Once on a locale URL, that URL is authoritative — no further automatic
+  redirect, so a shared link always shows the language the sender intended.
+- The FR/EN switcher in the nav toggles manually.
+- Animation text (short labels, rotating questions) is translated too —
+  each `Scene*` component takes a `lang` prop.
 
-### Limite SEO importante à connaître
+### A known SEO limitation
 
-Ce site est une SPA (rendu côté client, pas de SSR/prerendering). Les
-balises `<title>`, `canonical`, `og:*` par langue sont mises à jour en JS
-une fois la page chargée (`useEffect` dans le composant `Site`). Pour un
-navigateur ou un crawler qui exécute le JavaScript (Googlebot le fait), ça
-fonctionne. Mais pour un crawler qui ne l'exécute pas, ou un aperçu de lien
-généré sans exécution JS, le HTML brut servi est toujours celui
-d'`index.html` (contenu français par défaut) — donc `/en` pourrait
-apparaître avec des métadonnées françaises dans ces cas précis.
+This site is a client-rendered SPA (no SSR/prerendering). The `<title>`,
+`canonical`, and `og:*` tags are updated per-locale in JS once the page has
+loaded (a `useEffect` in the `Site` component). This works fine for a
+browser or a crawler that executes JavaScript (Googlebot does). For a
+crawler that doesn't, or a link preview generated without JS execution,
+the raw HTML served is always `index.html`'s default (French) content —
+so `/en` can show up with French metadata in those specific cases.
 
-Pour un SEO international irréprochable, l'étape suivante serait du
-prerendering ou du SSR par route (ex. `vite-plugin-ssr`, Next.js, ou un
-service de prerendering comme Prerender.io). Je ne l'ai pas mis en place
-ici — ça change l'architecture du projet, donc mieux vaut le faire en
-connaissance de cause plutôt que je le décide à ta place.
+For airtight international SEO, the next step would be per-route
+prerendering or SSR (e.g. `vite-plugin-ssr`, Next.js, or a prerendering
+service like Prerender.io). That's a bigger architectural change and isn't
+in place here.
 
 ## SEO / GEO
 
-- **Balises classiques** : title, meta description, canonical, Open Graph et
-  Twitter Card sont dans `index.html` (valeurs par défaut FR), puis ajustées
-  par route via JS (voir limite ci-dessus).
-- **hreflang** : alternates `fr`/`en`/`x-default` déclarés dans
-  `index.html` et dans `sitemap.xml`.
-- **`og-image.png`** : visuel de partage (1200×630px) dans `public/`,
-  généré à partir de la charte du site (fond, grille, dégradé bleu/violet,
-  wordmark). Si le hero ou le positionnement changent significativement,
-  pense à le régénérer pour rester cohérent.
-- **Données structurées** : un bloc JSON-LD `ProfessionalService` (bilingue
-  via `availableLanguage`) dans `index.html`.
-- **`llms.txt`** : résumé en clair de l'activité pour les moteurs IA — encore
-  en français uniquement, à dupliquer en anglais si tu veux couvrir GEO pour
-  les deux langues.
-- **`sitemap.xml`** / **`robots.txt`** : couvrent `/fr` et `/en`.
-- **Fondations, pas garantie** : ces balises posent une base technique
-  propre. Le classement effectif dépendra aussi de contenu publié dans la
-  durée et de backlinks — pas de raccourci possible sur ce point.
+- **Standard tags**: title, meta description, canonical, Open Graph, and
+  Twitter Card live in `index.html` (French defaults), then get adjusted
+  per route via JS (see the limitation above).
+- **hreflang**: `fr`/`en`/`x-default` alternates declared in `index.html`
+  and in `sitemap.xml`.
+- **`og-image.png` / `og-image-en.png`**: social share images (1200×630px)
+  in `public/`, generated from the site's own design system (background,
+  grid, blue/violet gradient, wordmark) — one per locale, swapped via the
+  same per-route JS as the other `og:*` tags.
+- **Structured data**: a `ProfessionalService` JSON-LD block (bilingual via
+  `availableLanguage`) in `index.html`.
+- **`llms.txt`**: a plain-text summary of the site for AI/LLM crawlers,
+  following the [llms.txt](https://llmstxt.org/) convention — a short
+  description followed by link sections.
+- **`sitemap.xml`** / **`robots.txt`**: cover `/fr` and `/en`.
+- These tags establish a clean technical baseline; actual ranking still
+  depends on ongoing content and backlinks.
 
-## À faire avant mise en ligne
+## Performance & accessibility notes
 
-- **Logos clients** : affichés en "chips" stylées avec un défilement en
-  marquee (grayscale → couleur au survol/pause) en attendant de vrais
-  fichiers logo. Pour intégrer les logos officiels (PriceBee/XBE, Notice,
-  Octolo, La Poste, Ministère de l'Éducation nationale), vérifie d'abord
-  l'autorisation d'usage commercial — particulièrement sensible pour les
-  logos institutionnels.
-- **CTA de contact** : pointe vers https://calendly.com/busshidev/meeting
-  (Hero, Nav, CTA final).
-- **Déploiement** : le projet est prêt pour Vercel ou Netlify après
-  `npm run build` (dossier `dist/`). Le fichier `_redirects` (Netlify) ou
-  `vercel.json` (Vercel) est indispensable pour que `/fr` et `/en`
-  fonctionnent au rechargement direct plutôt que de renvoyer une 404 — sur
-  un autre hébergeur statique, configure une règle équivalente ("toute
-  route sert index.html").
+- Google Fonts is loaded non-blocking (`media="print"` swapped to `all` on
+  load) so the third-party round-trip doesn't hold up first paint; text
+  renders in the fallback font and swaps in via `font-display: swap`.
+- Logo images are served as WebP, sized close to their actual on-page
+  display size.
+- Color tokens (`muted`, `muted2` in `tailwind.config.js`) are picked to
+  clear a 4.5:1 contrast ratio against the page background.
+- The page content is wrapped in a `<main>` landmark, with `Nav`/`Footer`
+  as `<header>`/`<footer>`.
 
-## Note technique
+## Deployment
 
-Ce projet n'a pas pu être installé/buildé dans l'environnement de génération
-(pas d'accès réseau côté sandbox). Le code a été relu attentivement mais
-lance `npm install && npm run dev` en premier pour repérer une éventuelle
-coquille avant d'aller plus loin.
+The project builds to a static `dist/` folder (`npm run build`) and is
+ready for Vercel or Netlify. The `_redirects` file (Netlify) or
+`vercel.json` (Vercel) is required for `/fr` and `/en` to work on a direct
+reload instead of returning a 404 — on another static host, configure an
+equivalent "serve index.html for every route" rule.

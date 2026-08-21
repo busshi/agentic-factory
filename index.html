@@ -30,7 +30,20 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <!-- Loaded non-blocking: the stylesheet applies once it arrives
+         (media="print" doesn't match on load, then onload switches it to
+         "all"), instead of holding up first paint for a third-party
+         round-trip. text stays in the fallback font until it swaps in
+         (font-display=swap), so nothing is invisible in the meantime. -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+    </noscript>
 
     <!-- Structured data (schema.org) — helps both classic search engines
          and AI answer engines (GEO) understand who this is and what it

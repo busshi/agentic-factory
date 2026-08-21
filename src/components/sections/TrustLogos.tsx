@@ -1,11 +1,11 @@
 import type { Translation } from '../../i18n'
 import { RevealSection } from '../ui/RevealSection'
 import laPosteLogo from '../../assets/logos/la-poste.jpeg'
-import ministereLogo from '../../assets/logos/ministere-education-nationale.png'
+import ministereLogo from '../../assets/logos/ministere-education-nationale.webp'
 import noticeLogo from '../../assets/logos/notice.jpeg'
 import octoloLogo from '../../assets/logos/octolo.svg'
-import pricebeeLogo from '../../assets/logos/pricebee.jpg'
-import stationFLogo from '../../assets/logos/station-f.png'
+import pricebeeLogo from '../../assets/logos/pricebee.webp'
+import stationFLogo from '../../assets/logos/station-f.webp'
 
 interface TrustLogo {
   name: string

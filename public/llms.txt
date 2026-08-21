@@ -6,23 +6,22 @@
 > client (API, base de données, systèmes métier) — pas des scénarios
 > no-code fragiles.
 
-## Cibles
-- PME régionales sans compétence IA/dev en interne
-- Petites startups (≤ 5 personnes) dont l'équipe technique est déjà
-  occupée à faire tourner le produit
+Cibles : PME régionales sans compétence IA/dev en interne, et petites
+startups (≤ 5 personnes) dont l'équipe technique est déjà occupée à faire
+tourner le produit.
 
-## Cas d'usage principaux
-- Automatisation de la facturation et des relances (PME)
-- Tri et réponse automatisée aux emails (PME)
-- Agent de support client autonome, entraîné sur la documentation produit
-  (startup)
-- Agent de qualification des leads inbound (startup)
+Cas d'usage principaux : automatisation de la facturation et des relances,
+tri et réponse automatisée aux emails (PME) ; support client autonome
+entraîné sur la documentation produit, qualification des leads inbound
+(startup).
 
-## Offre
-- Audit gratuit (30 minutes) pour identifier le process le plus
-  chronophage et évaluer s'il vaut la peine d'être automatisé
-- Prise de rendez-vous : https://calendly.com/busshidev/meeting
+## Site
+
+- [Version française](https://agentic-factory.fr/fr): présentation complète de l'offre, cas d'usage détaillés, témoignages clients
+- [English version](https://agentic-factory.fr/en): full site in English
 
 ## Contact
-- Email : contact@agentic-factory.fr
-- LinkedIn : https://www.linkedin.com/in/alexandre-dubar
+
+- [Audit gratuit](https://calendly.com/busshidev/meeting): réserver 30 minutes pour évaluer un process à automatiser, sans engagement
+- [Email](mailto:contact@agentic-factory.fr): contact@agentic-factory.fr
+- [LinkedIn](https://www.linkedin.com/in/alexandre-dubar): profil professionnel d'Alexandre Dubar

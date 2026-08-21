@@ -39,14 +39,16 @@ export function Site({ lang }: { lang: Lang }) {
   return (
     <div className="min-h-screen">
       <Nav lang={lang} t={t} />
-      <Hero lang={lang} t={t} />
-      <Problem t={t} />
-      <ValueProp t={t} />
-      <UseCases lang={lang} t={t} />
-      <Credibility t={t} />
-      <Testimonials t={t} />
-      <TrustLogos t={t} />
-      <FinalCTA t={t} />
+      <main>
+        <Hero lang={lang} t={t} />
+        <Problem t={t} />
+        <ValueProp t={t} />
+        <UseCases lang={lang} t={t} />
+        <Credibility t={t} />
+        <Testimonials t={t} />
+        <TrustLogos t={t} />
+        <FinalCTA t={t} />
+      </main>
       <Footer t={t} />
     </div>
   )

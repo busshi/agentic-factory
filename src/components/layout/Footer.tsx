@@ -1,6 +1,6 @@
 import { Linkedin, Mail } from 'lucide-react'
 import type { Translation } from '../../i18n'
-import busshidevLogo from '../../assets/brand/busshidev-logo.png'
+import busshidevLogo from '../../assets/brand/busshidev-logo.webp'
 
 export function Footer({ t }: { t: Translation }) {
   return (
@@ -34,13 +34,17 @@ export function Footer({ t }: { t: Translation }) {
           href="https://busshidev.fr"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-2 opacity-50 hover:opacity-90 transition-opacity cursor-pointer"
+          className="group flex flex-col items-center gap-2 cursor-pointer"
         >
-          <span className="font-mono text-xs text-muted2">{t.footer.byBusshidev}</span>
+          {/* text-muted (not text-muted2) at full opacity — text-muted2
+              falls below the 4.5:1 contrast ratio required for small text
+              on bg-bg, and dimming it further with opacity made it worse.
+              The logo below is decorative, so it can stay dimmed. */}
+          <span className="font-mono text-xs text-muted group-hover:text-text transition-colors">{t.footer.byBusshidev}</span>
           <img
             src={busshidevLogo}
             alt="BusshiDev"
-            className="h-9 w-auto invert"
+            className="h-9 w-auto invert opacity-50 group-hover:opacity-90 transition-opacity"
           />
         </a>
       </div>

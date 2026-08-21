@@ -10,7 +10,12 @@ export default {
         line: '#1C2440',
         text: '#E9ECF4',
         muted: '#8992AB',
-        muted2: '#5C6480',
+        // #5C6480 only cleared ~3.45:1 against bg — under the 4.5:1 WCAG AA
+        // floor for small text (this color is used at text-xs/11px
+        // throughout: eyebrow labels, tags, timestamps). Lightened just
+        // enough to clear 4.5:1 while staying visually subordinate to
+        // `muted`.
+        muted2: '#737B9C',
         blue: {
           DEFAULT: '#3B82F6',
           soft: '#60A5FA',
