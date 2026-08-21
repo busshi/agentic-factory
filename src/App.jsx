@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useLayoutEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Routes, Route, Navigate, Link as RouterLink } from 'react-router-dom'
 import { getT } from './i18n.jsx'
@@ -1193,6 +1193,11 @@ function UseCases({ lang, t }) {
   const markInteraction = () => {
     lastInteractionRef.current = Date.now()
   }
+  // mouseenter/focus only fire once on entry, not for the whole time the
+  // pointer rests on a card — without this, hovering longer than the idle
+  // delay would let the cycle resume right under the cursor. This blocks it
+  // outright for as long as a card stays hovered/focused.
+  const hoveringRef = useRef(false)
 
   // only the carousel's own horizontal scroll should ever move — if the
   // section itself is off-screen (e.g. still on the hero), scrollIntoView
@@ -1225,16 +1230,58 @@ function UseCases({ lang, t }) {
     return () => clearInterval(id)
   }, [cases.length])
 
+  // whole-section visibility, for the desktop/tablet idle cycle below — the
+  // mobile carousel above is hidden (display:none) from sm upward, so its
+  // own visibility observer can't be reused here.
+  const sectionRef = useRef(null)
+  const sectionInViewRef = useRef(false)
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        sectionInViewRef.current = entry.isIntersecting
+      },
+      { threshold: 0.3 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  // desktop/tablet: while idle (no hover/focus on any card for a while, or
+  // by default before the first one), cycle the stage panel through a
+  // random case every few seconds — gives the panel something to show
+  // instead of sitting still, without auto-scrolling either column (that's
+  // the "double scroll" behavior that was removed from CategoryCarousel).
+  // Skipped below the sm breakpoint, where the mobile carousel above
+  // already has its own sequential auto-advance.
+  useEffect(() => {
+    const IDLE_DELAY = 3000
+    const id = setInterval(() => {
+      if (window.innerWidth < 640) return
+      if (!sectionInViewRef.current) return
+      if (hoveringRef.current) return
+      if (Date.now() - lastInteractionRef.current < IDLE_DELAY) return
+      if (cases.length <= 1) return
+      let next = activeRef.current
+      while (next === activeRef.current) {
+        next = Math.floor(Math.random() * cases.length)
+      }
+      setActive(next)
+    }, 2200)
+    return () => clearInterval(id)
+  }, [cases.length])
+
   return (
     <RevealSection id="cas-usage" className="px-6 py-24 border-t border-line">
-      <div className="max-w-6xl mx-auto">
+      <div ref={sectionRef} className="max-w-6xl mx-auto">
         <Eyebrow>{t.useCases.eyebrow}</Eyebrow>
         <h2 className="font-display font-semibold text-3xl sm:text-4xl mt-5 max-w-2xl leading-tight">
           {t.useCases.title}
         </h2>
 
         {/* stage panel — shows the illustrated scene for the hovered/focused/tapped card */}
-        <div className="mt-12 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm h-[300px] sm:h-[400px] relative overflow-hidden">
+        <div className="mt-12 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm h-[300px] sm:h-[360px] relative overflow-hidden">
           <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
           <AnimatePresence mode="wait">
             <motion.div
@@ -1285,12 +1332,12 @@ function UseCases({ lang, t }) {
           ))}
         </div>
 
-        {/* tablet and up: two carousels, one per audience (PME / Startup).
-            Stacked full-width from sm, side-by-side from lg. Each one
-            scrolls independently on manual swipe/drag, with a thin
+        {/* tablet and up: two carousels, one per audience (PME / Startup),
+            always stacked as two full-width rows regardless of screen size.
+            Each one scrolls independently on manual swipe/drag, with a thin
             progress bar below it, and both feed the same shared stage
             panel above. */}
-        <div className="hidden sm:grid sm:grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+        <div className="hidden sm:grid sm:grid-cols-1 gap-8 mt-6">
           {[t.useCases.tagPME, t.useCases.tagStartup].map((tag) => {
             const columnCases = cases
               .map((c, i) => ({ ...c, idx: i }))
@@ -1302,6 +1349,8 @@ function UseCases({ lang, t }) {
                 items={columnCases}
                 active={active}
                 setActive={setActive}
+                markInteraction={markInteraction}
+                hoveringRef={hoveringRef}
               />
             )
           })}
@@ -1316,14 +1365,16 @@ function UseCases({ lang, t }) {
    progress bar below the row tracks scroll position, both as a subtle
    invitation to scroll and as feedback on how far through the column
    you are. */
-function CategoryCarousel({ tag, items, active, setActive }) {
+function CategoryCarousel({ tag, items, active, setActive, markInteraction, hoveringRef }) {
   const scrollRef = useRef(null)
   const [progress, setProgress] = useState(0)
+  const [hasOverflow, setHasOverflow] = useState(false)
 
   const updateProgress = () => {
     const el = scrollRef.current
     if (!el) return
     const max = el.scrollWidth - el.clientWidth
+    setHasOverflow(max > 0)
     const raw = max > 0 ? el.scrollLeft / max : 0
     // smoothstep: lent au début (évite que la barre paraisse déjà pleine
     // dès la 2e carte) et lent en fin de course (évite le saut brutal à
@@ -1331,8 +1382,17 @@ function CategoryCarousel({ tag, items, active, setActive }) {
     setProgress(raw * raw * (3 - 2 * raw))
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     updateProgress()
+    // whether the row overflows depends on viewport width — re-check on
+    // resize so the bar (and the fixed vs. stretched card width below)
+    // update as the layout crosses the point where all cards fit without
+    // scrolling. useLayoutEffect (not useEffect) so this first measurement
+    // happens before paint — otherwise cards briefly stretch full-width on
+    // load, even on narrow screens where they need to stay fixed-width for
+    // the swipeable row, before snapping to their real size a frame later.
+    window.addEventListener('resize', updateProgress)
+    return () => window.removeEventListener('resize', updateProgress)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items.length])
 
@@ -1341,18 +1401,37 @@ function CategoryCarousel({ tag, items, active, setActive }) {
       <p className="font-mono text-xs tracking-widest uppercase text-muted2 mb-4">{tag}</p>
       <div
         ref={scrollRef}
-        onScroll={updateProgress}
+        onScroll={() => {
+          markInteraction()
+          updateProgress()
+        }}
         className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-2 px-2"
       >
         {items.map((c) => (
           <div
             key={c.title}
-            onMouseEnter={() => setActive(c.idx)}
-            onFocus={() => setActive(c.idx)}
+            onMouseEnter={() => {
+              hoveringRef.current = true
+              markInteraction()
+              setActive(c.idx)
+            }}
+            onMouseLeave={() => {
+              hoveringRef.current = false
+              markInteraction()
+            }}
+            onFocus={() => {
+              hoveringRef.current = true
+              markInteraction()
+              setActive(c.idx)
+            }}
+            onBlur={() => {
+              hoveringRef.current = false
+              markInteraction()
+            }}
             tabIndex={0}
-            className={`group snap-start shrink-0 w-[260px] p-6 rounded-2xl border bg-surface/40 hover:bg-surface2/60 transition-colors relative overflow-hidden cursor-default ${
-              active === c.idx ? 'border-violet/50' : 'border-line'
-            }`}
+            className={`group snap-start p-6 rounded-2xl border bg-surface/40 hover:bg-surface2/60 transition-colors relative overflow-hidden cursor-default ${
+              hasOverflow ? 'shrink-0 w-[260px]' : 'flex-1 min-w-[220px]'
+            } ${active === c.idx ? 'border-violet/50' : 'border-line'}`}
           >
             <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-gradient-to-br from-blue/10 to-violet/10 blur-2xl group-hover:opacity-100 opacity-0 transition-opacity" />
             <c.icon className="w-5 h-5 text-violet-soft" strokeWidth={1.6} />
@@ -1361,12 +1440,14 @@ function CategoryCarousel({ tag, items, active, setActive }) {
           </div>
         ))}
       </div>
-      <div className="h-1 rounded-full bg-line/60 overflow-hidden mt-1">
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-blue to-violet transition-[width] duration-500 ease-out"
-          style={{ width: `${Math.max(progress * 100, 8)}%` }}
-        />
-      </div>
+      {hasOverflow && (
+        <div className="h-1 rounded-full bg-line/60 overflow-hidden mt-1">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-blue to-violet transition-[width] duration-500 ease-out"
+            style={{ width: `${Math.max(progress * 100, 8)}%` }}
+          />
+        </div>
+      )}
     </div>
   )
 }
