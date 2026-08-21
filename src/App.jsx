@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, animate } from 'framer-motion'
+import { Routes, Route, Navigate, Link as RouterLink } from 'react-router-dom'
+import { getT } from './i18n.jsx'
 import juliaPhoto from './assets/testimonials/julia-georgi.jpeg'
 import quentinPhoto from './assets/testimonials/quentin-chantelot.jpeg'
 import {
@@ -168,7 +170,11 @@ function PipelineFlow({ className = '' }) {
    language as PipelineFlow: thin rails, gradient particles,
    mono labels, dark chip surfaces.
 --------------------------------------------------------- */
-function SceneInvoice() {
+function SceneInvoice({ lang = 'fr' }) {
+  const s = {
+    fr: { pending: 'en attente', done: 'relancée ✓', sent: 'relance envoyée' },
+    en: { pending: 'pending', done: 'followed up ✓', sent: 'follow-up sent' },
+  }[lang]
   return (
     <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -195,14 +201,14 @@ function SceneInvoice() {
         </rect>
         <text x="90" y="124" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#8992AB" textAnchor="middle">
           <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.35;0.4;0.95;1" dur="4s" repeatCount="indefinite" />
-          en attente
+          {s.pending}
         </text>
         <rect x="52" y="112" width="76" height="18" rx="9" fill="none" stroke="#4ADE80" strokeWidth="1">
           <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.45;0.95;1" dur="4s" repeatCount="indefinite" />
         </rect>
         <text x="90" y="124" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#4ADE80" textAnchor="middle">
           <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.4;0.45;0.95;1" dur="4s" repeatCount="indefinite" />
-          relancée ✓
+          {s.done}
         </text>
       </g>
 
@@ -219,13 +225,13 @@ function SceneInvoice() {
         <path d="M -24 -14 L 0 4 L 24 -14" stroke="url(#sceneGrad)" strokeWidth="1.2" fill="none" />
       </g>
       <text x="300" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
-        relance envoyée
+        {s.sent}
       </text>
     </svg>
   )
 }
 
-function SceneEmailSort() {
+function SceneEmailSort({ lang = 'fr' }) {
   const mails = [
     { path: 'M 78 40 C 140 40, 195 90, 262 68', delay: '0s', color: '#3B82F6' },
     { path: 'M 78 100 C 140 100, 195 100, 262 100', delay: '0.9s', color: '#A855F7' },
@@ -245,7 +251,9 @@ function SceneEmailSort() {
         <rect x="-34" y="-24" width="68" height="48" rx="7" fill="#0B0F1A" stroke="#1C2440" strokeWidth="1.5" />
         <path d="M -34 -17 L 0 8 L 34 -17" stroke="#3A4062" strokeWidth="1.3" fill="none" />
       </g>
-      <text x="40" y="140" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">inbox</text>
+      <text x="40" y="140" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+        {lang === 'fr' ? 'inbox' : 'inbox'}
+      </text>
 
       {/* traveling envelopes, each with its own fade/motion + a tiny glowing "read" flash on arrival */}
       {mails.map((m, i) => (
@@ -263,25 +271,42 @@ function SceneEmailSort() {
       {/* folder: traité */}
       <g transform="translate(304 62)">
         <path d="M -32 -17 h 22 l 6 8 h 36 v 32 h -64 z" fill="#0B0F1A" stroke="#3B82F6" strokeWidth="1.4" />
-        <text y="38" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#60A5FA" textAnchor="middle">traité</text>
+        <text y="38" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#60A5FA" textAnchor="middle">
+          {lang === 'fr' ? 'traité' : 'handled'}
+        </text>
       </g>
       {/* folder: urgent */}
       <g transform="translate(304 142)">
         <path d="M -32 -17 h 22 l 6 8 h 36 v 32 h -64 z" fill="#0B0F1A" stroke="#A855F7" strokeWidth="1.4" />
-        <text y="38" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#C084FC" textAnchor="middle">urgent</text>
+        <text y="38" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#C084FC" textAnchor="middle">
+          {lang === 'fr' ? 'urgent' : 'urgent'}
+        </text>
       </g>
     </svg>
   )
 }
 
-function SceneSupport() {
-  const questions = [
-    ['Comment réinitialiser', 'mon mot de passe ?'],
-    ['Où trouver ma facture', 'du mois dernier ?'],
-    ['Puis-je changer de plan', 'à tout moment ?'],
-    ["Comment annuler mon", 'abonnement ?'],
-    ["L'export CSV ne", 'fonctionne plus ?'],
-  ]
+function SceneSupport({ lang = 'fr' }) {
+  const questions = {
+    fr: [
+      ['Comment réinitialiser', 'mon mot de passe ?'],
+      ['Où trouver ma facture', 'du mois dernier ?'],
+      ['Puis-je changer de plan', 'à tout moment ?'],
+      ["Comment annuler mon", 'abonnement ?'],
+      ["L'export CSV ne", 'fonctionne plus ?'],
+    ],
+    en: [
+      ['How do I reset', 'my password?'],
+      ['Where do I find', "last month's invoice?"],
+      ['Can I change plans', 'at any time?'],
+      ['How do I cancel', 'my subscription?'],
+      ['The CSV export', "isn't working?"],
+    ],
+  }[lang]
+  const s = {
+    fr: { received: 'question reçue', analysis: 'analyse', reply: 'réponse', resolved: 'résolu, sans escalade' },
+    en: { received: 'question received', analysis: 'analysis', reply: 'reply', resolved: 'resolved, no escalation' },
+  }[lang]
   const [qIndex, setQIndex] = useState(0)
 
   useEffect(() => {
@@ -289,7 +314,7 @@ function SceneSupport() {
       setQIndex((i) => (i + 1) % questions.length)
     }, 5000)
     return () => clearInterval(id)
-  }, [])
+  }, [lang])
 
   return (
     <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -305,9 +330,9 @@ function SceneSupport() {
       </defs>
 
       <g transform="translate(0 31)">
-        <text x="90" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">question reçue</text>
-        <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">analyse</text>
-        <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">réponse</text>
+        <text x="90" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.received}</text>
+        <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.analysis}</text>
+        <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.reply}</text>
 
         {/* incoming question bubble — text rotates through a few realistic
             questions every 5s, cross-fading so it never feels like a jump-cut */}
@@ -368,14 +393,14 @@ function SceneSupport() {
           </path>
         </g>
         <text x="320" y="128" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
-          résolu, sans escalade
+          {s.resolved}
         </text>
       </g>
     </svg>
   )
 }
 
-function SceneLeads() {
+function SceneLeads({ lang = 'fr' }) {
   const rawLeads = [
     { y: 130, delay: '0s' },
     { y: 45, delay: '0.35s' },
@@ -389,6 +414,34 @@ function SceneLeads() {
     { score: 31, color: '#5C6480', y: 146 },
   ]
   const maxBarWidth = 92
+  const labels = { fr: ['leads bruts', 'priorisés'], en: ['raw leads', 'prioritized'] }[lang]
+
+  // drives both the bar width AND the displayed number together, so the
+  // score visibly counts up as the bar grows instead of the number just
+  // appearing — same grow/hold/reset cadence as the old SMIL version,
+  // just numeric this time
+  const [counts, setCounts] = useState(ranked.map(() => 0))
+
+  useEffect(() => {
+    const controls = ranked.map((r, i) =>
+      animate([0, 0, r.score, r.score, 0], {
+        times: [0, 0.4, 0.5, 0.9, 1],
+        duration: 3.6,
+        delay: i * 0.9,
+        repeat: Infinity,
+        ease: 'linear',
+        onUpdate: (latest) => {
+          setCounts((prev) => {
+            const next = [...prev]
+            next[i] = Math.round(latest)
+            return next
+          })
+        },
+      })
+    )
+    return () => controls.forEach((c) => c.stop())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -408,8 +461,8 @@ function SceneLeads() {
       </defs>
 
       <g transform="translate(2 26)">
-        <text x="42" y="20" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">leads bruts</text>
-        <text x="300" y="20" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">priorisés</text>
+        <text x="42" y="20" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{labels[0]}</text>
+        <text x="300" y="20" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{labels[1]}</text>
 
         {/* raw, unordered leads continuously flowing toward the agent */}
         {rawLeads.map((l, i) => {
@@ -442,12 +495,12 @@ function SceneLeads() {
         {/* rail into the ranked list */}
         <path d="M 216 100 C 240 100, 250 100, 260 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
 
-        {/* sorted, readable priority list — each bar grows in sync with a
-            colored particle leaving the agent chip and reaching it, so the
-            score visibly builds up "live" instead of sitting there static */}
+        {/* sorted, readable priority list — bar width AND the score number
+            both driven by the same counts[i] state, so they move together */}
         {ranked.map((r, i) => {
           const particlePath = `M 206 100 C 230 100, 245 ${r.y}, 260 ${r.y}`
           const begin = `${i * 0.9}s`
+          const width = (counts[i] / 100) * maxBarWidth
           return (
             <g key={i}>
               <path d={particlePath} stroke="#161D33" strokeWidth="1" fill="none" opacity="0.5" />
@@ -464,20 +517,9 @@ function SceneLeads() {
               </circle>
 
               <rect x="260" y={r.y - 7} width={maxBarWidth} height="14" rx="4" fill="#111729" stroke="#1C2440" strokeWidth="1" />
-              <rect x="260" y={r.y - 7} height="14" rx="4" fill={r.color}>
-                <animate
-                  attributeName="width"
-                  values={`0;0;${(r.score / 100) * maxBarWidth};${(r.score / 100) * maxBarWidth};0`}
-                  keyTimes="0;0.40;0.50;0.9;1"
-                  dur="3.6s"
-                  begin={begin}
-                  repeatCount="indefinite"
-                />
-                <animate attributeName="opacity" values="0.7;0.95;0.95;0.7" keyTimes="0;0.5;0.9;1" dur="3.6s" begin={begin} repeatCount="indefinite" />
-              </rect>
+              <rect x="260" y={r.y - 7} width={width} height="14" rx="4" fill={r.color} opacity="0.9" />
               <text x={260 + maxBarWidth + 12} y={r.y + 4} fontFamily="JetBrains Mono, monospace" fontSize="11" fill={r.color} textAnchor="start">
-                <animate attributeName="opacity" values="0.3;0.3;1;1;0.3" keyTimes="0;0.4;0.5;0.9;1" dur="3.6s" begin={begin} repeatCount="indefinite" />
-                {r.score}
+                {counts[i] > 0 ? counts[i] : ''}
               </text>
             </g>
           )
@@ -487,7 +529,32 @@ function SceneLeads() {
   )
 }
 
-function SceneAppointment() {
+function SceneAppointment({ lang = 'fr' }) {
+  const requests = {
+    fr: [
+      ['Vous êtes dispo', 'demain 14h ?'],
+      ['Un créneau libre', 'cette semaine ?'],
+      ['On peut se voir', 'vendredi matin ?'],
+      ['Dispo pour un appel', 'lundi prochain ?'],
+    ],
+    en: [
+      ['Are you free', 'tomorrow at 2pm?'],
+      ['Any slot open', 'this week?'],
+      ['Can we meet', 'Friday morning?'],
+      ['Free for a call', 'next Monday?'],
+    ],
+  }
+  const t = {
+    fr: { demande: 'demande', creneau: 'créneau libre', confirme: 'confirmé', demain: 'demain', rappel: 'rappel programmé' },
+    en: { demande: 'request', creneau: 'open slot', confirme: 'confirmed', demain: 'tomorrow', rappel: 'reminder set' },
+  }[lang]
+  const [qIndex, setQIndex] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setQIndex((i) => (i + 1) % requests[lang].length), 5000)
+    return () => clearInterval(id)
+  }, [lang])
+
   return (
     <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -502,16 +569,31 @@ function SceneAppointment() {
       </defs>
 
       <g transform="translate(0 31)">
-        <text x="86" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">demande</text>
-        <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">créneau libre</text>
-        <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">confirmé</text>
+        <text x="86" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{t.demande}</text>
+        <text x="210" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{t.creneau}</text>
+        <text x="318" y="26" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{t.confirme}</text>
 
-        {/* incoming request bubble */}
+        {/* incoming request bubble — text rotates through a few realistic
+            requests every 5s, cross-fading like the support scene */}
         <g>
           <rect x="24" y="46" width="128" height="50" rx="14" fill="#0B0F1A" stroke="#1C2440" strokeWidth="1.5" />
           <path d="M 44 96 l -10 14 l 20 -8 z" fill="#0B0F1A" stroke="#1C2440" strokeWidth="1.5" />
-          <text x="40" y="68" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">Vous êtes dispo</text>
-          <text x="40" y="84" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">demain 14h ?</text>
+          <AnimatePresence mode="wait">
+            <motion.g
+              key={qIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <text x="40" y="68" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">
+                {requests[lang][qIndex][0]}
+              </text>
+              <text x="40" y="84" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">
+                {requests[lang][qIndex][1]}
+              </text>
+            </motion.g>
+          </AnimatePresence>
         </g>
 
         {/* rail to agent chip */}
@@ -544,7 +626,7 @@ function SceneAppointment() {
         <g transform="translate(282 66)">
           <rect width="76" height="46" rx="10" fill="#0B0F1A" stroke="url(#sceneGrad5)" strokeWidth="1.4" />
           <rect x="0" y="0" width="76" height="13" rx="10" fill="#161D33" />
-          <text x="38" y="10" fontFamily="JetBrains Mono, monospace" fontSize="8" fill="#8992AB" textAnchor="middle">demain</text>
+          <text x="38" y="10" fontFamily="JetBrains Mono, monospace" fontSize="8" fill="#8992AB" textAnchor="middle">{t.demain}</text>
           <text x="38" y="34" fontFamily="JetBrains Mono, monospace" fontSize="13" fill="#4ADE80" textAnchor="middle">14:00</text>
           {/* confirmation badge — sits on the gradient border, top-right
               corner, rather than overlapping the time text */}
@@ -555,18 +637,22 @@ function SceneAppointment() {
           </g>
         </g>
         <text x="320" y="128" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
-          rappel programmé
+          {t.rappel}
         </text>
       </g>
     </svg>
   )
 }
 
-function SceneMonitoring() {
+function SceneMonitoring({ lang = 'fr' }) {
+  const s = {
+    fr: { signaux: 'signaux', alerte: 'alerte', prevenue: 'équipe prévenue', latence: 'latence', erreurs: 'erreurs', trafic: 'trafic' },
+    en: { signaux: 'signals', alerte: 'alert', prevenue: 'team notified', latence: 'latency', erreurs: 'errors', trafic: 'traffic' },
+  }[lang]
   const signals = [
-    { y: 40, color: '#60A5FA', label: 'latence' },
-    { y: 100, color: '#FBBF24', label: 'erreurs' },
-    { y: 160, color: '#4ADE80', label: 'trafic' },
+    { y: 40, color: '#60A5FA', label: s.latence },
+    { y: 100, color: '#FBBF24', label: s.erreurs },
+    { y: 160, color: '#4ADE80', label: s.trafic },
   ]
   const wave = 'M 168 105 L 186 103 L 200 107 L 215 101 L 230 105 L 245 65 L 258 125 L 275 103 L 300 104'
 
@@ -588,8 +674,8 @@ function SceneMonitoring() {
       </defs>
 
       <g transform="translate(0 26)">
-        <text x="42" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">signaux</text>
-        <text x="330" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">alerte</text>
+        <text x="42" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.signaux}</text>
+        <text x="330" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.alerte}</text>
 
         {/* multiple colored metric sources, each a tiny sparkline, all
             feeding into the agent — it's the one that decides which
@@ -615,6 +701,11 @@ function SceneMonitoring() {
             <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
           </circle>
           <rect x="-12" y="-12" width="24" height="24" rx="6" fill="#0B0F1A" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
+          {[-6, -1, 4].map((x, i) => (
+            <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="#C084FC">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
         </g>
 
         {/* rail from chip to the chosen response */}
@@ -642,14 +733,18 @@ function SceneMonitoring() {
           <path d="M -6 -6 q 6 -8 12 0 q 0 8 3 10 h -18 q 3 -2 3 -10" fill="none" stroke="#F87171" strokeWidth="1.4" strokeLinejoin="round" />
         </g>
         <text x="320" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
-          équipe prévenue
+          {s.prevenue}
         </text>
       </g>
     </svg>
   )
 }
 
-function SceneExtraction() {
+function SceneExtraction({ lang = 'fr' }) {
+  const s = {
+    fr: { scanned: 'document scanné', structured: 'données structurées', client: 'client', montant: 'montant', date: 'date' },
+    en: { scanned: 'scanned document', structured: 'structured data', client: 'client', montant: 'amount', date: 'date' },
+  }[lang]
   return (
     <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -664,8 +759,8 @@ function SceneExtraction() {
       </defs>
 
       <g transform="translate(0 26)">
-        <text x="66" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">document scanné</text>
-        <text x="310" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">données structurées</text>
+        <text x="66" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.scanned}</text>
+        <text x="310" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.structured}</text>
 
         {/* scanned document, with a scan-line sweeping down it on loop */}
         <g transform="translate(50 100)">
@@ -703,9 +798,9 @@ function SceneExtraction() {
 
         {/* structured fields appearing one by one */}
         {[
-          { label: 'client', value: 'SARL Dupont', y: 56 },
-          { label: 'montant', value: '1 240 €', y: 88 },
-          { label: 'date', value: '12/03', y: 120 },
+          { label: s.client, value: 'SARL Dupont', y: 56 },
+          { label: s.montant, value: '1 240 €', y: 88 },
+          { label: s.date, value: '12/03', y: 120 },
         ].map((f, i) => (
           <g key={i}>
             <rect x="262" y={f.y - 14} width="100" height="28" rx="6" fill="#111729" stroke="#1C2440" strokeWidth="1">
@@ -726,18 +821,29 @@ function SceneExtraction() {
   )
 }
 
-function SceneCompetitiveWatch() {
-  const digests = [
-    ['Concurrent A : -12%', 'sur les prix'],
-    ['3 avis négatifs chez', 'le concurrent B'],
-    ['Concurrent C lance', 'une feature IA'],
-  ]
+function SceneCompetitiveWatch({ lang = 'fr' }) {
+  const digests = {
+    fr: [
+      ['Concurrent A : -12%', 'sur les prix'],
+      ['3 avis négatifs chez', 'le concurrent B'],
+      ['Concurrent C lance', 'une feature IA'],
+    ],
+    en: [
+      ['Competitor A: -12%', 'on pricing'],
+      ['3 negative reviews', 'for competitor B'],
+      ['Competitor C ships', 'an AI feature'],
+    ],
+  }[lang]
+  const s = {
+    fr: { sources: 'sources', digest: 'digest', updated: 'mis à jour chaque jour' },
+    en: { sources: 'sources', digest: 'digest', updated: 'updated every day' },
+  }[lang]
   const [dIndex, setDIndex] = useState(0)
 
   useEffect(() => {
     const id = setInterval(() => setDIndex((i) => (i + 1) % digests.length), 4200)
     return () => clearInterval(id)
-  }, [])
+  }, [lang])
 
   return (
     <svg viewBox="0 0 380 220" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -749,8 +855,8 @@ function SceneCompetitiveWatch() {
       </defs>
 
       <g transform="translate(0 26)">
-        <text x="46" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">sources</text>
-        <text x="300" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">digest</text>
+        <text x="46" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.sources}</text>
+        <text x="300" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.digest}</text>
 
         {/* watched sources — pulled in tighter to the left so the digest
             card on the right has plenty of room for real sentences */}
@@ -777,6 +883,11 @@ function SceneCompetitiveWatch() {
             <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3.4s" repeatCount="indefinite" />
           </circle>
           <rect x="-11" y="-11" width="22" height="22" rx="6" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+          {[-5.5, -1, 3.5].map((x, i) => (
+            <rect key={i} x={x} y="-4.5" width="1.8" height="9" rx="0.9" fill="#C084FC">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
         </g>
 
         <path d="M 168 100 C 178 100, 182 100, 190 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
@@ -804,7 +915,7 @@ function SceneCompetitiveWatch() {
           </AnimatePresence>
         </g>
         <text x="276" y="162" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
-          mis à jour chaque jour
+          {s.updated}
         </text>
       </g>
     </svg>
@@ -835,13 +946,15 @@ function RevealSection({ children, className = '', id }) {
   )
 }
 
-function Nav() {
+function Nav({ lang, t }) {
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const otherLang = lang === 'fr' ? 'en' : 'fr'
 
   return (
     <header
@@ -852,22 +965,31 @@ function Nav() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="#top" className="font-display font-semibold text-2xl tracking-tight flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue to-violet" />
-          <span>agentic<span className="text-gradient">-factory</span></span>
+          <span className="text-gradient">agentic-factory</span>
         </a>
-        <a
-          href="https://calendly.com/busshidev/meeting"
-          target="_blank"
-          rel="noreferrer"
-          className="font-mono text-xs tracking-wide px-4 py-2 rounded-full border border-line hover:border-violet/60 transition-colors"
-        >
-          Audit gratuit
-        </a>
+        <div className="flex items-center gap-4">
+          <RouterLink
+            to={`/${otherLang}`}
+            className="font-mono text-xs text-muted2 hover:text-text transition-colors"
+            aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+          >
+            {otherLang.toUpperCase()}
+          </RouterLink>
+          <a
+            href="https://calendly.com/busshidev/meeting"
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono text-xs tracking-wide px-4 py-2 rounded-full border border-line hover:border-violet/60 transition-colors"
+          >
+            {t.nav.cta}
+          </a>
+        </div>
       </div>
     </header>
   )
 }
 
-function Hero() {
+function Hero({ lang, t }) {
   const heroScenes = [SceneInvoice, SceneEmailSort, SceneAppointment, SceneSupport, SceneLeads, SceneMonitoring, SceneExtraction, SceneCompetitiveWatch]
   const [heroActive, setHeroActive] = useState(0)
 
@@ -890,15 +1012,13 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Eyebrow>Freelance · Agents IA</Eyebrow>
+          <Eyebrow>{t.hero.eyebrow}</Eyebrow>
           <h1 className="font-display font-semibold text-4xl sm:text-5xl md:text-6xl leading-[1.08] mt-6 max-w-3xl">
-            Vos tâches répétitives méritent mieux qu'un stagiaire.{' '}
-            <span className="text-gradient">Elles méritent un agent.</span>
+            {t.hero.titleA}{' '}
+            <span className="text-gradient">{t.hero.titleB}</span>
           </h1>
           <p className="text-muted text-lg mt-6 max-w-xl leading-relaxed">
-            Des agents IA codés sur-mesure, branchés sur vos outils réels — pas des
-            scénarios no-code qui lâchent au premier imprévu. Moins de tâches
-            répétitives, plus de temps pour ce qui compte vraiment.
+            {t.hero.subtitle}
           </p>
           <div className="flex flex-wrap items-center gap-4 mt-9">
             <a
@@ -907,14 +1027,14 @@ function Hero() {
               rel="noreferrer"
               className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue to-violet text-white font-medium px-6 py-3.5 rounded-full hover:opacity-90 transition-opacity"
             >
-              Réserver mon audit gratuit
+              {t.hero.ctaPrimary}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </a>
             <a
               href="#cas-usage"
               className="font-mono text-sm text-muted hover:text-text transition-colors inline-flex items-center gap-1"
             >
-              Voir les cas d'usage
+              {t.hero.ctaSecondary}
               <ChevronRight className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -935,7 +1055,7 @@ function Hero() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-2 sm:inset-6"
             >
-              <HeroScene />
+              <HeroScene lang={lang} />
             </motion.div>
           </AnimatePresence>
         </motion.div>
@@ -944,60 +1064,35 @@ function Hero() {
   )
 }
 
-function Problem() {
+function Problem({ t }) {
   return (
     <RevealSection className="px-6 py-24 border-t border-line">
       <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_1.2fr] gap-12 items-start">
         <div>
-          <Eyebrow>Le constat</Eyebrow>
+          <Eyebrow>{t.problem.eyebrow}</Eyebrow>
           <h2 className="font-display font-semibold text-3xl sm:text-4xl mt-5 leading-tight">
-            Vous savez que vous perdez du temps.
-            <br />
-            Vous n'avez juste personne pour le récupérer.
+            {t.problem.title}
           </h2>
         </div>
         <div className="space-y-5 text-muted text-lg leading-relaxed">
-          <p>
-            Le lundi matin, ce sont encore les mêmes relances à envoyer à la main, la
-            même boîte mail à trier, le même reporting à refaire depuis zéro.
-          </p>
-          <p>
-            Ni la PME ni la startup de cinq personnes n'ont de développeur IA sous la
-            main pour changer ça — la seconde est déjà occupée à faire tourner le
-            produit. Pas faute de solution : faute de quelqu'un pour la construire.
-          </p>
+          <p>{t.problem.p1}</p>
+          <p>{t.problem.p2}</p>
         </div>
       </div>
     </RevealSection>
   )
 }
 
-function ValueProp() {
-  const points = [
-    {
-      icon: Terminal,
-      title: 'Codé, pas juste configuré',
-      text: "Chaque agent s'intègre à votre stack réelle — API, base de données, outils métier — là où un scénario no-code casse au premier cas particulier.",
-    },
-    {
-      icon: Workflow,
-      title: 'Un audit avant tout engagement',
-      text: "On identifie ensemble le process qui vous coûte le plus de temps, avant de parler d'implémentation. Pas de vente d'automatisation dont vous n'avez pas besoin.",
-    },
-    {
-      icon: GitBranch,
-      title: 'Pensé pour la prod, pas pour la démo',
-      text: 'Front, back, infra : un agent qui tourne réellement en production, pas une démo qui impressionne en réunion puis reste dans les cartons.',
-    },
-  ]
+function ValueProp({ t }) {
+  const icons = [Terminal, Workflow, GitBranch]
+  const points = t.valueProp.cards.map((c, i) => ({ ...c, icon: icons[i] }))
 
   return (
     <RevealSection className="px-6 py-24 border-t border-line bg-surface/30">
       <div className="max-w-6xl mx-auto">
-        <Eyebrow>Ce qui change</Eyebrow>
+        <Eyebrow>{t.valueProp.eyebrow}</Eyebrow>
         <h2 className="font-display font-semibold text-3xl sm:text-4xl mt-5 max-w-2xl leading-tight">
-          Configurer une automatisation, tout le monde sait faire. La coder pour
-          qu'elle tienne dans vos vrais systèmes, c'est une autre affaire.
+          {t.valueProp.title}
         </h2>
         <div className="grid sm:grid-cols-3 gap-6 mt-14">
           {points.map((p, i) => (
@@ -1020,65 +1115,17 @@ function ValueProp() {
   )
 }
 
-function UseCases() {
-  const cases = [
-    {
-      icon: FileSpreadsheet,
-      tag: 'PME',
-      title: 'Facturation & relances',
-      text: "Un agent qui suit vos factures impayées, relance automatiquement au bon ton et au bon moment, et vous alerte seulement quand une décision humaine est nécessaire.",
-      Scene: SceneInvoice,
-    },
-    {
-      icon: Mail,
-      tag: 'PME',
-      title: 'Tri et réponse aux emails',
-      text: "Classement automatique, réponses aux demandes récurrentes, remontée des urgences en tête de file. Votre boîte mail arrête de dicter votre journée.",
-      Scene: SceneEmailSort,
-    },
-    {
-      icon: CalendarCheck,
-      tag: 'PME',
-      title: 'Prise de rendez-vous automatisée',
-      text: "Un agent qui propose vos créneaux libres, confirme le rendez-vous et programme le rappel — sans allers-retours par email pour trouver une heure qui convient.",
-      Scene: SceneAppointment,
-    },
-    {
-      icon: Bot,
-      tag: 'Startup',
-      title: 'Support client autonome',
-      text: "Un agent entraîné sur votre doc produit et votre historique de tickets, qui répond directement aux questions récurrentes et n'escalade vers l'équipe que ce qui le mérite vraiment.",
-      Scene: SceneSupport,
-    },
-    {
-      icon: Server,
-      tag: 'Startup',
-      title: 'Qualification des leads inbound',
-      text: "Chaque lead entrant (site, formulaire, waitlist) est enrichi et priorisé automatiquement avant qu'un humain n'y touche. L'équipe commerciale ne voit que ce qui vaut vraiment un call.",
-      Scene: SceneLeads,
-    },
-    {
-      icon: BellRing,
-      tag: 'Startup',
-      title: 'Veille & alerting produit',
-      text: "Un agent qui surveille vos métriques en continu et ne prévient l'équipe que sur une vraie anomalie — fini le bruit de notifications qu'on finit par ignorer.",
-      Scene: SceneMonitoring,
-    },
-    {
-      icon: FileSearch,
-      tag: 'PME',
-      title: 'Extraction de données depuis vos documents',
-      text: "Factures, bons de commande, devis scannés : un agent qui lit vos documents et en extrait les données utiles directement dans votre tableur ou votre logiciel de gestion.",
-      Scene: SceneExtraction,
-    },
-    {
-      icon: Radar,
-      tag: 'Startup',
-      title: 'Veille concurrentielle automatisée',
-      text: "Un agent qui surveille en continu vos concurrents (prix, avis, nouvelles fonctionnalités) et vous livre un résumé chaque jour, plutôt qu'une heure de recherche manuelle.",
-      Scene: SceneCompetitiveWatch,
-    },
-  ]
+function UseCases({ lang, t }) {
+  const icons = [FileSpreadsheet, Mail, CalendarCheck, Bot, Server, BellRing, FileSearch, Radar]
+  const scenes = [SceneInvoice, SceneEmailSort, SceneAppointment, SceneSupport, SceneLeads, SceneMonitoring, SceneExtraction, SceneCompetitiveWatch]
+  const tagKeys = ['tagPME', 'tagPME', 'tagPME', 'tagStartup', 'tagStartup', 'tagStartup', 'tagPME', 'tagStartup']
+
+  const cases = t.useCases.cases.map((c, i) => ({
+    ...c,
+    icon: icons[i],
+    Scene: scenes[i],
+    tag: t.useCases[tagKeys[i]],
+  }))
 
   const [active, setActive] = useState(0)
   const ActiveScene = cases[active].Scene
@@ -1156,9 +1203,9 @@ function UseCases() {
   return (
     <RevealSection id="cas-usage" className="px-6 py-24 border-t border-line">
       <div className="max-w-6xl mx-auto">
-        <Eyebrow>Cas d'usage</Eyebrow>
+        <Eyebrow>{t.useCases.eyebrow}</Eyebrow>
         <h2 className="font-display font-semibold text-3xl sm:text-4xl mt-5 max-w-2xl leading-tight">
-          Adapté à votre structure, pas un template générique
+          {t.useCases.title}
         </h2>
 
         {/* stage panel — shows the illustrated scene for the hovered/focused/tapped card */}
@@ -1173,7 +1220,7 @@ function UseCases() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0 p-4 sm:p-6"
             >
-              <ActiveScene />
+              <ActiveScene lang={lang} />
             </motion.div>
           </AnimatePresence>
         </div>
@@ -1246,7 +1293,7 @@ function UseCases() {
   )
 }
 
-function Credibility() {
+function Credibility({ t }) {
   const stack = [
     'TypeScript', 'React / Next.js', 'NestJS', 'Node.js', 'Python / Django', 'GraphQL', 'PostgreSQL', 'Docker',
   ]
@@ -1255,15 +1302,12 @@ function Credibility() {
     <RevealSection className="px-6 py-24 border-t border-line bg-surface/30">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-start">
         <div>
-          <Eyebrow>Comment je travaille</Eyebrow>
+          <Eyebrow>{t.credibility.eyebrow}</Eyebrow>
           <h2 className="font-display font-semibold text-3xl sm:text-4xl mt-5 leading-tight">
-            5 ans de freelance, une pratique sérieuse de l'agentic
+            {t.credibility.title}
           </h2>
           <p className="text-muted text-lg leading-relaxed mt-6">
-            Chaque agent que je livre est pensé pour durer, pas pour impressionner en
-            démo et lâcher au premier pic d'activité. Hébergé sur des infrastructures
-            cloud fiables (AWS, GCP), il continue de tourner même quand votre activité
-            s'accélère.
+            {t.credibility.text}
           </p>
           <a
             href="https://www.linkedin.com/in/alexandre-dubar"
@@ -1271,13 +1315,13 @@ function Credibility() {
             rel="noreferrer"
             className="inline-flex items-center gap-1.5 font-mono text-sm text-blue-soft hover:text-violet-soft transition-colors mt-6"
           >
-            Voir les recommandations sur LinkedIn
+            {t.credibility.linkedinCta}
             <ChevronRight className="w-3.5 h-3.5" />
           </a>
         </div>
         <div>
           <p className="font-mono text-xs tracking-widest uppercase text-muted2 mb-4">
-            stack
+            {t.credibility.stackLabel}
           </p>
           <div className="flex flex-wrap gap-2.5">
             {stack.map((s) => (
@@ -1295,28 +1339,14 @@ function Credibility() {
   )
 }
 
-function Testimonials() {
-  const quotes = [
-    {
-      text: "Alexandre a été clé pendant sa mission de plusieurs mois chez Notice. Il a su s'intégrer à une stack complexe, communiquer et se rendre utile dès le premier jour.",
-      name: 'Quentin Chantelot',
-      role: 'Founder & CTO, Notice',
-      context: 'Client',
-      photo: quentinPhoto,
-    },
-    {
-      text: "J'ai fait appel à Alexandre pour nous aider à construire une solution de tarification et de devis très complexe, et je ne le regrette pas une seconde. Une personne compétente, agréable et fiable.",
-      name: 'Julia Georgi',
-      role: 'Founder @ Georgia',
-      context: 'Ex-supérieure',
-      photo: juliaPhoto,
-    },
-  ]
+function Testimonials({ t }) {
+  const photos = [quentinPhoto, juliaPhoto]
+  const quotes = t.testimonials.quotes.map((q, i) => ({ ...q, photo: photos[i] }))
 
   return (
     <RevealSection className="px-6 py-20 border-t border-line">
       <div className="max-w-6xl mx-auto">
-        <Eyebrow>Ce qu'on dit de moi</Eyebrow>
+        <Eyebrow>{t.testimonials.eyebrow}</Eyebrow>
         <div className="grid sm:grid-cols-2 gap-6 mt-10">
           {quotes.map((q, i) => (
             <motion.div
@@ -1332,7 +1362,7 @@ function Testimonials() {
               <div className="flex items-center gap-3 mt-5 pt-4 border-t border-line/70">
                 <img
                   src={q.photo}
-                  alt={`Photo de ${q.name}`}
+                  alt={q.name}
                   className="w-10 h-10 rounded-full object-cover border border-line"
                   loading="lazy"
                 />
@@ -1357,7 +1387,7 @@ function Testimonials() {
    Kept as styled wordmarks for now: reproducing official trademarked
    logos (especially institutional ones) requires the client's explicit
    authorization to use them commercially. */
-function TrustLogos() {
+function TrustLogos({ t }) {
   const logos = [
     { name: 'PriceBee', note: 'racheté par XBE' },
     { name: 'Notice' },
@@ -1371,7 +1401,7 @@ function TrustLogos() {
     <RevealSection className="py-16 border-t border-line overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 text-center">
         <p className="font-mono text-xs tracking-widest uppercase text-muted2">
-          Ils m'ont fait confiance
+          {t.trustLogos.title}
         </p>
       </div>
       <div className="relative mt-8 group [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
@@ -1390,18 +1420,17 @@ function TrustLogos() {
   )
 }
 
-function FinalCTA() {
+function FinalCTA({ t }) {
   return (
     <RevealSection id="contact" className="px-6 py-28 border-t border-line relative overflow-hidden">
       <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
       <div className="max-w-3xl mx-auto text-center relative">
-        <Eyebrow>Étape suivante</Eyebrow>
+        <Eyebrow>{t.finalCta.eyebrow}</Eyebrow>
         <h2 className="font-display font-semibold text-3xl sm:text-4xl md:text-5xl mt-5 leading-tight">
-          Un audit gratuit pour identifier ce qui vaut la peine d'être automatisé
+          {t.finalCta.title}
         </h2>
         <p className="text-muted text-lg mt-6 max-w-xl mx-auto leading-relaxed">
-          30 minutes pour regarder votre process le plus chronophage, et vous dire
-          honnêtement si un agent IA le vaut. Sans engagement.
+          {t.finalCta.text}
         </p>
         <a
           href="https://calendly.com/busshidev/meeting"
@@ -1409,7 +1438,7 @@ function FinalCTA() {
           rel="noreferrer"
           className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue to-violet text-white font-medium px-7 py-4 rounded-full hover:opacity-90 transition-opacity mt-9"
         >
-          Réserver mon audit gratuit
+          {t.finalCta.cta}
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </a>
       </div>
@@ -1422,7 +1451,7 @@ function Footer() {
     <footer className="px-6 py-10 border-t border-line">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted2">
         <span className="font-mono">
-          agentic<span className="text-gradient">-factory</span>
+          <span className="text-gradient">agentic-factory</span>
         </span>
         <div className="flex items-center gap-6">
           <a href="https://www.linkedin.com/in/alexandre-dubar" target="_blank" rel="noreferrer" className="hover:text-text transition-colors">
@@ -1437,19 +1466,58 @@ function Footer() {
   )
 }
 
-export default function App() {
+/* One full render of the site for a given locale. Both /fr and /en mount
+   this same component with a different `lang`, so the whole page — copy,
+   scene labels, <html lang>, canonical — switches together. */
+function Site({ lang }) {
+  const t = getT(lang)
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+
+    // canonical + og:url should reflect whichever locale is actually being
+    // viewed, not always the French default
+    const canonical = document.querySelector('link[rel="canonical"]')
+    if (canonical) canonical.setAttribute('href', `https://agentic-factory.fr/${lang}`)
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) ogUrl.setAttribute('content', `https://agentic-factory.fr/${lang}`)
+    const ogLocale = document.querySelector('meta[property="og:locale"]')
+    if (ogLocale) ogLocale.setAttribute('content', lang === 'fr' ? 'fr_FR' : 'en_US')
+  }, [lang])
+
   return (
     <div className="min-h-screen">
-      <Nav />
-      <Hero />
-      <Problem />
-      <ValueProp />
-      <UseCases />
-      <Credibility />
-      <Testimonials />
-      <TrustLogos />
-      <FinalCTA />
+      <Nav lang={lang} t={t} />
+      <Hero lang={lang} t={t} />
+      <Problem t={t} />
+      <ValueProp t={t} />
+      <UseCases lang={lang} t={t} />
+      <Credibility t={t} />
+      <Testimonials t={t} />
+      <TrustLogos t={t} />
+      <FinalCTA t={t} />
       <Footer />
     </div>
+  )
+}
+
+/* Detects the browser's language on first load and sends the person to
+   /fr or /en accordingly. Only used at the bare "/" — once someone is on
+   a locale URL, that URL is the source of truth (no further redirects),
+   so a shared link always shows what the sender intended. */
+function LanguageRedirect() {
+  const browserLang = typeof navigator !== 'undefined' ? navigator.language : 'fr'
+  const target = browserLang.toLowerCase().startsWith('fr') ? '/fr' : '/en'
+  return <Navigate to={target} replace />
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LanguageRedirect />} />
+      <Route path="/fr" element={<Site lang="fr" />} />
+      <Route path="/en" element={<Site lang="en" />} />
+      <Route path="*" element={<LanguageRedirect />} />
+    </Routes>
   )
 }
