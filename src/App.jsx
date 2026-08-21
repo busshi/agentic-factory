@@ -1385,12 +1385,10 @@ function CategoryCarousel({ tag, items, active, setActive, markInteraction, hove
   useLayoutEffect(() => {
     updateProgress()
     // whether the row overflows depends on viewport width — re-check on
-    // resize so the bar (and the fixed vs. stretched card width below)
-    // update as the layout crosses the point where all cards fit without
-    // scrolling. useLayoutEffect (not useEffect) so this first measurement
-    // happens before paint — otherwise cards briefly stretch full-width on
-    // load, even on narrow screens where they need to stay fixed-width for
-    // the swipeable row, before snapping to their real size a frame later.
+    // resize so the progress bar appears/disappears as the layout crosses
+    // the point where all cards fit without scrolling. useLayoutEffect (not
+    // useEffect) so the bar doesn't flash visible for a frame on load
+    // before this first measurement runs.
     window.addEventListener('resize', updateProgress)
     return () => window.removeEventListener('resize', updateProgress)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1429,9 +1427,9 @@ function CategoryCarousel({ tag, items, active, setActive, markInteraction, hove
               markInteraction()
             }}
             tabIndex={0}
-            className={`group snap-start p-6 rounded-2xl border bg-surface/40 hover:bg-surface2/60 transition-colors relative overflow-hidden cursor-default ${
-              hasOverflow ? 'shrink-0 w-[260px]' : 'flex-1 min-w-[220px]'
-            } ${active === c.idx ? 'border-violet/50' : 'border-line'}`}
+            className={`group snap-start flex-1 min-w-[260px] p-6 rounded-2xl border bg-surface/40 hover:bg-surface2/60 transition-colors relative overflow-hidden cursor-default ${
+              active === c.idx ? 'border-violet/50' : 'border-line'
+            }`}
           >
             <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-gradient-to-br from-blue/10 to-violet/10 blur-2xl group-hover:opacity-100 opacity-0 transition-opacity" />
             <c.icon className="w-5 h-5 text-violet-soft" strokeWidth={1.6} />
