@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { motion, AnimatePresence, animate } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Routes, Route, Navigate, Link as RouterLink } from 'react-router-dom'
 import { getT } from './i18n.jsx'
 import juliaPhoto from './assets/testimonials/julia-georgi.jpeg'
@@ -418,28 +418,45 @@ function SceneLeads({ lang = 'fr' }) {
 
   // drives both the bar width AND the displayed number together, so the
   // score visibly counts up as the bar grows instead of the number just
-  // appearing — same grow/hold/reset cadence as the old SMIL version,
-  // just numeric this time
+  // appearing. Implemented as a plain requestAnimationFrame loop rather
+  // than framer-motion's standalone animate() — that call was throwing
+  // ("WeakMap keys must be objects") when fed a raw keyframes array with
+  // no attached subject/element, so a small hand-rolled interpolator is
+  // both simpler and more reliable here.
   const [counts, setCounts] = useState(ranked.map(() => 0))
 
   useEffect(() => {
-    const controls = ranked.map((r, i) =>
-      animate([0, 0, r.score, r.score, 0], {
-        times: [0, 0.4, 0.5, 0.9, 1],
-        duration: 3.6,
-        delay: i * 0.9,
-        repeat: Infinity,
-        ease: 'linear',
-        onUpdate: (latest) => {
-          setCounts((prev) => {
-            const next = [...prev]
-            next[i] = Math.round(latest)
-            return next
-          })
-        },
-      })
-    )
-    return () => controls.forEach((c) => c.stop())
+    const DURATION = 3600 // ms, matches the old dur="3.6s"
+    const TIMES = [0, 0.4, 0.5, 0.9, 1]
+    let rafId
+    const start = performance.now()
+
+    function valueAt(score, frac) {
+      const values = [0, 0, score, score, 0]
+      for (let k = 0; k < TIMES.length - 1; k++) {
+        if (frac >= TIMES[k] && frac <= TIMES[k + 1]) {
+          const span = TIMES[k + 1] - TIMES[k] || 1
+          const segFrac = (frac - TIMES[k]) / span
+          return values[k] + (values[k + 1] - values[k]) * segFrac
+        }
+      }
+      return values[values.length - 1]
+    }
+
+    function tick(now) {
+      const elapsed = now - start
+      setCounts(
+        ranked.map((r, i) => {
+          const delay = i * 900 // ms, matches the old begin={i*0.9s}
+          const local = ((elapsed - delay) % DURATION + DURATION) % DURATION
+          return Math.round(valueAt(r.score, local / DURATION))
+        })
+      )
+      rafId = requestAnimationFrame(tick)
+    }
+
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
