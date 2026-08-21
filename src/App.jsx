@@ -984,7 +984,7 @@ function Nav({ lang, t }) {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="#top" className="font-display font-semibold text-2xl tracking-tight flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue to-violet" />
-          <span className="text-gradient">agentic-factory</span>
+          <span className="text-gradient">agentic-factory.fr</span>
         </a>
         <div className="flex items-center gap-4">
           <RouterLink
@@ -1523,7 +1523,7 @@ function Footer({ t }) {
     <footer className="px-6 py-10 border-t border-line">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted2">
         <span className="font-mono">
-          <span className="text-gradient">agentic-factory</span>
+          <span className="text-gradient">agentic-factory.fr</span>
         </span>
         <div className="flex items-center gap-5">
           <a
@@ -1581,6 +1581,12 @@ function Site({ lang }) {
     if (ogUrl) ogUrl.setAttribute('content', `https://agentic-factory.fr/${lang}`)
     const ogLocale = document.querySelector('meta[property="og:locale"]')
     if (ogLocale) ogLocale.setAttribute('content', lang === 'fr' ? 'fr_FR' : 'en_US')
+
+    const ogImageUrl = `https://agentic-factory.fr/og-image${lang === 'en' ? '-en' : ''}.png`
+    const ogImage = document.querySelector('meta[property="og:image"]')
+    if (ogImage) ogImage.setAttribute('content', ogImageUrl)
+    const twitterImage = document.querySelector('meta[name="twitter:image"]')
+    if (twitterImage) twitterImage.setAttribute('content', ogImageUrl)
   }, [lang])
 
   return (

@@ -77,9 +77,10 @@ connaissance de cause plutôt que je le décide à ta place.
   par route via JS (voir limite ci-dessus).
 - **hreflang** : alternates `fr`/`en`/`x-default` déclarés dans
   `index.html` et dans `sitemap.xml`.
-- **`og-image.png`** : référencée dans les balises Open Graph/Twitter mais le
-  fichier n'existe pas encore — génère un visuel de partage (1200×630px) et
-  dépose-le dans `public/og-image.png` avant mise en ligne.
+- **`og-image.png`** : visuel de partage (1200×630px) dans `public/`,
+  généré à partir de la charte du site (fond, grille, dégradé bleu/violet,
+  wordmark). Si le hero ou le positionnement changent significativement,
+  pense à le régénérer pour rester cohérent.
 - **Données structurées** : un bloc JSON-LD `ProfessionalService` (bilingue
   via `availableLanguage`) dans `index.html`.
 - **`llms.txt`** : résumé en clair de l'activité pour les moteurs IA — encore
@@ -98,7 +99,6 @@ connaissance de cause plutôt que je le décide à ta place.
   Octolo, La Poste, Ministère de l'Éducation nationale), vérifie d'abord
   l'autorisation d'usage commercial — particulièrement sensible pour les
   logos institutionnels.
-- **`og-image.png`** : à créer, voir section SEO/GEO ci-dessus.
 - **CTA de contact** : pointe vers https://calendly.com/busshidev/meeting
   (Hero, Nav, CTA final).
 - **Déploiement** : le projet est prêt pour Vercel ou Netlify après
