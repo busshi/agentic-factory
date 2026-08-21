@@ -84,7 +84,7 @@ export function Hero({ lang, t }: HeroProps) {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 sm:mt-20 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm p-2 sm:p-10 h-[320px] sm:h-[420px] relative overflow-hidden"
+          className="mt-10 sm:mt-20 rounded-2xl border border-line bg-surface/60 backdrop-blur-sm p-2 sm:p-8 h-[260px] sm:h-[340px] relative overflow-hidden"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -93,7 +93,7 @@ export function Hero({ lang, t }: HeroProps) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.97 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-2 sm:inset-6"
+              className="absolute inset-2 sm:inset-5"
             >
               <HeroScene lang={lang} />
             </motion.div>
