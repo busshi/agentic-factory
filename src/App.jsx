@@ -988,14 +988,14 @@ function Nav({ lang, t }) {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#top" className="font-display font-semibold text-2xl tracking-tight flex items-center gap-2.5">
+        <a href="#top" className="font-display font-semibold text-2xl tracking-tight flex items-center gap-2.5 cursor-pointer -my-4 py-4 -ml-6 pl-6 pr-2">
           <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue to-violet" />
           <span className="text-gradient">agentic-factory.fr</span>
         </a>
         <div className="flex items-center gap-4">
           <RouterLink
             to={`/${otherLang}`}
-            className="font-mono text-xs text-muted2 hover:text-text transition-colors"
+            className="relative font-mono text-xs text-muted2 hover:text-text transition-colors cursor-pointer -my-4 py-4 -mx-2 px-2"
             aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
           >
             {otherLang.toUpperCase()}
@@ -1004,7 +1004,7 @@ function Nav({ lang, t }) {
             href="https://calendly.com/busshidev/meeting"
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-xs tracking-wide px-4 py-2 rounded-full border border-line hover:border-violet/60 transition-colors"
+            className="relative font-mono text-xs tracking-wide px-4 py-2 rounded-full border border-line hover:border-violet/60 transition-colors cursor-pointer before:content-[''] before:absolute before:-inset-y-4 before:inset-x-0"
           >
             {t.nav.cta}
           </a>
@@ -1050,14 +1050,14 @@ function Hero({ lang, t }) {
               href="https://calendly.com/busshidev/meeting"
               target="_blank"
               rel="noreferrer"
-              className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue to-violet text-white font-medium px-6 py-3.5 rounded-full hover:opacity-90 transition-opacity"
+              className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue to-violet text-white font-medium px-6 py-3.5 rounded-full hover:opacity-90 transition-opacity cursor-pointer"
             >
               {t.hero.ctaPrimary}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </a>
             <a
               href="#cas-usage"
-              className="font-mono text-sm text-muted hover:text-text transition-colors inline-flex items-center gap-1"
+              className="font-mono text-sm text-muted hover:text-text transition-colors inline-flex items-center gap-1 cursor-pointer"
             >
               {t.hero.ctaSecondary}
               <ChevronRight className="w-3.5 h-3.5" />
@@ -1471,7 +1471,7 @@ function Credibility({ t }) {
             href="https://www.linkedin.com/in/alexandre-dubar"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 font-mono text-sm text-blue-soft hover:text-violet-soft transition-colors mt-6"
+            className="inline-flex items-center gap-1.5 font-mono text-sm text-blue-soft hover:text-violet-soft transition-colors mt-6 cursor-pointer"
           >
             {t.credibility.linkedinCta}
             <ChevronRight className="w-3.5 h-3.5" />
@@ -1606,7 +1606,7 @@ function FinalCTA({ t }) {
           href="https://calendly.com/busshidev/meeting"
           target="_blank"
           rel="noreferrer"
-          className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue to-violet text-white font-medium px-7 py-4 rounded-full hover:opacity-90 transition-opacity mt-9"
+          className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue to-violet text-white font-medium px-7 py-4 rounded-full hover:opacity-90 transition-opacity mt-9 cursor-pointer"
         >
           {t.finalCta.cta}
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -1620,23 +1620,23 @@ function Footer({ t }) {
   return (
     <footer className="px-6 py-10 border-t border-line">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted2">
-        <span className="font-mono">
+        <a href="#top" className="font-mono cursor-pointer hover:opacity-80 transition-opacity">
           <span className="text-gradient">agentic-factory.fr</span>
-        </span>
+        </a>
         <div className="flex items-center gap-5">
           <a
             href="https://www.linkedin.com/in/alexandre-dubar"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
-            className="hover:text-text transition-colors"
+            className="hover:text-text transition-colors cursor-pointer -m-2 p-2"
           >
             <Linkedin className="w-[18px] h-[18px]" strokeWidth={1.6} />
           </a>
           <a
             href="mailto:contact@agentic-factory.fr"
             aria-label="Email"
-            className="hover:text-text transition-colors"
+            className="hover:text-text transition-colors cursor-pointer -m-2 p-2"
           >
             <Mail className="w-[18px] h-[18px]" strokeWidth={1.6} />
           </a>
@@ -1648,7 +1648,7 @@ function Footer({ t }) {
           href="https://busshidev.fr"
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center gap-2 opacity-50 hover:opacity-90 transition-opacity"
+          className="flex flex-col items-center gap-2 opacity-50 hover:opacity-90 transition-opacity cursor-pointer"
         >
           <span className="font-mono text-xs text-muted2">{t.footer.byBusshidev}</span>
           <img
