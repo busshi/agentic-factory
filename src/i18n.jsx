@@ -123,6 +123,9 @@ export const translations = {
       text: "30 minutes pour regarder votre process le plus chronophage, et vous dire honnêtement si un agent IA le vaut. Sans engagement.",
       cta: 'Réserver mon audit gratuit',
     },
+    footer: {
+      byBusshidev: 'Un produit de',
+    },
   },
 
   en: {
@@ -244,6 +247,9 @@ export const translations = {
       title: "A free audit to find out what's actually worth automating",
       text: "30 minutes to look at your most time-consuming process, and tell you honestly whether an AI agent is worth it. No commitment.",
       cta: 'Book my free audit',
+    },
+    footer: {
+      byBusshidev: 'A product by',
     },
   },
 }
