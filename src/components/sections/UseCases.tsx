@@ -109,6 +109,14 @@ export function UseCases({ lang, t }: UseCasesProps) {
       if (!carouselInViewRef.current) return
       if (Date.now() - lastInteractionRef.current < 4500) return
       const next = (activeRef.current + 1) % cases.length
+      // Drive the stage panel directly instead of waiting for the
+      // IntersectionObserver above to notice the scroll and sync `active`
+      // back — that round trip depends on the browser actually running
+      // the observer promptly, which it won't always do (e.g. a
+      // backgrounded/inactive tab), so the panel could sit frozen even
+      // though the interval keeps firing. scrollIntoView below is then
+      // just a best-effort visual follow-along, not load-bearing.
+      setActive(next)
       const target = cardRefs.current[next]
       if (target && typeof target.scrollIntoView === 'function') {
         target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
