@@ -65,7 +65,7 @@ export interface Translation {
     text: string
     cta: string
   }
-  footer: { byBusshidev: string }
+  footer: { byBusshidev: string; legalMentions: string; legalCgu: string }
 }
 
 export const translations: Record<Lang, Translation> = {
@@ -191,6 +191,8 @@ export const translations: Record<Lang, Translation> = {
     },
     footer: {
       byBusshidev: 'Un produit de',
+      legalMentions: 'Mentions légales',
+      legalCgu: "CGU",
     },
   },
 
@@ -316,6 +318,8 @@ export const translations: Record<Lang, Translation> = {
     },
     footer: {
       byBusshidev: 'A product by',
+      legalMentions: 'Legal notice',
+      legalCgu: 'Terms of use',
     },
   },
 }

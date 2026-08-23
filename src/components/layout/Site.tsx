@@ -49,7 +49,7 @@ export function Site({ lang }: { lang: Lang }) {
         <TrustLogos t={t} />
         <FinalCTA t={t} />
       </main>
-      <Footer t={t} />
+      <Footer lang={lang} t={t} />
     </div>
   )
 }

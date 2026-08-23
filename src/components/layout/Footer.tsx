@@ -1,14 +1,35 @@
 import { Linkedin, Mail } from 'lucide-react'
-import type { Translation } from '../../i18n'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
+import type { Lang, Translation } from '../../i18n'
 import busshidevLogo from '../../assets/brand/busshidev-logo.webp'
 
-export function Footer({ t }: { t: Translation }) {
+interface FooterProps {
+  lang: Lang
+  t: Translation
+}
+
+export function Footer({ lang, t }: FooterProps) {
+  const mentionsPath = lang === 'fr' ? '/fr/mentions-legales' : '/en/legal-notice'
+  const cguPath = lang === 'fr' ? '/fr/cgu' : '/en/terms'
+  const location = useLocation()
+  const homePath = `/${lang}`
+  const isHome = location.pathname === homePath
+
   return (
     <footer className="px-6 py-10 border-t border-line">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted2">
-        <a href="#top" className="font-mono cursor-pointer hover:opacity-80 transition-opacity">
+        <RouterLink
+          to={homePath}
+          onClick={(e) => {
+            if (isHome) {
+              e.preventDefault()
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }
+          }}
+          className="font-mono cursor-pointer hover:opacity-80 transition-opacity"
+        >
           <span className="text-gradient">agentic-factory.fr</span>
-        </a>
+        </RouterLink>
         <div className="flex items-center gap-5">
           <a
             href="https://www.linkedin.com/in/alexandre-dubar"
@@ -47,6 +68,15 @@ export function Footer({ t }: { t: Translation }) {
             className="h-9 w-auto invert opacity-50 group-hover:opacity-90 transition-opacity"
           />
         </a>
+        <div className="flex items-center gap-3 font-mono text-xs text-muted2">
+          <RouterLink to={mentionsPath} className="hover:text-text transition-colors cursor-pointer">
+            {t.footer.legalMentions}
+          </RouterLink>
+          <span className="text-line">·</span>
+          <RouterLink to={cguPath} className="hover:text-text transition-colors cursor-pointer">
+            {t.footer.legalCgu}
+          </RouterLink>
+        </div>
       </div>
     </footer>
   )

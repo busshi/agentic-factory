@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import type { Lang, Translation } from '../../i18n'
+import { localizedPath } from '../../lib/routes'
 
 interface NavProps {
   lang: Lang
@@ -16,6 +17,9 @@ export function Nav({ lang, t }: NavProps) {
   }, [])
 
   const otherLang: Lang = lang === 'fr' ? 'en' : 'fr'
+  const location = useLocation()
+  const homePath = `/${lang}`
+  const isHome = location.pathname === homePath
 
   return (
     <header
@@ -24,16 +28,22 @@ export function Nav({ lang, t }: NavProps) {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
-        <a
-          href="#top"
+        <RouterLink
+          to={homePath}
+          onClick={(e) => {
+            if (isHome) {
+              e.preventDefault()
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }
+          }}
           className="font-display font-semibold text-lg sm:text-2xl tracking-tight flex items-center gap-1.5 sm:gap-2.5 cursor-pointer -my-3 py-3 sm:-my-4 sm:py-4 -ml-4 pl-4 sm:-ml-6 sm:pl-6 pr-2 shrink-0"
         >
           <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-gradient-to-r from-blue to-violet shrink-0" />
           <span className="text-gradient whitespace-nowrap">agentic-factory.fr</span>
-        </a>
+        </RouterLink>
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <RouterLink
-            to={`/${otherLang}`}
+            to={localizedPath(location.pathname, otherLang)}
             className="relative font-mono text-xs text-muted2 hover:text-text transition-colors cursor-pointer -my-3 py-3 sm:-my-4 sm:py-4 -mx-1 px-1 sm:-mx-2 sm:px-2"
             aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
           >
