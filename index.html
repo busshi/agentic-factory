@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>AgenticFactory — Agents IA sur-mesure pour automatiser vos process métier</title>
+    <title>AgenticFactory — Agents IA sur-mesure pour PME et startups</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="description" content="AgenticFactory conçoit et code des agents IA sur-mesure pour PME et startups : automatisation de la facturation, support client autonome, qualification de leads. Audit gratuit." />
+    <meta name="description" content="AgenticFactory conçoit des agents IA sur-mesure pour PME et startups : facturation, support client, qualification de leads. Audit gratuit." />
     <link rel="canonical" href="https://agentic-factory.fr/" />
     <meta name="robots" content="index, follow" />
     <link rel="alternate" hreflang="fr" href="https://agentic-factory.fr/fr" />
@@ -72,7 +72,18 @@
     </script>
   </head>
   <body class="bg-bg text-text font-body antialiased">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static fallback for crawlers that don't execute JavaScript — this
+           is a client-rendered SPA, so without this, a no-JS crawler sees
+           an empty page with no <h1>. React replaces this content the
+           instant it mounts (createRoot(...).render() overwrites #root's
+           children), so real users and JS-executing crawlers (Googlebot
+           included) only ever see the actual page. Keep this in sync with
+           the French hero heading in src/i18n.tsx if that copy changes. -->
+      <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">
+        Vos tâches répétitives méritent mieux qu'un stagiaire. Elles méritent un agent.
+      </h1>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

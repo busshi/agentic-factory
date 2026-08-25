@@ -19,6 +19,9 @@ export function Site({ lang }: { lang: Lang }) {
 
   useEffect(() => {
     document.documentElement.lang = lang
+    document.title = t.meta.title
+    const description = document.querySelector('meta[name="description"]')
+    if (description) description.setAttribute('content', t.meta.description)
 
     // canonical + og:url should reflect whichever locale is actually being
     // viewed, not always the French default
@@ -34,7 +37,7 @@ export function Site({ lang }: { lang: Lang }) {
     if (ogImage) ogImage.setAttribute('content', ogImageUrl)
     const twitterImage = document.querySelector('meta[name="twitter:image"]')
     if (twitterImage) twitterImage.setAttribute('content', ogImageUrl)
-  }, [lang])
+  }, [lang, t])
 
   return (
     <div className="min-h-screen">
