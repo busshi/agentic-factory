@@ -4,29 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>AgenticFactory — Agents IA sur-mesure pour PME et startups</title>
+    <!-- title / description / canonical / robots / og:url / og:locale /
+         og:image / twitter:image are set per-route via <Head> (see
+         Site.tsx, LegalMeta.tsx, App.tsx's LanguageRedirect) so the
+         prerendered HTML carries the correct, per-locale values — no
+         static default is declared here to avoid duplicate, conflicting
+         tags. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="description" content="AgenticFactory conçoit des agents IA sur-mesure pour PME et startups : facturation, support client, qualification de leads. Audit gratuit." />
-    <link rel="canonical" href="https://agentic-factory.fr/" />
-    <meta name="robots" content="index, follow" />
     <link rel="alternate" hreflang="fr" href="https://agentic-factory.fr/fr" />
     <link rel="alternate" hreflang="en" href="https://agentic-factory.fr/en" />
     <link rel="alternate" hreflang="x-default" href="https://agentic-factory.fr/en" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Twitter: type, site name and card format don't vary
+         by locale, so they stay static here; title/description/image are
+         set per-route via <Head>. -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="AgenticFactory" />
     <meta property="og:title" content="AgenticFactory — Agents IA sur-mesure pour automatiser vos process métier" />
     <meta property="og:description" content="Des agents IA codés sur-mesure, branchés sur vos outils réels — pas des scénarios no-code qui lâchent au premier imprévu. Audit gratuit pour PME et startups." />
-    <meta property="og:url" content="https://agentic-factory.fr/" />
-    <meta property="og:image" content="https://agentic-factory.fr/og-image.png" />
-    <meta property="og:locale" content="fr_FR" />
-
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="AgenticFactory — Agents IA sur-mesure pour automatiser vos process métier" />
     <meta name="twitter:description" content="Des agents IA codés sur-mesure, branchés sur vos outils réels. Audit gratuit pour PME et startups." />
-    <meta name="twitter:image" content="https://agentic-factory.fr/og-image.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -72,18 +70,11 @@
     </script>
   </head>
   <body class="bg-bg text-text font-body antialiased">
-    <div id="root">
-      <!-- Static fallback for crawlers that don't execute JavaScript — this
-           is a client-rendered SPA, so without this, a no-JS crawler sees
-           an empty page with no <h1>. React replaces this content the
-           instant it mounts (createRoot(...).render() overwrites #root's
-           children), so real users and JS-executing crawlers (Googlebot
-           included) only ever see the actual page. Keep this in sync with
-           the French hero heading in src/i18n.tsx if that copy changes. -->
-      <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">
-        Vos tâches répétitives méritent mieux qu'un stagiaire. Elles méritent un agent.
-      </h1>
-    </div>
+    <!-- Populated at build time with real prerendered markup for each
+         route (see vite-react-ssg in src/main.tsx) — crawlers that don't
+         execute JavaScript still get the actual page content, not an
+         empty shell. React hydrates over this on the client. -->
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

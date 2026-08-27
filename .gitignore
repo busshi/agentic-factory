@@ -2,3 +2,4 @@ node_modules/
 yarn.lock
 .claude/
 dist/
+.vite-react-ssg-temp/

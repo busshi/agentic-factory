@@ -1,19 +1,18 @@
 import type { Lang } from '../i18n'
 import { LegalLayout, LegalSection } from '../components/legal/LegalLayout'
-import { useLegalMeta } from '../components/legal/useLegalMeta'
+import { LegalMeta } from '../components/legal/LegalMeta'
 import { LegalPageShell } from './LegalPageShell'
 
 export function CGU({ lang }: { lang: Lang }) {
   const isEn = lang === 'en'
 
-  useLegalMeta(
-    isEn ? 'Terms of Use — AgenticFactory' : "Conditions Générales d'Utilisation — AgenticFactory",
-    isEn ? '/en/terms' : '/fr/cgu',
-    lang
-  )
-
   return (
     <LegalPageShell lang={lang}>
+    <LegalMeta
+      pageTitle={isEn ? 'Terms of Use — AgenticFactory' : "Conditions Générales d'Utilisation — AgenticFactory"}
+      canonicalPath={isEn ? '/en/terms' : '/fr/cgu'}
+      lang={lang}
+    />
     <LegalLayout
       title={isEn ? 'Terms of Use' : "Conditions Générales d'Utilisation"}
       updatedAt={isEn ? 'Last updated: August 23, 2026' : 'Dernière mise à jour : 23 août 2026'}

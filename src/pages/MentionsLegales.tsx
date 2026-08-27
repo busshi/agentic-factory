@@ -1,19 +1,18 @@
 import type { Lang } from '../i18n'
 import { LegalLayout, LegalSection } from '../components/legal/LegalLayout'
-import { useLegalMeta } from '../components/legal/useLegalMeta'
+import { LegalMeta } from '../components/legal/LegalMeta'
 import { LegalPageShell } from './LegalPageShell'
 
 export function MentionsLegales({ lang }: { lang: Lang }) {
   const isEn = lang === 'en'
 
-  useLegalMeta(
-    isEn ? 'Legal Notice — AgenticFactory' : 'Mentions légales — AgenticFactory',
-    isEn ? '/en/legal-notice' : '/fr/mentions-legales',
-    lang
-  )
-
   return (
     <LegalPageShell lang={lang}>
+    <LegalMeta
+      pageTitle={isEn ? 'Legal Notice — AgenticFactory' : 'Mentions légales — AgenticFactory'}
+      canonicalPath={isEn ? '/en/legal-notice' : '/fr/mentions-legales'}
+      lang={lang}
+    />
     <LegalLayout
       title={isEn ? 'Legal Notice' : 'Mentions légales'}
       updatedAt={isEn ? 'Last updated: August 23, 2026' : 'Dernière mise à jour : 23 août 2026'}
