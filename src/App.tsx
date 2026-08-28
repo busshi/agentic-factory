@@ -2,19 +2,22 @@ import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import type { RouteRecord } from 'vite-react-ssg'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Site } from './components/layout/Site'
 import { MentionsLegales } from './pages/MentionsLegales'
 import { CGU } from './pages/CGU'
 
 /* Root layout every route mounts under. Its only job is to keep
-   <Analytics/> alive as a single, persistent instance across client-side
-   navigation — Analytics is guarded for the server (it only touches
-   `window` inside an effect), so it's a no-op during the SSG build. */
+   <Analytics/>/<SpeedInsights/> alive as single, persistent instances
+   across client-side navigation — both are guarded for the server (they
+   only touch `window` inside an effect), so they're a no-op during the
+   SSG build. */
 function RootLayout() {
   return (
     <>
       <Outlet />
       <Analytics />
+      <SpeedInsights />
     </>
   )
 }

@@ -102,10 +102,12 @@ page, and social/link previews always get the correct per-locale metadata.
 
 ## Analytics
 
-Page views are tracked via [`@vercel/analytics`](https://vercel.com/docs/analytics)
-(`<Analytics/>` mounted once in the root layout in `src/App.tsx`). It's a
-no-op outside of a Vercel deployment (locally, or on another host, its
-script simply 404s harmlessly).
+Page views and real-user performance are tracked via
+[`@vercel/analytics`](https://vercel.com/docs/analytics) and
+[`@vercel/speed-insights`](https://vercel.com/docs/speed-insights)
+(`<Analytics/>` and `<SpeedInsights/>` mounted once in the root layout in
+`src/App.tsx`). Both are a no-op outside of a Vercel deployment (locally,
+or on another host, their scripts simply 404 harmlessly).
 
 ## Performance & accessibility notes
 
