@@ -76,7 +76,10 @@ export function Footer({ lang, t }: FooterProps) {
           <RouterLink to={mentionsPath} className="hover:text-text transition-colors cursor-pointer">
             {t.footer.legalMentions}
           </RouterLink>
-          <span className="text-line">·</span>
+          {/* text-muted2 (not text-line) — the hairline divider color reads
+              as basically invisible at this small size, so the separator
+              didn't register as one. Same color as the links around it. */}
+          <span className="text-muted2">·</span>
           <RouterLink to={cguPath} className="hover:text-text transition-colors cursor-pointer">
             {t.footer.legalCgu}
           </RouterLink>

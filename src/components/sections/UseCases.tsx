@@ -176,14 +176,11 @@ export function UseCases({ lang, t }: UseCasesProps) {
         </h2>
 
         {/* stage panel — shows the illustrated scene for the hovered/focused/tapped card.
-            Deliberately locked to a fixed, fully opaque dark background (not the
-            bg/surface tokens) in both themes, like a device screen: the Scene* SVGs are
-            drawn assuming a dark backdrop (dark card fills, light/glowing strokes) and
-            don't have a light-mode treatment of their own. Full opacity matters here —
-            at partial opacity this panel blended with the page's own background, which
-            only read as "dark" while that background was dark too; against a light page
-            the same translucency washed the panel out to a muddy gray. */}
-        <div className="mt-12 rounded-2xl border border-[#1C2440] bg-[#0B0F1A] backdrop-blur-sm h-[300px] sm:h-[360px] relative overflow-hidden">
+            The Scene* SVGs reference the same theme tokens as the rest of the
+            site (rgb(var(--color-*)) instead of hardcoded dark-only hex — see
+            src/components/scenes/), so this panel can just use the normal
+            surface/line tokens too instead of a forced dark background. */}
+        <div className="mt-12 rounded-2xl border border-line bg-surface backdrop-blur-sm h-[300px] sm:h-[360px] relative overflow-hidden">
           <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
           <AnimatePresence mode="wait">
             <motion.div
