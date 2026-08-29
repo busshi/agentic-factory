@@ -52,7 +52,7 @@ export interface Translation {
     title: string
     text: string
     linkedinCta: string
-    stackLabel: string
+    statLabel: string
   }
   testimonials: {
     eyebrow: string
@@ -162,9 +162,9 @@ export const translations: Record<Lang, Translation> = {
     credibility: {
       eyebrow: 'Comment je travaille',
       title: "5 ans de freelance, une pratique sérieuse de l'agentic",
-      text: "Chaque agent que je livre est pensé pour durer, pas pour impressionner en démo et lâcher au premier pic d'activité. Hébergé sur des infrastructures cloud fiables (AWS, GCP), il continue de tourner même quand votre activité s'accélère.",
+      text: "Chaque agent que je livre est codé sur-mesure autour de l'API Claude et branché sur vos outils réels — pensé pour durer, pas pour impressionner en démo et lâcher au premier pic d'activité. Hébergé sur des infrastructures cloud fiables (AWS, GCP), il continue de tourner même quand votre activité s'accélère.",
       linkedinCta: 'Voir les recommandations sur LinkedIn',
-      stackLabel: 'stack',
+      statLabel: 'ans de freelance',
     },
     testimonials: {
       eyebrow: "Ce qu'on dit de moi",
@@ -292,9 +292,9 @@ export const translations: Record<Lang, Translation> = {
     credibility: {
       eyebrow: 'How I work',
       title: '5 years freelancing, a serious agentic practice',
-      text: "Every agent I ship is built to last, not to impress in a demo and fall over at the first real spike in activity. Hosted on reliable cloud infrastructure (AWS, GCP), it keeps running even as your activity scales up.",
+      text: "Every agent I ship is custom-built around the Claude API and wired into your real tools — made to last, not to impress in a demo and fall over at the first real spike in activity. Hosted on reliable cloud infrastructure (AWS, GCP), it keeps running even as your activity scales up.",
       linkedinCta: 'See recommendations on LinkedIn',
-      stackLabel: 'stack',
+      statLabel: 'years freelancing',
     },
     testimonials: {
       eyebrow: 'What people say',

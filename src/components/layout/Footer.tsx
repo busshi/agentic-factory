@@ -49,7 +49,11 @@ export function Footer({ lang, t }: FooterProps) {
           </a>
         </div>
       </div>
-      <div className="max-w-6xl mx-auto mt-6 flex flex-col items-center gap-4">
+      {/* Same gap (gap-6, matching the mt-6 above) between every block here
+          — the two dividers each get equal space above and below them,
+          rather than the tighter/looser mix of a couple different spacing
+          values. */}
+      <div className="max-w-6xl mx-auto mt-6 flex flex-col items-center gap-6">
         <div className="w-10 h-px bg-line/60" />
         <a
           href="https://busshidev.fr"
@@ -72,6 +76,7 @@ export function Footer({ lang, t }: FooterProps) {
             className="h-9 w-auto dark:invert opacity-50 group-hover:opacity-90 transition-opacity"
           />
         </a>
+        <div className="w-10 h-px bg-line/60" />
         <div className="flex items-center gap-3 font-mono text-xs text-muted2">
           <RouterLink to={mentionsPath} className="hover:text-text transition-colors cursor-pointer">
             {t.footer.legalMentions}
