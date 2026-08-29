@@ -80,16 +80,19 @@ export function Hero({ lang, t }: HeroProps) {
           </div>
         </motion.div>
 
-        {/* Same fixed, fully opaque dark backdrop as the use-cases stage panel
-            (UseCases.tsx) — the Scene* SVGs assume a dark background and have no
-            light-mode treatment, and partial opacity here would let the (now light)
-            page background wash it out. */}
+        {/* The Scene* SVGs now reference the same theme tokens as the rest of
+            the site (rgb(var(--color-*)) instead of hardcoded dark-only hex —
+            see src/components/scenes/), so this panel can just use the normal
+            surface/line tokens too instead of a forced dark background. */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 sm:mt-20 rounded-2xl border border-[#1C2440] bg-[#0B0F1A] backdrop-blur-sm p-2 sm:p-8 h-[260px] sm:h-[340px] relative overflow-hidden"
+          className="mt-10 sm:mt-20 rounded-2xl border border-line bg-surface backdrop-blur-sm p-2 sm:p-8 h-[260px] sm:h-[340px] relative overflow-hidden"
         >
+          {/* same subtle top-centered glow as the use-cases stage panel
+              (UseCases.tsx), for a consistent look between the two */}
+          <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
           <AnimatePresence mode="wait">
             <motion.div
               key={heroActive}

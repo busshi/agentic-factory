@@ -45,17 +45,17 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
       </defs>
 
       <g transform="translate(0 26)">
-        <text x="46" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.sources}</text>
-        <text x="300" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">{s.digest}</text>
+        <text x="46" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">{s.sources}</text>
+        <text x="300" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">{s.digest}</text>
 
         {/* watched sources — pulled in tighter to the left so the digest
             card on the right has plenty of room for real sentences */}
         {sources.map((src, i) => (
           <g key={i}>
-            <circle cx="26" cy={src.y} r="7" fill="none" stroke="#3A4062" strokeWidth="1.4" />
-            <circle cx="26" cy={src.y} r="2.5" fill="#3A4062" />
-            <path d={src.path} stroke="#161D33" strokeWidth="1.25" fill="none" />
-            <circle r="2.6" fill="#60A5FA">
+            <circle cx="26" cy={src.y} r="7" fill="none" stroke="rgb(var(--color-line))" strokeWidth="1.4" />
+            <circle cx="26" cy={src.y} r="2.5" fill="rgb(var(--color-line))" />
+            <path d={src.path} stroke="rgb(var(--color-surface2))" strokeWidth="1.25" fill="none" />
+            <circle r="2.6" fill="rgb(var(--color-blue-soft))">
               <animateMotion dur="2.2s" begin={`${i * 0.6}s`} repeatCount="indefinite" path={src.path} />
               <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.2s" begin={`${i * 0.6}s`} repeatCount="indefinite" />
             </circle>
@@ -64,24 +64,24 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
 
         {/* mini agent chip */}
         <g transform="translate(150 100)">
-          <circle r="26" fill="#A855F7" opacity="0.15" />
+          <circle r="26" fill="rgb(var(--color-violet))" opacity="0.15" />
           <circle r="19" fill="none" stroke="url(#sceneGrad8)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
             <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3.4s" repeatCount="indefinite" />
           </circle>
-          <rect x="-11" y="-11" width="22" height="22" rx="6" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+          <rect x="-11" y="-11" width="22" height="22" rx="6" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
           {[-5.5, -1, 3.5].map((x, i) => (
-            <rect key={i} x={x} y="-4.5" width="1.8" height="9" rx="0.9" fill="#C084FC">
+            <rect key={i} x={x} y="-4.5" width="1.8" height="9" rx="0.9" fill="rgb(var(--color-violet-soft))">
               <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
             </rect>
           ))}
         </g>
 
-        <path d="M 168 100 C 178 100, 182 100, 190 100" stroke="#1C2440" strokeWidth="1.25" fill="none" />
+        <path d="M 168 100 C 178 100, 182 100, 190 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
 
         {/* digest card, much wider now — text rotates through insights,
             comfortably inside the card at this width */}
         <g>
-          <rect x="190" y="60" width="172" height="80" rx="12" fill="#0B0F1A" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+          <rect x="190" y="60" width="172" height="80" rx="12" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
           <AnimatePresence mode="wait">
             <motion.g
               key={dIndex}
@@ -91,16 +91,16 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
               transition={{ duration: 0.4 }}
             >
               <circle cx="206" cy="82" r="2.5" fill="#4ADE80" />
-              <text x="216" y="86" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">
+              <text x="216" y="86" fontFamily="Inter, sans-serif" fontSize="10.5" fill="rgb(var(--color-text))">
                 {digest?.[0]}
               </text>
-              <text x="206" y="104" fontFamily="Inter, sans-serif" fontSize="10.5" fill="#C7CCDC">
+              <text x="206" y="104" fontFamily="Inter, sans-serif" fontSize="10.5" fill="rgb(var(--color-text))">
                 {digest?.[1]}
               </text>
             </motion.g>
           </AnimatePresence>
         </g>
-        <text x="276" y="162" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#5C6480" textAnchor="middle">
+        <text x="276" y="162" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">
           {s.updated}
         </text>
       </g>

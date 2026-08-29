@@ -57,8 +57,9 @@ const LOGOS: TrustLogo[] = [
 ]
 
 /* Trust bar — styled as a real logo wall (bordered chips, grayscale→color
-   on hover). See README for notes on licensing when swapping/adding
-   institutional client logos. */
+   on hover — the scroll itself keeps running on hover, only the color
+   reveal is a hover effect). See README for notes on licensing when
+   swapping/adding institutional client logos. */
 export function TrustLogos({ t }: { t: Translation }) {
   const track = [...LOGOS, ...LOGOS]
 
@@ -69,8 +70,8 @@ export function TrustLogos({ t }: { t: Translation }) {
           {t.trustLogos.title}
         </p>
       </div>
-      <div className="relative mt-8 max-w-6xl mx-auto group overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-        <div className="flex w-max gap-3.5 animate-marquee group-hover:[animation-play-state:paused]">
+      <div className="relative mt-8 max-w-6xl mx-auto overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+        <div className="flex w-max gap-3.5 animate-marquee">
           {track.map((l, i) => {
             const sizeClasses = `${l.scale ? 'h-14' : 'h-10'} w-auto max-w-[150px]`
             const img = l.Logo ? (

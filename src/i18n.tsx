@@ -184,7 +184,7 @@ export const translations: Record<Lang, Translation> = {
       ],
     },
     trustLogos: {
-      title: "Ils m'ont fait confiance",
+      title: 'Ils me font confiance',
     },
     finalCta: {
       eyebrow: 'Étape suivante',

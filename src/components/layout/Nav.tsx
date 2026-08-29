@@ -9,7 +9,13 @@ interface NavProps {
 }
 
 export function Nav({ lang, t }: NavProps) {
-  const [scrolled, setScrolled] = useState(false)
+  // Lazily read the real scroll position at mount instead of always
+  // starting at false: client-side navigation (e.g. a footer link from
+  // CGU back to the homepage) remounts Nav without resetting scroll
+  // position, and without this, the nav would render transparent — as if
+  // unscrolled — until the next scroll event, showing page content through
+  // it that's supposed to be hidden behind its background.
+  const [scrolled, setScrolled] = useState(() => typeof window !== 'undefined' && window.scrollY > 20)
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll)
