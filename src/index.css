@@ -3,22 +3,69 @@
 @tailwind utilities;
 
 @layer base {
+  /* Color tokens as RGB triplets (not hex) so Tailwind's opacity modifiers
+     (e.g. bg-surface2/40) keep working via rgb(var(--x) / <alpha-value>) —
+     see tailwind.config.js. Light is the default palette; dark overrides
+     it under prefers-color-scheme so the site follows the OS setting
+     automatically, no toggle needed. */
+  :root {
+    --color-bg: 246 247 251;
+    --color-surface: 255 255 255;
+    --color-surface2: 238 241 248;
+    --color-line: 214 220 235;
+    --color-text: 11 14 26;
+    --color-muted: 69 78 102;
+    --color-muted2: 97 107 128;
+    --color-blue: 59 130 246;
+    --color-blue-soft: 37 99 235;
+    --color-violet: 168 85 247;
+    --color-violet-soft: 147 51 234;
+    --grad-text-from: #2563EB;
+    --grad-text-to: #9333EA;
+    --selection-bg: rgba(147, 51, 234, 0.25);
+    --selection-color: #0B0E1A;
+    --focus-ring: #7E22CE;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: 5 7 13;
+      --color-surface: 11 15 26;
+      --color-surface2: 17 23 41;
+      --color-line: 28 36 64;
+      --color-text: 233 236 244;
+      --color-muted: 137 146 171;
+      --color-muted2: 115 123 156;
+      --color-blue: 59 130 246;
+      --color-blue-soft: 96 165 250;
+      --color-violet: 168 85 247;
+      --color-violet-soft: 192 132 252;
+      --grad-text-from: #60A5FA;
+      --grad-text-to: #C084FC;
+      --selection-bg: rgba(168, 85, 247, 0.35);
+      --selection-color: #fff;
+      --focus-ring: #A855F7;
+      color-scheme: dark;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
   }
   ::selection {
-    background: rgba(168, 85, 247, 0.35);
-    color: #fff;
+    background: var(--selection-bg);
+    color: var(--selection-color);
   }
   :focus-visible {
-    outline: 2px solid #A855F7;
+    outline: 2px solid var(--focus-ring);
     outline-offset: 3px;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    background-image: linear-gradient(90deg, #60A5FA 0%, #C084FC 100%);
+    background-image: linear-gradient(90deg, var(--grad-text-from) 0%, var(--grad-text-to) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

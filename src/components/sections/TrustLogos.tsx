@@ -3,13 +3,16 @@ import { RevealSection } from '../ui/RevealSection'
 import laPosteLogo from '../../assets/logos/la-poste.webp'
 import ministereLogo from '../../assets/logos/ministere-education-nationale.webp'
 import noticeLogo from '../../assets/logos/notice.webp'
-import octoloLogo from '../../assets/logos/octolo.svg'
 import pricebeeLogo from '../../assets/logos/pricebee.webp'
 import stationFLogo from '../../assets/logos/station-f.webp'
+import { OctoloLogo } from './OctoloLogo'
 
 interface TrustLogo {
   name: string
-  src: string
+  // Either a static image, or an inline SVG component (needed when the
+  // wordmark itself must retint with the theme — see OctoloLogo).
+  src?: string
+  Logo?: typeof OctoloLogo
   invert?: boolean
   scale?: boolean
   // Notice's file is just the bulb mark — on its own it's not recognizable
@@ -26,14 +29,17 @@ interface TrustLogo {
 
 // "invert" flags logos whose file is dark ink on a white background — a
 // CSS invert flips them to light ink so they read on the dark chip, same
-// trick already used for the BusshiDev footer logo. Most of these logos
-// are full-color on real alpha transparency already (keyed out from their
-// white background rather than inverted, to keep their actual brand
-// colors), so only Station F (flat black wordmark) still needs it.
+// trick already used for the BusshiDev footer logo. Applied only in dark
+// mode (dark:invert): in light mode the chip itself is light, so the
+// logo's native dark ink already reads fine there without inverting.
+// Most of these logos are full-color on real alpha transparency already
+// (keyed out from their white background rather than inverted, to keep
+// their actual brand colors), so only Station F (flat black wordmark)
+// still needs it.
 const LOGOS: TrustLogo[] = [
   { name: 'PriceBee', src: pricebeeLogo },
   { name: 'Notice', src: noticeLogo, showLabel: true },
-  { name: 'Octolo', src: octoloLogo },
+  { name: 'Octolo', Logo: OctoloLogo },
   { name: 'La Poste', src: laPosteLogo },
   { name: "Ministère de l'Éducation nationale", src: ministereLogo, scale: true, plate: true },
   { name: 'Station F', src: stationFLogo, invert: true },
@@ -55,11 +61,14 @@ export function TrustLogos({ t }: { t: Translation }) {
       <div className="relative mt-8 max-w-6xl mx-auto group overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
         <div className="flex w-max gap-3.5 animate-marquee group-hover:[animation-play-state:paused]">
           {track.map((l, i) => {
-            const img = (
+            const sizeClasses = `${l.scale ? 'h-14' : 'h-10'} w-auto max-w-[150px]`
+            const img = l.Logo ? (
+              <l.Logo className={`${sizeClasses} text-text`} aria-label={l.name} />
+            ) : (
               <img
                 src={l.src}
                 alt={l.name}
-                className={`${l.scale ? 'h-14' : 'h-10'} w-auto max-w-[150px] object-contain ${l.invert ? 'invert' : ''}`}
+                className={`${sizeClasses} object-contain ${l.invert ? 'dark:invert' : ''}`}
               />
             )
             return (

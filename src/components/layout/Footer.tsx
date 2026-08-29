@@ -62,10 +62,14 @@ export function Footer({ lang, t }: FooterProps) {
               on bg-bg, and dimming it further with opacity made it worse.
               The logo below is decorative, so it can stay dimmed. */}
           <span className="font-mono text-xs text-muted group-hover:text-text transition-colors">{t.footer.byBusshidev}</span>
+          {/* The source file is a black logo on transparent background — inverted
+              to white so it reads on the dark theme's near-black background, but
+              only in dark mode: in light mode the logo is already dark-on-light,
+              so inverting it there would turn it white-on-white (invisible). */}
           <img
             src={busshidevLogo}
             alt="BusshiDev"
-            className="h-9 w-auto invert opacity-50 group-hover:opacity-90 transition-opacity"
+            className="h-9 w-auto dark:invert opacity-50 group-hover:opacity-90 transition-opacity"
           />
         </a>
         <div className="flex items-center gap-3 font-mono text-xs text-muted2">

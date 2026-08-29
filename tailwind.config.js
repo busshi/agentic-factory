@@ -4,25 +4,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#05070D',
-        surface: '#0B0F1A',
-        surface2: '#111729',
-        line: '#1C2440',
-        text: '#E9ECF4',
-        muted: '#8992AB',
-        // #5C6480 only cleared ~3.45:1 against bg — under the 4.5:1 WCAG AA
-        // floor for small text (this color is used at text-xs/11px
-        // throughout: eyebrow labels, tags, timestamps). Lightened just
-        // enough to clear 4.5:1 while staying visually subordinate to
-        // `muted`.
-        muted2: '#737B9C',
+        // Values live as CSS custom properties in src/index.css (light
+        // palette on :root, dark overrides under prefers-color-scheme),
+        // so the whole site retints automatically with the OS setting —
+        // components never reference a hex value directly. The
+        // rgb(var(--x) / <alpha-value>) form keeps opacity modifiers
+        // (bg-surface2/40, border-line/70, ...) working.
+        bg: 'rgb(var(--color-bg) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        surface2: 'rgb(var(--color-surface2) / <alpha-value>)',
+        line: 'rgb(var(--color-line) / <alpha-value>)',
+        text: 'rgb(var(--color-text) / <alpha-value>)',
+        muted: 'rgb(var(--color-muted) / <alpha-value>)',
+        muted2: 'rgb(var(--color-muted2) / <alpha-value>)',
         blue: {
-          DEFAULT: '#3B82F6',
-          soft: '#60A5FA',
+          DEFAULT: 'rgb(var(--color-blue) / <alpha-value>)',
+          soft: 'rgb(var(--color-blue-soft) / <alpha-value>)',
         },
         violet: {
-          DEFAULT: '#A855F7',
-          soft: '#C084FC',
+          DEFAULT: 'rgb(var(--color-violet) / <alpha-value>)',
+          soft: 'rgb(var(--color-violet-soft) / <alpha-value>)',
         },
       },
       fontFamily: {

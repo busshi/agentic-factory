@@ -109,6 +109,22 @@ Page views and real-user performance are tracked via
 `src/App.tsx`). Both are a no-op outside of a Vercel deployment (locally,
 or on another host, their scripts simply 404 harmlessly).
 
+## Light / dark theme
+
+The site follows the OS `prefers-color-scheme` setting automatically —
+there's no manual toggle. Color tokens (`bg`, `surface`, `text`, `muted`,
+`blue`, `violet`, etc.) are CSS custom properties defined in
+`src/index.css`: a light palette on bare `:root`, overridden under
+`@media (prefers-color-scheme: dark)`. `tailwind.config.js` points each
+Tailwind color token at its variable (`rgb(var(--color-x) / <alpha-value>)`),
+so components never reference a hex value directly and both themes stay in
+sync automatically.
+
+One deliberate exception: the two illustrated "scene" panels (Hero and the
+use-cases stage panel) stay a fixed dark background in both themes, like a
+device screen — the SVG animations in `src/components/scenes/` are drawn
+assuming a dark backdrop and don't have a light-mode treatment of their own.
+
 ## Performance & accessibility notes
 
 - Google Fonts is loaded non-blocking (`media="print"` swapped to `all` on
