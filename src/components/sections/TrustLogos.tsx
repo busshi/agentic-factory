@@ -18,13 +18,20 @@ interface TrustLogo {
   // Notice's file is just the bulb mark — on its own it's not recognizable
   // enough in the chip, so the company name is set beside it.
   showLabel?: boolean
-  // Fills the whole chip (not just a small plate around the logo) with
-  // white, matching the logo file's own white margin so there's no visible
-  // seam between "card" and "logo background". For a multi-element lockup
-  // like the ministère's (tricolour + wordmark + emblem), that reads as an
-  // intentional badge on the dark row instead of floating loose the way
-  // the single-color logos do.
+  // Fills the whole chip (not just a small plate around the logo), matching
+  // the logo file's own white margin so there's no visible seam between
+  // "card" and "logo background". For a multi-element lockup like the
+  // ministère's (tricolour + wordmark + emblem), that reads as an
+  // intentional badge instead of floating loose the way the single-color
+  // logos do. Solid white in dark mode, where that badge look stands out
+  // against the dark row on purpose; the same soft tint as the other chips
+  // in light mode, where a harder white would instead stand out as a
+  // mismatched, more solid white among them.
   plate?: boolean
+  // Skips the shared grayscale-until-hover treatment, keeping the logo's
+  // own color at all times — for a logo whose native ink is already too
+  // faint to survive being desaturated further. See PriceBee below.
+  noGrayscale?: boolean
 }
 
 // "invert" flags logos whose file is dark ink on a white background — a
@@ -37,7 +44,11 @@ interface TrustLogo {
 // their actual brand colors), so only Station F (flat black wordmark)
 // still needs it.
 const LOGOS: TrustLogo[] = [
-  { name: 'PriceBee', src: pricebeeLogo },
+  // Thin navy wordmark + faint hexagon pattern — desaturating it further
+  // with the shared grayscale filter nearly erased it, in both themes.
+  // Keeping its own navy color (no grayscale, no invert — never goes
+  // white) gives it enough contrast on its own.
+  { name: 'PriceBee', src: pricebeeLogo, noGrayscale: true },
   { name: 'Notice', src: noticeLogo, showLabel: true },
   { name: 'Octolo', Logo: OctoloLogo },
   { name: 'La Poste', src: laPosteLogo },
@@ -74,9 +85,9 @@ export function TrustLogos({ t }: { t: Translation }) {
             return (
               <div
                 key={`${l.name}-${i}`}
-                className={`flex items-center justify-center h-20 w-[200px] px-6 rounded-xl border grayscale opacity-70 hover:grayscale-0 hover:opacity-100 hover:border-violet/40 transition-all shrink-0 ${
-                  l.plate ? 'bg-white border-white' : 'bg-surface2/40 border-line'
-                }`}
+                className={`flex items-center justify-center h-20 w-[200px] px-6 rounded-xl border transition-all shrink-0 hover:border-violet/40 ${
+                  l.noGrayscale ? 'opacity-90 hover:opacity-100' : 'grayscale opacity-70 hover:grayscale-0 hover:opacity-100'
+                } ${l.plate ? 'bg-surface2/40 border-line dark:bg-white dark:border-white' : 'bg-surface2/40 border-line'}`}
               >
                 {l.showLabel ? (
                   <div className="flex items-center gap-2.5">
