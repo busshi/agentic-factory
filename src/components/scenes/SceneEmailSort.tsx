@@ -28,7 +28,12 @@ export function SceneEmailSort({ lang = 'fr' }: SceneProps) {
       {mails.map((m, i) => (
         <g key={i}>
           <path d={m.path} stroke="rgb(var(--color-surface2))" strokeWidth="1.25" fill="none" />
-          <g filter="url(#sceneGlow)">
+          {/* opacity="0" as a static base, not just the animate's first
+              keyframe — before `begin` elapses, the animate hasn't taken
+              effect yet and this group (centered on its own local origin)
+              would otherwise render at the SVG's default (0,0) — the
+              top-left corner — half clipped outside the viewBox. */}
+          <g opacity="0" filter="url(#sceneGlow)">
             <animateMotion dur="3s" begin={m.delay} repeatCount="indefinite" path={m.path} />
             <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.85;1" dur="3s" begin={m.delay} repeatCount="indefinite" />
             <rect x="-10" y="-7" width="20" height="14" rx="2.5" fill="rgb(var(--color-surface))" stroke={m.color} strokeWidth="1.3" />

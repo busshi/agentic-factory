@@ -42,7 +42,11 @@ export function SceneMonitoring({ lang = 'fr' }: SceneProps) {
             <g key={i}>
               <path d={`M -10 4 L -3 -4 L 3 2 L 10 -5`} transform={`translate(30 ${sig.y})`} stroke={sig.color} strokeWidth="1.4" fill="none" opacity="0.85" />
               <path d={path} stroke="rgb(var(--color-surface2))" strokeWidth="1.1" fill="none" />
-              <circle r="2.6" fill={sig.color} filter="url(#sceneGlow3)">
+              {/* opacity="0" as a static base, not just the animate's first
+                  keyframe — before `begin` elapses, the animate hasn't
+                  taken effect yet and the circle would otherwise sit fully
+                  visible at the SVG's default (0,0) origin. */}
+              <circle opacity="0" r="2.6" fill={sig.color} filter="url(#sceneGlow3)">
                 <animateMotion dur="2.4s" begin={`${i * 0.7}s`} repeatCount="indefinite" path={path} />
                 <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.4s" begin={`${i * 0.7}s`} repeatCount="indefinite" />
               </circle>
@@ -76,8 +80,9 @@ export function SceneMonitoring({ lang = 'fr' }: SceneProps) {
         </circle>
 
         <path d="M 249 65 C 280 48, 300 48, 320 74" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-        <circle r="2.6" fill="#F87171">
+        <circle opacity="0" r="2.6" fill="#F87171">
           <animateMotion dur="1.6s" repeatCount="indefinite" path="M 249 65 C 280 48, 300 48, 320 74" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.6s" repeatCount="indefinite" />
         </circle>
 
         {/* bell + alert card */}

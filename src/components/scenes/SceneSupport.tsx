@@ -79,8 +79,14 @@ export function SceneSupport({ lang = 'fr' }: SceneProps) {
 
         {/* rail to agent chip */}
         <path d="M 154 71 C 178 71, 178 90, 195 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-        <circle r="2.6" fill="rgb(var(--color-blue-soft))">
+        {/* opacity starts at 0 (both as a static base attribute and as
+            the animate's first keyframe) — animateMotion positions the
+            element by absolute translation along the path, so giving it
+            its own cx/cy would double-offset it once the motion starts;
+            hiding it pre-motion via opacity is the safe fix instead. */}
+        <circle opacity="0" r="2.6" fill="rgb(var(--color-blue-soft))">
           <animateMotion dur="1.1s" repeatCount="indefinite" path="M 154 71 C 178 71, 178 90, 195 90" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.1s" repeatCount="indefinite" />
         </circle>
 
         {/* mini agent chip, center — pulses faster to read as "actively working" */}
@@ -99,8 +105,9 @@ export function SceneSupport({ lang = 'fr' }: SceneProps) {
 
         {/* rail to reply bubble */}
         <path d="M 242 90 C 262 90, 262 90, 282 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-        <circle r="2.6" fill="rgb(var(--color-violet-soft))">
+        <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
           <animateMotion dur="1.1s" begin="1.1s" repeatCount="indefinite" path="M 242 90 C 262 90, 262 90, 282 90" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.1s" begin="1.1s" repeatCount="indefinite" />
         </circle>
 
         {/* reply bubble with checkmark, clear on/off cycle synced to the rest */}

@@ -55,7 +55,11 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
             <circle cx="26" cy={src.y} r="7" fill="none" stroke="rgb(var(--color-line))" strokeWidth="1.4" />
             <circle cx="26" cy={src.y} r="2.5" fill="rgb(var(--color-line))" />
             <path d={src.path} stroke="rgb(var(--color-surface2))" strokeWidth="1.25" fill="none" />
-            <circle r="2.6" fill="rgb(var(--color-blue-soft))">
+            {/* opacity="0" as a static base, not just the animate's first
+                keyframe — before `begin` elapses, the animate hasn't taken
+                effect yet and the circle would otherwise sit fully visible
+                at the SVG's default (0,0) origin. */}
+            <circle opacity="0" r="2.6" fill="rgb(var(--color-blue-soft))">
               <animateMotion dur="2.2s" begin={`${i * 0.6}s`} repeatCount="indefinite" path={src.path} />
               <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.2s" begin={`${i * 0.6}s`} repeatCount="indefinite" />
             </circle>
@@ -77,6 +81,10 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
         </g>
 
         <path d="M 168 100 C 178 100, 182 100, 190 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+        <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
+          <animateMotion dur="1.3s" begin="0.65s" repeatCount="indefinite" path="M 168 100 C 178 100, 182 100, 190 100" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="1.3s" begin="0.65s" repeatCount="indefinite" />
+        </circle>
 
         {/* digest card, much wider now — text rotates through insights,
             comfortably inside the card at this width */}
