@@ -75,8 +75,14 @@ export function SceneAppointment({ lang = 'fr' }: SceneProps) {
 
         {/* rail to agent chip */}
         <path d="M 152 71 C 176 71, 176 90, 195 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-        <circle r="2.6" fill="rgb(var(--color-blue-soft))">
+        {/* opacity starts at 0 (both as a static base attribute and as
+            the animate's first keyframe) — animateMotion positions the
+            element by absolute translation along the path, so giving it
+            its own cx/cy would double-offset it once the motion starts;
+            hiding it pre-motion via opacity is the safe fix instead. */}
+        <circle opacity="0" r="2.6" fill="rgb(var(--color-blue-soft))">
           <animateMotion dur="1.4s" repeatCount="indefinite" path="M 152 71 C 176 71, 176 90, 195 90" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.4s" repeatCount="indefinite" />
         </circle>
 
         {/* mini agent chip, center */}
@@ -95,16 +101,25 @@ export function SceneAppointment({ lang = 'fr' }: SceneProps) {
 
         {/* rail to calendar */}
         <path d="M 242 90 C 262 90, 262 90, 282 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-        <circle r="2.6" fill="rgb(var(--color-violet-soft))">
+        <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
           <animateMotion dur="1.4s" begin="1.3s" repeatCount="indefinite" path="M 242 90 C 262 90, 262 90, 282 90" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.4s" begin="1.3s" repeatCount="indefinite" />
         </circle>
 
         {/* calendar card confirming the slot */}
         <g transform="translate(282 66)">
           <rect width="76" height="46" rx="10" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad5)" strokeWidth="1.4" />
-          <rect x="0" y="0" width="76" height="13" rx="10" fill="rgb(var(--color-surface2))" />
+          {/* A filled header band here (surface2) read as an odd pale,
+              faintly color-tinted smudge in light mode — a plain divider
+              line (the same `line` token used for hairlines everywhere
+              else on the site) is cleaner in both themes. */}
+          <line x1="6" y1="13" x2="70" y2="13" stroke="rgb(var(--color-line))" strokeWidth="1" />
           <text x="38" y="10" fontFamily="JetBrains Mono, monospace" fontSize="8" fill="rgb(var(--color-muted))" textAnchor="middle">{t.demain}</text>
-          <text x="38" y="34" fontFamily="JetBrains Mono, monospace" fontSize="13" fill="#4ADE80" textAnchor="middle">14:00</text>
+          {/* violet-soft, not the confirmation green — matches how other
+              scenes color the actual data value (SceneInvoice's amount,
+              SceneExtraction's fields), keeping green reserved for the
+              confirmed-status badge alone. */}
+          <text x="38" y="34" fontFamily="JetBrains Mono, monospace" fontSize="13" fill="rgb(var(--color-violet-soft))" textAnchor="middle">14:00</text>
           {/* confirmation badge — sits on the gradient border, top-right
               corner, rather than overlapping the time text */}
           <g transform="translate(76 0)">

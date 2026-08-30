@@ -19,7 +19,6 @@ export function SceneInvoice({ lang = 'fr' }: SceneProps) {
       <rect x="58" y="72" width="94" height="4" rx="2" fill="rgb(var(--color-line))" />
       <rect x="58" y="84" width="94" height="4" rx="2" fill="rgb(var(--color-line))" />
       <rect x="58" y="96" width="60" height="4" rx="2" fill="rgb(var(--color-line))" />
-      <rect x="58" y="152" width="40" height="5" rx="2" fill="rgb(var(--color-muted2))" />
       <text x="122" y="157" fontFamily="JetBrains Mono, monospace" fontSize="12" fill="rgb(var(--color-violet-soft))" textAnchor="end">
         1 240 €
       </text>
@@ -43,7 +42,7 @@ export function SceneInvoice({ lang = 'fr' }: SceneProps) {
 
       {/* rail to envelope */}
       <path d="M 170 100 C 220 100, 250 100, 300 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-      <circle r="2.6" fill="rgb(var(--color-violet-soft))">
+      <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
         <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M 170 100 C 220 100, 250 100, 300 100" />
         <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
       </circle>

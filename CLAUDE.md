@@ -219,7 +219,9 @@ Before suggesting a dependency:
 
 Never commit changes unless explicitly requested.
 
-Never push changes to a remote repository.
+Never push changes to a remote repository unless explicitly requested.
+
+Never push directly to `main`, even if asked to push or open a PR — always work on a feature branch and push that instead.
 
 Never reset, revert, delete or overwrite existing user changes without explicit permission.
 

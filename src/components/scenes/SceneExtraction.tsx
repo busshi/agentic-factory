@@ -42,8 +42,9 @@ export function SceneExtraction({ lang = 'fr' }: SceneProps) {
 
         {/* rail to agent chip */}
         <path d="M 92 100 C 130 100, 150 100, 172 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-        <circle r="2.6" fill="rgb(var(--color-blue-soft))" filter="url(#sceneGlow4)">
+        <circle opacity="0" r="2.6" fill="rgb(var(--color-blue-soft))" filter="url(#sceneGlow4)">
           <animateMotion dur="1.5s" repeatCount="indefinite" path="M 92 100 C 130 100, 150 100, 172 100" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.5s" repeatCount="indefinite" />
         </circle>
 
         {/* mini agent chip */}
@@ -62,6 +63,10 @@ export function SceneExtraction({ lang = 'fr' }: SceneProps) {
 
         {/* rail to structured output */}
         <path d="M 208 100 C 240 100, 250 100, 262 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+        <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
+          <animateMotion dur="1.5s" begin="0.75s" repeatCount="indefinite" path="M 208 100 C 240 100, 250 100, 262 100" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.5s" begin="0.75s" repeatCount="indefinite" />
+        </circle>
 
         {/* structured fields appearing one by one */}
         {fields.map((f, i) => (

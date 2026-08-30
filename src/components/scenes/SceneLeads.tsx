@@ -7,18 +7,27 @@ interface RankedLead {
   y: number
 }
 
+// Same 4 colors as RANKED below, in the same order — the raw leads
+// flowing in and the ranked bars flowing out read as one consistent
+// palette instead of the input side being uniformly gray.
+const LEAD_COLORS = ['#4ADE80', 'rgb(var(--color-blue-soft))', 'rgb(var(--color-violet-soft))', 'rgb(var(--color-muted2))']
+
 const RAW_LEADS = [
-  { y: 130, delay: '0s' },
-  { y: 45, delay: '0.35s' },
-  { y: 155, delay: '0.7s' },
-  { y: 80, delay: '1.05s' },
+  { y: 130, delay: '0s', color: LEAD_COLORS[0] },
+  { y: 45, delay: '0.35s', color: LEAD_COLORS[1] },
+  { y: 155, delay: '0.7s', color: LEAD_COLORS[2] },
+  { y: 80, delay: '1.05s', color: LEAD_COLORS[3] },
 ]
 
+// 4 distinct colors, one per rank — a gradient of priority from green
+// (best lead) through the site's blue/violet accents down to muted
+// (lowest). Each bar's traveling dot reuses the same color (r.color),
+// so the two always match.
 const RANKED: RankedLead[] = [
-  { score: 92, color: '#4ADE80', y: 44 },
-  { score: 78, color: 'rgb(var(--color-blue-soft))', y: 78 },
-  { score: 55, color: 'rgb(var(--color-blue-soft))', y: 112 },
-  { score: 31, color: 'rgb(var(--color-muted2))', y: 146 },
+  { score: 92, color: LEAD_COLORS[0], y: 44 },
+  { score: 78, color: LEAD_COLORS[1], y: 78 },
+  { score: 55, color: LEAD_COLORS[2], y: 112 },
+  { score: 31, color: LEAD_COLORS[3], y: 146 },
 ]
 
 const MAX_BAR_WIDTH = 92
@@ -62,13 +71,22 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
       return values[values.length - 1] ?? 0
     }
 
+    // Each full cycle bumps that row's target by +1 over the last one —
+    // reads as the score genuinely climbing over time rather than the
+    // exact same number resetting on every loop. Wraps back to the base
+    // score every 8 cycles (capped a few points under 100) so it never
+    // grows without bound or overflows the bar's own width.
+    const CYCLE_BAND = 8
+
     function tick(now: number) {
       const elapsed = now - start
       setCounts(
         RANKED.map((r, i) => {
           const delay = i * 900 // ms, matches the old begin={i*0.9s}
+          const cycleIndex = Math.floor(Math.max(0, elapsed - delay) / DURATION)
+          const target = Math.min(99, r.score + (cycleIndex % CYCLE_BAND))
           const local = ((elapsed - delay) % DURATION + DURATION) % DURATION
-          return Math.round(valueAt(r.score, local / DURATION))
+          return Math.round(valueAt(target, local / DURATION))
         })
       )
       rafId = requestAnimationFrame(tick)
@@ -104,7 +122,11 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
           const path = `M 42 ${l.y} C 90 ${l.y}, 130 100, 172 100`
           return (
             <g key={i}>
-              <circle r="3.6" fill="rgb(var(--color-muted2))" filter="url(#sceneGlow2)">
+              {/* opacity="0" as a static base, not just the animate's first
+                  keyframe — before `begin` elapses, the animate hasn't
+                  taken effect yet and the circle would otherwise sit fully
+                  visible at the SVG's default (0,0) origin. */}
+              <circle opacity="0" r="3.6" fill={l.color} filter="url(#sceneGlow2)">
                 <animateMotion dur="1.6s" begin={l.delay} repeatCount="indefinite" path={path} />
                 <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.75;1" dur="1.6s" begin={l.delay} repeatCount="indefinite" />
               </circle>
@@ -140,7 +162,7 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
           return (
             <g key={i}>
               <path d={particlePath} stroke="rgb(var(--color-surface2))" strokeWidth="1" fill="none" opacity="0.5" />
-              <circle r="3" fill={r.color} filter="url(#sceneGlow2)">
+              <circle opacity="0" r="3" fill={r.color} filter="url(#sceneGlow2)">
                 <animateMotion
                   dur="3.6s"
                   begin={begin}
