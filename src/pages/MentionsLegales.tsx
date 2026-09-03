@@ -105,7 +105,7 @@ export function MentionsLegales({ lang }: { lang: Lang }) {
 
           <LegalSection title="3. Propriété intellectuelle">
             <p>
-              L&apos;ensemble des contenus présents sur le Site (textes, images, logos,
+              L’ensemble des contenus présents sur le Site (textes, images, logos,
               graphismes, mise en page, code source) est, sauf mention contraire, la propriété
               exclusive de BusshiDev ou de ses clients cités à titre de référence, et est protégé
               par le Code de la propriété intellectuelle. Toute reproduction, représentation,
@@ -113,9 +113,9 @@ export function MentionsLegales({ lang }: { lang: Lang }) {
               procédé que ce soit, sans autorisation écrite préalable, est interdite.
             </p>
             <p>
-              Les logos des entreprises et organisations présentés dans les sections « Ils m&apos;ont
-              fait confiance » et « Ce qu&apos;on dit de moi » sont la propriété de leurs détenteurs
-              respectifs et sont utilisés à titre de référence, avec l&apos;accord des personnes
+              Les logos des entreprises et organisations présentés dans les sections « Ils m’ont
+              fait confiance » et « Ce qu’on dit de moi » sont la propriété de leurs détenteurs
+              respectifs et sont utilisés à titre de référence, avec l’accord des personnes
               concernées, pour illustrer des missions réellement réalisées.
             </p>
           </LegalSection>
@@ -123,24 +123,24 @@ export function MentionsLegales({ lang }: { lang: Lang }) {
           <LegalSection title="4. Liens hypertextes">
             <p>
               Le Site contient des liens vers des sites tiers (LinkedIn, Calendly). BusshiDev
-              n&apos;exerce aucun contrôle sur ces sites et décline toute responsabilité quant à
+              n’exerce aucun contrôle sur ces sites et décline toute responsabilité quant à
               leur contenu ou leur politique de confidentialité.
             </p>
           </LegalSection>
 
           <LegalSection title="5. Cookies et traceurs">
             <p>
-              Le Site ne dépose aucun cookie ni traceur, qu&apos;il soit technique ou tiers — il
-              ne fait appel à aucun outil de mesure d&apos;audience, de chat en ligne ou de
+              Le Site ne dépose aucun cookie ni traceur, qu’il soit technique ou tiers — il
+              ne fait appel à aucun outil de mesure d’audience, de chat en ligne ou de
               publicité. Voir la section « Cookies » de nos{' '}
-              <a href="/fr/cgu">Conditions Générales d&apos;Utilisation</a> pour plus de détails.
+              <a href="/fr/cgu">Conditions Générales d’Utilisation</a> pour plus de détails.
             </p>
           </LegalSection>
 
           <LegalSection title="6. Droit applicable">
             <p>
               Les présentes mentions légales sont soumises au droit français. En cas de litige et
-              à défaut d&apos;accord amiable, les tribunaux français seront seuls compétents.
+              à défaut d’accord amiable, les tribunaux français seront seuls compétents.
             </p>
           </LegalSection>
         </>
