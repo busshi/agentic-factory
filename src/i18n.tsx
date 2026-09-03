@@ -81,7 +81,7 @@ export const translations: Record<Lang, Translation> = {
     },
     hero: {
       eyebrow: 'Agents IA',
-      titleA: 'Vos tâches répétitives méritent mieux qu’un bricolage no-code.',
+      titleA: 'Vos tâches répétitives méritent mieux qu’un stagiaire.',
       titleB: 'Elles méritent un agent.',
       subtitle:
         'Des agents IA codés sur-mesure, branchés sur vos outils réels — pas des scénarios no-code qui lâchent au premier imprévu. Moins de tâches répétitives, plus de temps pour ce qui compte vraiment.',
