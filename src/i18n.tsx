@@ -72,9 +72,9 @@ export const translations: Record<Lang, Translation> = {
   fr: {
     meta: {
       htmlLang: 'fr',
-      title: 'AgenticFactory — Agents IA sur-mesure pour PME et startups',
+      title: 'agentic-factory.fr — Agents IA sur-mesure pour PME et startups',
       description:
-        'AgenticFactory conçoit des agents IA sur-mesure pour PME et startups : facturation, support client, qualification de leads. Audit gratuit.',
+        'agentic-factory.fr conçoit des agents IA sur-mesure pour PME et startups : facturation, support client, qualification de leads. Audit gratuit.',
     },
     nav: {
       cta: 'Audit gratuit',
@@ -202,9 +202,9 @@ export const translations: Record<Lang, Translation> = {
   en: {
     meta: {
       htmlLang: 'en',
-      title: 'AgenticFactory — Custom AI Agents for SMEs and Startups',
+      title: 'agentic-factory.fr — Custom AI Agents for SMEs and Startups',
       description:
-        'AgenticFactory builds custom AI agents for SMEs and startups: invoicing, customer support, lead qualification. Free audit.',
+        'agentic-factory.fr builds custom AI agents for SMEs and startups: invoicing, customer support, lead qualification. Free audit.',
     },
     nav: {
       cta: 'Free audit',
