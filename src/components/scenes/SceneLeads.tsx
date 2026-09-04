@@ -162,27 +162,19 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
           return (
             <g key={i}>
               <path d={particlePath} stroke="rgb(var(--color-surface2))" strokeWidth="1" fill="none" opacity="0.5" />
-              {/* keyPoints needs calcMode="linear" — without it,
-                  animateMotion's default calcMode="paced" silently
-                  ignores keyPoints/keyTimes and paces the dot across the
-                  *whole* duration instead, so during this brief opacity
-                  window it's barely past the chip and never visibly
-                  reaches the bar. Widened window (was ~10% of the 3.6s
-                  cycle) times the arrival to just before the bar starts
-                  filling (score ramp-up begins at keyTime 0.4 in the
-                  `tick` effect above), so it reads as "this lead lands,
-                  then its bar fills". */}
+              {/* Same recipe as the raw-leads dots flowing into the chip
+                  above (plain animateMotion over the whole path, no
+                  keyPoints) instead of the earlier keyPoints/calcMode
+                  version — that one still wasn't visibly leaving the chip
+                  even with calcMode="linear" set, so dropping down to the
+                  simpler, already-proven-working pattern instead of
+                  debugging the fancier one further. Shorter dur than the
+                  bar's own 3.6s cycle means it laps a few times per
+                  bar-fill, reading as steady activity rather than one
+                  precisely-timed handoff. */}
               <circle opacity="0" r="3" fill={r.color} filter="url(#sceneGlow2)">
-                <animateMotion
-                  dur="3.6s"
-                  begin={begin}
-                  repeatCount="indefinite"
-                  calcMode="linear"
-                  keyPoints="0;0;1;1"
-                  keyTimes="0;0.05;0.35;1"
-                  path={particlePath}
-                />
-                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.03;0.07;0.35;0.40" dur="3.6s" begin={begin} repeatCount="indefinite" />
+                <animateMotion dur="1.6s" begin={begin} repeatCount="indefinite" path={particlePath} />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.75;1" dur="1.6s" begin={begin} repeatCount="indefinite" />
               </circle>
 
               <rect x="260" y={r.y - 7} width={MAX_BAR_WIDTH} height="14" rx="4" fill="rgb(var(--color-surface2))" stroke="rgb(var(--color-line))" strokeWidth="1" />
