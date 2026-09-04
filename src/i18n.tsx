@@ -72,7 +72,7 @@ export const translations: Record<Lang, Translation> = {
   fr: {
     meta: {
       htmlLang: 'fr',
-      title: 'agentic-factory.fr — Agents IA sur-mesure pour PME et startups',
+      title: 'agentic-factory.fr — Agents IA sur-mesure pour PME/startups',
       description:
         'agentic-factory.fr conçoit des agents IA sur-mesure pour PME et startups : facturation, support client, qualification de leads. Audit gratuit.',
     },
