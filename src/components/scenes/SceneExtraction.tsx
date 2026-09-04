@@ -84,7 +84,14 @@ export function SceneExtraction({ lang = 'fr' }: SceneProps) {
           const begin = Array.from({ length: REPEATS }, (_, n) => `${(firstBegin + n * FIELD_CYCLE).toFixed(2)}s`).join(';')
           return (
             <g key={i}>
-              <path d={path} stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+              {/* the rail itself only shows up while its dot is actually
+                  on it — three lines sitting there permanently, only one
+                  of which has a dot moving on it at any given time, read
+                  as odd. Same begin/dur as the dot below so they appear
+                  and fade together. */}
+              <path opacity="0" d={path} stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none">
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur={`${DOT_DUR}s`} begin={begin} />
+              </path>
               <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
                 <animateMotion dur={`${DOT_DUR}s`} begin={begin} path={path} />
                 <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur={`${DOT_DUR}s`} begin={begin} />
