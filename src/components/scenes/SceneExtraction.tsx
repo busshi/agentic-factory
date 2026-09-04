@@ -29,15 +29,19 @@ export function SceneExtraction({ lang = 'fr' }: SceneProps) {
         <text x="66" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">{s.scanned}</text>
         <text x="310" y="16" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">{s.structured}</text>
 
-        {/* scanned document, with a scan-line sweeping down it on loop */}
+        {/* scanned document, with a scan-line sweeping down it on loop —
+            gentle continuous 3D wobble (animate-tilt3d) on its own inner
+            <g>, same split as the agent chip and the other cards. */}
         <g transform="translate(50 100)">
-          <rect x="-38" y="-56" width="76" height="112" rx="8" fill="rgb(var(--color-surface))" stroke="rgb(var(--color-line))" strokeWidth="1.5" />
-          {[-38, -22, -6, 10, 26].map((y, i) => (
-            <rect key={i} x="-26" y={y} width="52" height="4" rx="2" fill="rgb(var(--color-line))" />
-          ))}
-          <rect x="-38" y="-56" width="76" height="6" fill="url(#sceneGrad7)" opacity="0.8">
-            <animate attributeName="y" values="-56;50;-56" dur="2.6s" repeatCount="indefinite" />
-          </rect>
+          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
+            <rect x="-38" y="-56" width="76" height="112" rx="8" fill="rgb(var(--color-surface))" stroke="rgb(var(--color-line))" strokeWidth="1.5" />
+            {[-38, -22, -6, 10, 26].map((y, i) => (
+              <rect key={i} x="-26" y={y} width="52" height="4" rx="2" fill="rgb(var(--color-line))" />
+            ))}
+            <rect x="-38" y="-56" width="76" height="6" fill="url(#sceneGrad7)" opacity="0.8">
+              <animate attributeName="y" values="-56;50;-56" dur="2.6s" repeatCount="indefinite" />
+            </rect>
+          </g>
         </g>
 
         {/* rail to agent chip */}
@@ -47,18 +51,23 @@ export function SceneExtraction({ lang = 'fr' }: SceneProps) {
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.5s" repeatCount="indefinite" />
         </circle>
 
-        {/* mini agent chip */}
+        {/* mini agent chip. The 3D wobble (animate-tilt3d) sits on its own
+            inner <g> with no position of its own — see
+            SceneAppointment.tsx for why it can't share the translate(...)
+            <g>. */}
         <g transform="translate(190 100)">
-          <circle r="30" fill="rgb(var(--color-violet))" opacity="0.15" />
-          <circle r="21" fill="none" stroke="url(#sceneGrad7)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
-            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
-          </circle>
-          <rect x="-13" y="-13" width="26" height="26" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad7)" strokeWidth="1.4" />
-          {[-6, -1, 4].map((x, i) => (
-            <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
-              <animate attributeName="opacity" values="0.2;1;0.2" dur="0.9s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
-            </rect>
-          ))}
+          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
+            <circle r="30" fill="rgb(var(--color-violet))" opacity="0.15" />
+            <circle r="21" fill="none" stroke="url(#sceneGrad7)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
+            </circle>
+            <rect x="-13" y="-13" width="26" height="26" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad7)" strokeWidth="1.4" />
+            {[-6, -1, 4].map((x, i) => (
+              <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
+                <animate attributeName="opacity" values="0.2;1;0.2" dur="0.9s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
+              </rect>
+            ))}
+          </g>
         </g>
 
         {/* rail to structured output */}

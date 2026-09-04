@@ -52,12 +52,25 @@ export default {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        // Gentle continuous 3D wobble for elements inside the use-case
+        // Scene* illustrations (the agent chip, key cards). Needs
+        // transform-box:fill-box + transform-origin:center on the target
+        // (set per-usage, since Tailwind has no utility for transform-box)
+        // so it rotates around its own center rather than the SVG's
+        // origin — see scenes/README notes in the components for why the
+        // rotation lives on a separate inner <g>, not the same one that
+        // already carries a positional translate() attribute.
+        tilt3d: {
+          '0%, 100%': { transform: 'perspective(400px) rotateY(-14deg) rotateX(5deg)' },
+          '50%': { transform: 'perspective(400px) rotateY(14deg) rotateX(-5deg)' },
+        },
       },
       animation: {
         pulseLine: 'pulseLine 1.2s linear infinite',
         floatSlow: 'floatSlow 6s ease-in-out infinite',
         nodeGlow: 'nodeGlow 2.4s ease-in-out infinite',
         marquee: 'marquee 28s linear infinite',
+        tilt3d: 'tilt3d 4s ease-in-out infinite',
       },
     },
   },

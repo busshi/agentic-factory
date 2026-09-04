@@ -32,12 +32,31 @@ export function SceneEmailSort({ lang = 'fr' }: SceneProps) {
               keyframe — before `begin` elapses, the animate hasn't taken
               effect yet and this group (centered on its own local origin)
               would otherwise render at the SVG's default (0,0) — the
-              top-left corner — half clipped outside the viewBox. */}
+              top-left corner — half clipped outside the viewBox.
+              The "tumble" is a scaleX oscillation (1 -> 0 -> -1 -> 0 -> 1)
+              via SMIL animateTransform, not a CSS 3D rotateY — a flat
+              shape being squashed to a sliver and back reads as a coin-
+              flip in 3D, and staying in SMIL avoids mixing it with the
+              filter + animateMotion already on this element (CSS 3D
+              transforms on a filtered/SMIL-animated SVG subtree froze
+              solid in testing — a real, if narrow, cross-browser
+              footgun). */}
           <g opacity="0" filter="url(#sceneGlow)">
             <animateMotion dur="3s" begin={m.delay} repeatCount="indefinite" path={m.path} />
             <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.85;1" dur="3s" begin={m.delay} repeatCount="indefinite" />
-            <rect x="-10" y="-7" width="20" height="14" rx="2.5" fill="rgb(var(--color-surface))" stroke={m.color} strokeWidth="1.3" />
-            <path d={`M -10 -5 L 0 3 L 10 -5`} stroke={m.color} strokeWidth="1" fill="none" />
+            <g>
+              <animateTransform
+                attributeName="transform"
+                type="scale"
+                values="1 1; 0.05 1; -1 1; -0.05 1; 1 1"
+                keyTimes="0;0.25;0.5;0.75;1"
+                dur="3s"
+                begin={m.delay}
+                repeatCount="indefinite"
+              />
+              <rect x="-10" y="-7" width="20" height="14" rx="2.5" fill="rgb(var(--color-surface))" stroke={m.color} strokeWidth="1.3" />
+              <path d={`M -10 -5 L 0 3 L 10 -5`} stroke={m.color} strokeWidth="1" fill="none" />
+            </g>
           </g>
         </g>
       ))}

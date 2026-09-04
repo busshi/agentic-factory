@@ -85,18 +85,25 @@ export function SceneAppointment({ lang = 'fr' }: SceneProps) {
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.4s" repeatCount="indefinite" />
         </circle>
 
-        {/* mini agent chip, center */}
+        {/* mini agent chip, center. The 3D wobble (animate-tilt3d) sits on
+            its own inner <g> with no position of its own — putting it on
+            the same <g> as the translate(...) attribute would replace that
+            positioning outright instead of combining with it (CSS
+            transform overrides an SVG transform attribute, it doesn't
+            compose with it). */}
         <g transform="translate(210 100)">
-          <circle r="32" fill="url(#coreGradScene3)" opacity="0.45" />
-          <circle r="23" fill="none" stroke="url(#sceneGrad5)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.6">
-            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2.6s" repeatCount="indefinite" />
-          </circle>
-          <rect x="-14" y="-14" width="28" height="28" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad5)" strokeWidth="1.4" />
-          {[-7, -1.5, 4].map((x, i) => (
-            <rect key={i} x={x} y="-6" width="2.2" height="12" rx="1.1" fill="rgb(var(--color-violet-soft))">
-              <animate attributeName="opacity" values="0.2;1;0.2" dur="0.8s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
-            </rect>
-          ))}
+          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
+            <circle r="32" fill="url(#coreGradScene3)" opacity="0.45" />
+            <circle r="23" fill="none" stroke="url(#sceneGrad5)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.6">
+              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2.6s" repeatCount="indefinite" />
+            </circle>
+            <rect x="-14" y="-14" width="28" height="28" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad5)" strokeWidth="1.4" />
+            {[-7, -1.5, 4].map((x, i) => (
+              <rect key={i} x={x} y="-6" width="2.2" height="12" rx="1.1" fill="rgb(var(--color-violet-soft))">
+                <animate attributeName="opacity" values="0.2;1;0.2" dur="0.8s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
+              </rect>
+            ))}
+          </g>
         </g>
 
         {/* rail to calendar */}
@@ -106,8 +113,11 @@ export function SceneAppointment({ lang = 'fr' }: SceneProps) {
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.4s" begin="1.3s" repeatCount="indefinite" />
         </circle>
 
-        {/* calendar card confirming the slot */}
+        {/* calendar card confirming the slot — gentle continuous 3D wobble
+            (animate-tilt3d) on its own inner <g>, same split as the agent
+            chip and the invoice envelope. */}
         <g transform="translate(282 66)">
+        <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
           <rect width="76" height="46" rx="10" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad5)" strokeWidth="1.4" />
           {/* A filled header band here (surface2) read as an odd pale,
               faintly color-tinted smudge in light mode — a plain divider
@@ -127,6 +137,7 @@ export function SceneAppointment({ lang = 'fr' }: SceneProps) {
             <circle r="9" fill="rgb(var(--color-surface))" stroke="#4ADE80" strokeWidth="1.6" />
             <path d="M -4 0 l 3 3.5 l 6 -7" fill="none" stroke="#4ADE80" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           </g>
+        </g>
         </g>
         <text x="320" y="128" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">
           {t.rappel}

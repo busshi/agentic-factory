@@ -126,12 +126,18 @@ export function Hero({ lang, t }: HeroProps) {
             <motion.div
               onMouseMove={handlePanelMouseMove}
               onMouseLeave={handlePanelMouseLeave}
+              // Neon ring built from the site's own blue/violet tokens
+              // (--color-blue #3B82F6, --color-violet #A855F7 — see
+              // index.css), not invented colors: a crisp blue inner ring,
+              // a violet outer ring just past it (the two read as one
+              // blue-to-violet edge), then a blue bloom and a wider violet
+              // bloom further out.
               whileHover={
                 prefersReducedMotion
                   ? undefined
                   : {
                       boxShadow:
-                        '0 0 0 1.5px rgba(147,163,255,0.9), 0 0 45px 8px rgba(96,165,250,0.55), 0 0 90px 24px rgba(192,132,252,0.4), 0 30px 80px -20px rgba(96,88,246,0.35)',
+                        '0 0 0 2px rgba(59,130,246,0.95), 0 0 0 3.5px rgba(168,85,247,0.7), 0 0 50px 8px rgba(59,130,246,0.55), 0 0 100px 26px rgba(168,85,247,0.45), 0 30px 80px -20px rgba(96,88,246,0.35)',
                     }
               }
               transition={{ boxShadow: { duration: 0.8, ease: 'easeInOut' } }}
