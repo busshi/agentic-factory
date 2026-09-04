@@ -162,16 +162,22 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
           return (
             <g key={i}>
               <path d={particlePath} stroke="rgb(var(--color-surface2))" strokeWidth="1" fill="none" opacity="0.5" />
+              {/* was only visible for ~10% of the cycle (a 0.36s travel
+                  inside 3.6s) — easy to miss which dot goes to which bar.
+                  Widened to a slower, clearly visible travel that arrives
+                  right as the bar itself starts filling (score ramp-up
+                  begins at keyTime 0.4 in the `tick` effect above), so it
+                  reads as "this lead lands, then its bar fills". */}
               <circle opacity="0" r="3" fill={r.color} filter="url(#sceneGlow2)">
                 <animateMotion
                   dur="3.6s"
                   begin={begin}
                   repeatCount="indefinite"
                   keyPoints="0;0;1;1"
-                  keyTimes="0;0.30;0.40;1"
+                  keyTimes="0;0.05;0.35;1"
                   path={particlePath}
                 />
-                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.28;0.32;0.42;0.46" dur="3.6s" begin={begin} repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.03;0.07;0.35;0.40" dur="3.6s" begin={begin} repeatCount="indefinite" />
               </circle>
 
               <rect x="260" y={r.y - 7} width={MAX_BAR_WIDTH} height="14" rx="4" fill="rgb(var(--color-surface2))" stroke="rgb(var(--color-line))" strokeWidth="1" />
