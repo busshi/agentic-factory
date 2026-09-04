@@ -107,11 +107,15 @@ export function SceneMonitoring({ lang = 'fr' }: SceneProps) {
             `wave` polyline (cumulative segment length to that point, over
             the total length) — the scanner dot's animateMotion moves at a
             constant fraction-of-length-per-time, so that's when it's due
-            to pass through here. Recompute this fraction if `wave` changes. */}
+            to pass through here. Recompute this fraction if `wave` changes.
+            calcMode="linear" is required for keyPoints to take effect at
+            all — animateMotion's default calcMode="paced" silently ignores
+            it otherwise. */}
         <circle opacity="0" r="2.6" fill="#F87171">
           <animateMotion
             dur="3.6s"
             repeatCount="indefinite"
+            calcMode="linear"
             keyPoints="0;0;1;1"
             keyTimes="0;0.484;0.68;1"
             path="M 249 65 C 280 48, 300 48, 320 74"
