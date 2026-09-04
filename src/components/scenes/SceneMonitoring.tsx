@@ -99,9 +99,24 @@ export function SceneMonitoring({ lang = 'fr' }: SceneProps) {
         </circle>
 
         <path d="M 249 65 C 280 48, 300 48, 320 74" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+        {/* This dot waits at the peak instead of looping on its own clock —
+            it only departs once the scanner dot above actually reaches the
+            peak. Same 3.6s period as the scanner's own animateMotion, with
+            keyPoints/keyTimes holding it at the path's start (0) until
+            ~48.4% of the cycle: that's the peak's own position along the
+            `wave` polyline (cumulative segment length to that point, over
+            the total length) — the scanner dot's animateMotion moves at a
+            constant fraction-of-length-per-time, so that's when it's due
+            to pass through here. Recompute this fraction if `wave` changes. */}
         <circle opacity="0" r="2.6" fill="#F87171">
-          <animateMotion dur="1.6s" repeatCount="indefinite" path="M 249 65 C 280 48, 300 48, 320 74" />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.6s" repeatCount="indefinite" />
+          <animateMotion
+            dur="3.6s"
+            repeatCount="indefinite"
+            keyPoints="0;0;1;1"
+            keyTimes="0;0.484;0.68;1"
+            path="M 249 65 C 280 48, 300 48, 320 74"
+          />
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.46;0.50;0.65;0.70;1" dur="3.6s" repeatCount="indefinite" />
         </circle>
 
         {/* bell + alert card */}
