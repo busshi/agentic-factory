@@ -90,22 +90,18 @@ export function SceneSupport({ lang = 'fr' }: SceneProps) {
         </circle>
 
         {/* mini agent chip, center — pulses faster to read as "actively
-            working". The 3D wobble (animate-tilt3d) sits on its own inner
-            <g> with no position of its own — see SceneAppointment.tsx for
-            why it can't share the translate(...) <g>. */}
+            working" */}
         <g transform="translate(210 100)">
-          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
-            <circle r="32" fill="url(#coreGradScene)" opacity="0.45" />
-            <circle r="23" fill="none" stroke="url(#sceneGrad3)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.6">
-              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2.2s" repeatCount="indefinite" />
-            </circle>
-            <rect x="-14" y="-14" width="28" height="28" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad3)" strokeWidth="1.4" />
-            {[-7, -1.5, 4].map((x, i) => (
-              <rect key={i} x={x} y="-6" width="2.2" height="12" rx="1.1" fill="rgb(var(--color-violet-soft))">
-                <animate attributeName="opacity" values="0.2;1;0.2" dur="0.7s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
-              </rect>
-            ))}
-          </g>
+          <circle r="32" fill="url(#coreGradScene)" opacity="0.45" />
+          <circle r="23" fill="none" stroke="url(#sceneGrad3)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.6">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2.2s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-14" y="-14" width="28" height="28" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad3)" strokeWidth="1.4" />
+          {[-7, -1.5, 4].map((x, i) => (
+            <rect key={i} x={x} y="-6" width="2.2" height="12" rx="1.1" fill="rgb(var(--color-violet-soft))">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="0.7s" begin={`${i * 0.15}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
         </g>
 
         {/* rail to reply bubble */}
@@ -116,11 +112,8 @@ export function SceneSupport({ lang = 'fr' }: SceneProps) {
         </circle>
 
         {/* reply bubble with checkmark, clear on/off cycle synced to the
-            rest. No pre-existing position transform on this <g>, so the
-            tilt3d wobble can go directly on it (no extra wrapper needed —
-            unlike the calendar/envelope cases, there's no translate(...)
-            attribute for a CSS transform to clobber). */}
-        <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
+            rest */}
+        <g>
           <rect x="282" y="66" width="76" height="42" rx="12" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad3)" strokeWidth="1.4">
             <animate attributeName="opacity" values="0.25;0.25;1;1;0.25" keyTimes="0;0.45;0.55;0.9;1" dur="2.2s" repeatCount="indefinite" />
           </rect>

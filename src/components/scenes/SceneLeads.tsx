@@ -134,23 +134,18 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
           )
         })}
 
-        {/* mini agent chip = the scoring engine. The 3D wobble
-            (animate-tilt3d) sits on its own inner <g> with no position of
-            its own — see SceneAppointment.tsx for why it can't share the
-            translate(...) <g>. */}
+        {/* mini agent chip = the scoring engine */}
         <g transform="translate(190 100)">
-          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
-            <circle r="30" fill="url(#coreGradScene2)" opacity="0.45" />
-            <circle r="21" fill="none" stroke="url(#sceneGrad4)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
-              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
-            </circle>
-            <rect x="-13" y="-13" width="26" height="26" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad4)" strokeWidth="1.4" />
-            {[-6, -1, 4].map((x, i) => (
-              <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
-                <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
-              </rect>
-            ))}
-          </g>
+          <circle r="30" fill="url(#coreGradScene2)" opacity="0.45" />
+          <circle r="21" fill="none" stroke="url(#sceneGrad4)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-13" y="-13" width="26" height="26" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad4)" strokeWidth="1.4" />
+          {[-6, -1, 4].map((x, i) => (
+            <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
         </g>
         <text x="190" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">score()</text>
 
@@ -167,16 +162,27 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
           return (
             <g key={i}>
               <path d={particlePath} stroke="rgb(var(--color-surface2))" strokeWidth="1" fill="none" opacity="0.5" />
+              {/* keyPoints needs calcMode="linear" — without it,
+                  animateMotion's default calcMode="paced" silently
+                  ignores keyPoints/keyTimes and paces the dot across the
+                  *whole* duration instead, so during this brief opacity
+                  window it's barely past the chip and never visibly
+                  reaches the bar. Widened window (was ~10% of the 3.6s
+                  cycle) times the arrival to just before the bar starts
+                  filling (score ramp-up begins at keyTime 0.4 in the
+                  `tick` effect above), so it reads as "this lead lands,
+                  then its bar fills". */}
               <circle opacity="0" r="3" fill={r.color} filter="url(#sceneGlow2)">
                 <animateMotion
                   dur="3.6s"
                   begin={begin}
                   repeatCount="indefinite"
+                  calcMode="linear"
                   keyPoints="0;0;1;1"
-                  keyTimes="0;0.30;0.40;1"
+                  keyTimes="0;0.05;0.35;1"
                   path={particlePath}
                 />
-                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.28;0.32;0.42;0.46" dur="3.6s" begin={begin} repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.03;0.07;0.35;0.40" dur="3.6s" begin={begin} repeatCount="indefinite" />
               </circle>
 
               <rect x="260" y={r.y - 7} width={MAX_BAR_WIDTH} height="14" rx="4" fill="rgb(var(--color-surface2))" stroke="rgb(var(--color-line))" strokeWidth="1" />

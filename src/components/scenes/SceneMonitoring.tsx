@@ -55,22 +55,18 @@ export function SceneMonitoring({ lang = 'fr' }: SceneProps) {
         })}
 
         {/* mini agent chip = the triage engine, deciding which signal
-            matters. The 3D wobble (animate-tilt3d) sits on its own inner
-            <g> with no position of its own — see SceneAppointment.tsx for
-            why it can't share the translate(...) <g>. */}
+            matters */}
         <g transform="translate(148 100)">
-          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
-            <circle r="28" fill="url(#coreGradScene4)" opacity="0.45" />
-            <circle r="20" fill="none" stroke="url(#sceneGrad6)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
-              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
-            </circle>
-            <rect x="-12" y="-12" width="24" height="24" rx="6" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
-            {[-6, -1, 4].map((x, i) => (
-              <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
-                <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
-              </rect>
-            ))}
-          </g>
+          <circle r="28" fill="url(#coreGradScene4)" opacity="0.45" />
+          <circle r="20" fill="none" stroke="url(#sceneGrad6)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-12" y="-12" width="24" height="24" rx="6" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
+          {[-6, -1, 4].map((x, i) => (
+            <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
         </g>
 
         {/* rail from chip to the chosen response */}
@@ -82,12 +78,12 @@ export function SceneMonitoring({ lang = 'fr' }: SceneProps) {
 
         {/* a scanner dot rides the whole waveform continuously — reads as
             "actively watching this metric", not just marking one static
-            point. The scale pulse (animateTransform, additive so it layers
-            on top of animateMotion's own translation instead of replacing
-            it) is a depth cue: bigger as if closer to camera, smaller as
-            if farther — a different 3D trick than the chip's tilt or the
-            envelope's flip, since a plain circle has no "face" to flip or
-            tilt to begin with. */}
+            point (the static anomaly marker it used to hand off to was
+            removed as redundant). The scale pulse (animateTransform,
+            additive so it layers on top of animateMotion's own translation
+            instead of replacing it) is a depth cue: bigger as if closer to
+            camera, smaller as if farther — a plain circle has no "face" to
+            tilt, so a size pulse stands in for that. */}
         <circle opacity="0" r="3" fill="#F87171" filter="url(#sceneGlow3)">
           <animateMotion dur="3.6s" repeatCount="indefinite" path={wave} rotate="auto" />
           <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.06;0.94;0.97;1" dur="3.6s" repeatCount="indefinite" />
@@ -102,28 +98,38 @@ export function SceneMonitoring({ lang = 'fr' }: SceneProps) {
           />
         </circle>
 
-        {/* static marker still calls out exactly where the anomaly is */}
-        <circle cx="245" cy="65" r="4" fill="#F87171" filter="url(#sceneGlow3)">
-          <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" />
-        </circle>
-
         <path d="M 249 65 C 280 48, 300 48, 320 74" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+        {/* This dot waits at the peak instead of looping on its own clock —
+            it only departs once the scanner dot above actually reaches the
+            peak. Same 3.6s period as the scanner's own animateMotion, with
+            keyPoints/keyTimes holding it at the path's start (0) until
+            ~48.4% of the cycle: that's the peak's own position along the
+            `wave` polyline (cumulative segment length to that point, over
+            the total length) — the scanner dot's animateMotion moves at a
+            constant fraction-of-length-per-time, so that's when it's due
+            to pass through here. Recompute this fraction if `wave` changes.
+            calcMode="linear" is required for keyPoints to take effect at
+            all — animateMotion's default calcMode="paced" silently ignores
+            it otherwise. */}
         <circle opacity="0" r="2.6" fill="#F87171">
-          <animateMotion dur="1.6s" repeatCount="indefinite" path="M 249 65 C 280 48, 300 48, 320 74" />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.6s" repeatCount="indefinite" />
+          <animateMotion
+            dur="3.6s"
+            repeatCount="indefinite"
+            calcMode="linear"
+            keyPoints="0;0;1;1"
+            keyTimes="0;0.484;0.68;1"
+            path="M 249 65 C 280 48, 300 48, 320 74"
+          />
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.46;0.50;0.65;0.70;1" dur="3.6s" repeatCount="indefinite" />
         </circle>
 
-        {/* bell + alert card — gentle continuous 3D wobble (animate-tilt3d)
-            on its own inner <g>, same split as the agent chip and the
-            other cards. */}
+        {/* bell + alert card */}
         <g transform="translate(320 100)">
-          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
-            <circle r="26" fill="none" stroke="url(#sceneGrad6)" strokeWidth="1.2" strokeDasharray="2 6" opacity="0.5">
-              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="5s" repeatCount="indefinite" />
-            </circle>
-            <rect x="-16" y="-16" width="32" height="32" rx="9" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
-            <path d="M -6 -6 q 6 -8 12 0 q 0 8 3 10 h -18 q 3 -2 3 -10" fill="none" stroke="#F87171" strokeWidth="1.4" strokeLinejoin="round" />
-          </g>
+          <circle r="26" fill="none" stroke="url(#sceneGrad6)" strokeWidth="1.2" strokeDasharray="2 6" opacity="0.5">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="5s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-16" y="-16" width="32" height="32" rx="9" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad6)" strokeWidth="1.4" />
+          <path d="M -6 -6 q 6 -8 12 0 q 0 8 3 10 h -18 q 3 -2 3 -10" fill="none" stroke="#F87171" strokeWidth="1.4" strokeLinejoin="round" />
         </g>
         <text x="320" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">
           {s.prevenue}
