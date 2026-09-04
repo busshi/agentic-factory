@@ -66,18 +66,23 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
           </g>
         ))}
 
-        {/* mini agent chip */}
+        {/* mini agent chip. The 3D wobble (animate-tilt3d) sits on its own
+            inner <g> with no position of its own — see
+            SceneAppointment.tsx for why it can't share the translate(...)
+            <g>. */}
         <g transform="translate(150 100)">
-          <circle r="26" fill="rgb(var(--color-violet))" opacity="0.15" />
-          <circle r="19" fill="none" stroke="url(#sceneGrad8)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
-            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3.4s" repeatCount="indefinite" />
-          </circle>
-          <rect x="-11" y="-11" width="22" height="22" rx="6" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
-          {[-5.5, -1, 3.5].map((x, i) => (
-            <rect key={i} x={x} y="-4.5" width="1.8" height="9" rx="0.9" fill="rgb(var(--color-violet-soft))">
-              <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
-            </rect>
-          ))}
+          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
+            <circle r="26" fill="rgb(var(--color-violet))" opacity="0.15" />
+            <circle r="19" fill="none" stroke="url(#sceneGrad8)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3.4s" repeatCount="indefinite" />
+            </circle>
+            <rect x="-11" y="-11" width="22" height="22" rx="6" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
+            {[-5.5, -1, 3.5].map((x, i) => (
+              <rect key={i} x={x} y="-4.5" width="1.8" height="9" rx="0.9" fill="rgb(var(--color-violet-soft))">
+                <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
+              </rect>
+            ))}
+          </g>
         </g>
 
         <path d="M 168 100 C 178 100, 182 100, 190 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
@@ -87,8 +92,11 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
         </circle>
 
         {/* digest card, much wider now — text rotates through insights,
-            comfortably inside the card at this width */}
-        <g>
+            comfortably inside the card at this width. Gentle continuous
+            3D wobble (animate-tilt3d) directly on this <g> — no
+            pre-existing position transform to clobber, same as the
+            support scene's reply bubble. */}
+        <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
           <rect x="190" y="60" width="172" height="80" rx="12" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad8)" strokeWidth="1.4" />
           <AnimatePresence mode="wait">
             <motion.g
