@@ -70,11 +70,12 @@ export function Hero({ lang, t }: HeroProps) {
       <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
       <div className="absolute inset-0 noise-overlay pointer-events-none" />
       <div className="max-w-6xl mx-auto relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
+        {/* initial={false}: the H1 is the page's LCP candidate — the
+            prerendered HTML was shipping it at opacity:0 (Framer Motion's
+            `initial` state gets baked into the SSR output), so it stayed
+            invisible until JS hydrated and ran the fade-in. Skipping the
+            mount animation lets it paint immediately instead. */}
+        <motion.div initial={false}>
           <Eyebrow>{t.hero.eyebrow}</Eyebrow>
           <h1 className="font-display font-semibold text-4xl sm:text-5xl md:text-6xl leading-[1.08] mt-6 max-w-3xl">
             {t.hero.titleA}{' '}
@@ -113,12 +114,10 @@ export function Hero({ lang, t }: HeroProps) {
             before anyone touches the cursor — a tilt that only reacts to
             hover is invisible to someone who never happens to hover it
             exactly); the innermost owns the cursor-tracked 3D tilt itself. */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 sm:mt-20"
-        >
+        {/* initial={false}, same reason as the text block above — this
+            panel is large enough to be the LCP candidate on some viewports,
+            so it shouldn't sit at opacity:0 waiting on hydration either. */}
+        <motion.div initial={false} className="mt-10 sm:mt-20">
           <motion.div
             animate={prefersReducedMotion ? undefined : { y: [0, -12, 0] }}
             transition={prefersReducedMotion ? undefined : { duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -147,7 +146,12 @@ export function Hero({ lang, t }: HeroProps) {
               {/* same subtle top-centered glow as the use-cases stage panel
                   (UseCases.tsx), for a consistent look between the two */}
               <div className="absolute inset-0 bg-grad-radial pointer-events-none" />
-              <AnimatePresence mode="wait">
+              {/* initial={false} on the AnimatePresence itself: only skips
+                  the very first scene's mount transition (so it's visible
+                  immediately, same LCP reasoning as above) — later scene
+                  changes on the 5s interval still get the full rotateY
+                  flip, since those aren't in the critical path. */}
+              <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={heroActive}
                   initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, rotateY: 65, scale: 0.85 }}
