@@ -12,11 +12,18 @@ interface RankedLead {
 // palette instead of the input side being uniformly gray.
 const LEAD_COLORS = ['#4ADE80', 'rgb(var(--color-blue-soft))', 'rgb(var(--color-violet-soft))', 'rgb(var(--color-muted2))']
 
+// Per-row input delay (seconds), shared with the output side below so a
+// dot's departure toward its bar can be computed as "whenever this same
+// row's input dot last arrived at the chip", not an unrelated schedule.
+const LEAD_OFFSETS = [0, 0.35, 0.7, 1.05]
+const INPUT_DUR = 1.6 // seconds, matches the input dot's dur below
+const HANDOFF_PAUSE = 0.15 // seconds the chip "holds" the lead before sending it out
+
 const RAW_LEADS = [
-  { y: 130, delay: '0s', color: LEAD_COLORS[0] },
-  { y: 45, delay: '0.35s', color: LEAD_COLORS[1] },
-  { y: 155, delay: '0.7s', color: LEAD_COLORS[2] },
-  { y: 80, delay: '1.05s', color: LEAD_COLORS[3] },
+  { y: 130, offset: LEAD_OFFSETS[0], color: LEAD_COLORS[0] },
+  { y: 45, offset: LEAD_OFFSETS[1], color: LEAD_COLORS[1] },
+  { y: 155, offset: LEAD_OFFSETS[2], color: LEAD_COLORS[2] },
+  { y: 80, offset: LEAD_OFFSETS[3], color: LEAD_COLORS[3] },
 ]
 
 // 4 distinct colors, one per rank — a gradient of priority from green
@@ -50,9 +57,10 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
 
   useEffect(() => {
     // Matches the traveling dot's own animateMotion below exactly: same
-    // 1.6s loop, same i*900ms per-row offset — so "the dot arrives" and
-    // "the score bumps" are the same event, not two independently-timed
-    // animations that happen to look related.
+    // 1.6s loop, same per-row offset (the input dot's arrival + handoff
+    // pause) — so "the dot arrives" and "the score bumps" are the same
+    // event, not two independently-timed animations that happen to look
+    // related.
     const DURATION = 1600 // ms, matches the dot's dur="1.6s"
     const RAMP_START = 0.8 // fraction of the cycle where the bump starts — the
     // dot's opacity fades out over 0.75–1 (see the animateMotion/animate
@@ -74,7 +82,7 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
       const elapsed = now - start
       setCounts(
         RANKED.map((r, i) => {
-          const delay = i * 900 // ms, matches the dot's begin={i*0.9s}
+          const delay = (LEAD_OFFSETS[i] + INPUT_DUR + HANDOFF_PAUSE) * 1000 // ms, matches the dot's begin
           const t = Math.max(0, elapsed - delay)
           const cycleIndex = Math.floor(t / DURATION)
           const frac = (t % DURATION) / DURATION
@@ -116,6 +124,7 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
         {/* raw, unordered leads continuously flowing toward the agent */}
         {RAW_LEADS.map((l, i) => {
           const path = `M 42 ${l.y} C 90 ${l.y}, 130 100, 172 100`
+          const begin = `${l.offset}s`
           return (
             <g key={i}>
               {/* opacity="0" as a static base, not just the animate's first
@@ -123,8 +132,8 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
                   taken effect yet and the circle would otherwise sit fully
                   visible at the SVG's default (0,0) origin. */}
               <circle opacity="0" r="3.6" fill={l.color} filter="url(#sceneGlow2)">
-                <animateMotion dur="1.6s" begin={l.delay} repeatCount="indefinite" path={path} />
-                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.75;1" dur="1.6s" begin={l.delay} repeatCount="indefinite" />
+                <animateMotion dur={`${INPUT_DUR}s`} begin={begin} repeatCount="indefinite" path={path} />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.75;1" dur={`${INPUT_DUR}s`} begin={begin} repeatCount="indefinite" />
               </circle>
             </g>
           )
@@ -152,22 +161,19 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
             both driven by the same counts[i] state, so they move together */}
         {RANKED.map((r, i) => {
           const particlePath = `M 206 100 C 230 100, 245 ${r.y}, 260 ${r.y}`
-          const begin = `${i * 0.9}s`
+          // Waits for row i's own input dot to actually arrive at the chip
+          // (offset + INPUT_DUR), plus a short handoff pause, before this
+          // one departs — and since both loop on the same 1.6s period,
+          // that "arrives, then departs" relationship holds on every
+          // cycle, not just the first. Plain animateMotion, no keyPoints —
+          // see the raw-leads dots above for why (the keyPoints/calcMode
+          // version never visibly left the chip in testing).
+          const begin = `${LEAD_OFFSETS[i] + INPUT_DUR + HANDOFF_PAUSE}s`
           const count = counts[i] ?? 0
           const width = (count / 100) * MAX_BAR_WIDTH
           return (
             <g key={i}>
               <path d={particlePath} stroke="rgb(var(--color-surface2))" strokeWidth="1" fill="none" opacity="0.5" />
-              {/* Same recipe as the raw-leads dots flowing into the chip
-                  above (plain animateMotion over the whole path, no
-                  keyPoints) instead of the earlier keyPoints/calcMode
-                  version — that one still wasn't visibly leaving the chip
-                  even with calcMode="linear" set, so dropping down to the
-                  simpler, already-proven-working pattern instead of
-                  debugging the fancier one further. Shorter dur than the
-                  bar's own 3.6s cycle means it laps a few times per
-                  bar-fill, reading as steady activity rather than one
-                  precisely-timed handoff. */}
               <circle opacity="0" r="3" fill={r.color} filter="url(#sceneGlow2)">
                 <animateMotion dur="1.6s" begin={begin} repeatCount="indefinite" path={particlePath} />
                 <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.75;1" dur="1.6s" begin={begin} repeatCount="indefinite" />
