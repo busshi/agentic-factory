@@ -4,8 +4,6 @@ import type { RouteRecord } from 'vite-react-ssg'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Site } from './components/layout/Site'
-import { MentionsLegales } from './pages/MentionsLegales'
-import { CGU } from './pages/CGU'
 
 /* Root layout every route mounts under. Its only job is to keep
    <Analytics/>/<SpeedInsights/> alive as single, persistent instances
@@ -56,10 +54,39 @@ export const routes: RouteRecord[] = [
       { index: true, element: <LanguageRedirect /> },
       { path: 'fr', element: <Site lang="fr" /> },
       { path: 'en', element: <Site lang="en" /> },
-      { path: 'fr/mentions-legales', element: <MentionsLegales lang="fr" /> },
-      { path: 'en/legal-notice', element: <MentionsLegales lang="en" /> },
-      { path: 'fr/cgu', element: <CGU lang="fr" /> },
-      { path: 'en/terms', element: <CGU lang="en" /> },
+      // Legal pages are lazy-loaded route chunks: rarely visited, so
+      // there's no reason for their code (and long legal text) to ship in
+      // the homepage's JS bundle. Each still gets its own fully static
+      // prerendered HTML at build time — `lazy` only changes what the
+      // *client* bundle looks like, not what vite-react-ssg renders.
+      {
+        path: 'fr/mentions-legales',
+        lazy: async () => {
+          const { MentionsLegales } = await import('./pages/MentionsLegales')
+          return { element: <MentionsLegales lang="fr" /> }
+        },
+      },
+      {
+        path: 'en/legal-notice',
+        lazy: async () => {
+          const { MentionsLegales } = await import('./pages/MentionsLegales')
+          return { element: <MentionsLegales lang="en" /> }
+        },
+      },
+      {
+        path: 'fr/cgu',
+        lazy: async () => {
+          const { CGU } = await import('./pages/CGU')
+          return { element: <CGU lang="fr" /> }
+        },
+      },
+      {
+        path: 'en/terms',
+        lazy: async () => {
+          const { CGU } = await import('./pages/CGU')
+          return { element: <CGU lang="en" /> }
+        },
+      },
       { path: '*', element: <LanguageRedirect /> },
     ],
   },
