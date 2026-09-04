@@ -80,10 +80,18 @@ export function SceneCompetitiveWatch({ lang = 'fr' }: SceneProps) {
           ))}
         </g>
 
+        {/* The 3 source dots above (begin 0/0.6/1.2s, dur=2.2s each) arrive
+            at 2.2/2.8/3.4s — this waits for the last of them (3.4s) plus a
+            short pause before departing, so the digest reads as "compiled
+            after gathering all 3 sources" rather than departing mid-way
+            through (it used to leave at 0.65s, before any source had even
+            arrived). Its own dur is set to the same 2.2s period as the
+            sources, so that "departs after the last source" relationship
+            holds on every repeat instead of drifting out of phase. */}
         <path d="M 168 100 C 178 100, 182 100, 190 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
         <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
-          <animateMotion dur="1.3s" begin="0.65s" repeatCount="indefinite" path="M 168 100 C 178 100, 182 100, 190 100" />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="1.3s" begin="0.65s" repeatCount="indefinite" />
+          <animateMotion dur="2.2s" begin="3.55s" repeatCount="indefinite" path="M 168 100 C 178 100, 182 100, 190 100" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="2.2s" begin="3.55s" repeatCount="indefinite" />
         </circle>
 
         {/* digest card, much wider now — text rotates through insights,

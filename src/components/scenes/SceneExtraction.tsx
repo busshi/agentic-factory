@@ -61,11 +61,16 @@ export function SceneExtraction({ lang = 'fr' }: SceneProps) {
           ))}
         </g>
 
-        {/* rail to structured output */}
+        {/* rail to structured output. begin=1.65s: the incoming-document
+            dot (above, dur="1.5s", begin=0 implicit) arrives at the chip
+            at 1.5s — this used to depart at 0.75s, before the document had
+            even arrived; now it waits until just after, and since both
+            share the same 1.5s period the "arrives, then departs" order
+            holds on every repeat. */}
         <path d="M 208 100 C 240 100, 250 100, 262 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
         <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
-          <animateMotion dur="1.5s" begin="0.75s" repeatCount="indefinite" path="M 208 100 C 240 100, 250 100, 262 100" />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.5s" begin="0.75s" repeatCount="indefinite" />
+          <animateMotion dur="1.5s" begin="1.65s" repeatCount="indefinite" path="M 208 100 C 240 100, 250 100, 262 100" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.5s" begin="1.65s" repeatCount="indefinite" />
         </circle>
 
         {/* structured fields appearing one by one */}
