@@ -154,9 +154,6 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
         </g>
         <text x="190" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">score()</text>
 
-        {/* rail into the ranked list */}
-        <path d="M 216 100 C 240 100, 250 100, 260 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-
         {/* sorted, readable priority list — bar width AND the score number
             both driven by the same counts[i] state, so they move together */}
         {RANKED.map((r, i) => {

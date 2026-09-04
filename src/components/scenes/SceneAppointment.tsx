@@ -99,14 +99,17 @@ export function SceneAppointment({ lang = 'fr' }: SceneProps) {
           ))}
         </g>
 
-        {/* rail to calendar. begin=1.55s: the incoming-request dot (above,
+        {/* rail to calendar — starts at (242,100), level with the chip's
+            own center (it's at translate(210 100)), not the card's center;
+            it curves down to (282,90) to meet the card at ITS center
+            instead. begin=1.55s: the incoming-request dot (above,
             dur="1.4s", begin=0 implicit) arrives at the chip at 1.4s —
             this waits until just after that instead of departing before
             it, and since both share the same 1.4s period the "arrives,
             then departs" order holds on every repeat. */}
-        <path d="M 242 90 C 262 90, 262 90, 282 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+        <path d="M 242 100 C 262 100, 262 90, 282 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
         <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
-          <animateMotion dur="1.4s" begin="1.55s" repeatCount="indefinite" path="M 242 90 C 262 90, 262 90, 282 90" />
+          <animateMotion dur="1.4s" begin="1.55s" repeatCount="indefinite" path="M 242 100 C 262 100, 262 90, 282 90" />
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.4s" begin="1.55s" repeatCount="indefinite" />
         </circle>
 

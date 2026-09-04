@@ -104,15 +104,18 @@ export function SceneSupport({ lang = 'fr' }: SceneProps) {
           ))}
         </g>
 
-        {/* rail to reply bubble. begin=1.25s: the incoming-question dot
-            (above, dur="1.1s", begin=0 implicit) arrives at the chip at
-            1.1s — this waits until just after that instead of leaving at
-            the exact same instant, and since both share the same 1.1s
-            period the "arrives, then departs" order holds on every
-            repeat. */}
-        <path d="M 242 90 C 262 90, 262 90, 282 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+        {/* rail to reply bubble — starts at (242,100), level with the
+            chip's own center (it's at translate(210 100)), not the
+            bubble's center; it curves down to (282,90) to meet the bubble
+            at roughly ITS center instead. begin=1.25s: the incoming-
+            question dot (above, dur="1.1s", begin=0 implicit) arrives at
+            the chip at 1.1s — this waits until just after that instead of
+            leaving at the exact same instant, and since both share the
+            same 1.1s period the "arrives, then departs" order holds on
+            every repeat. */}
+        <path d="M 242 100 C 262 100, 262 90, 282 90" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
         <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
-          <animateMotion dur="1.1s" begin="1.25s" repeatCount="indefinite" path="M 242 90 C 262 90, 262 90, 282 90" />
+          <animateMotion dur="1.1s" begin="1.25s" repeatCount="indefinite" path="M 242 100 C 262 100, 262 90, 282 90" />
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.1s" begin="1.25s" repeatCount="indefinite" />
         </circle>
 
