@@ -47,10 +47,16 @@ export function SceneInvoice({ lang = 'fr' }: SceneProps) {
         <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
       </circle>
 
-      {/* envelope icon */}
+      {/* envelope icon — gentle continuous 3D wobble (animate-tilt3d) on
+          its own inner <g> with no position of its own, same split as the
+          agent chip elsewhere: a CSS transform on the same <g> as a
+          translate(...) attribute replaces it outright instead of
+          combining with it. */}
       <g transform="translate(300 100)">
-        <rect x="-24" y="-17" width="48" height="34" rx="5" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad)" strokeWidth="1.4" />
-        <path d="M -24 -14 L 0 4 L 24 -14" stroke="url(#sceneGrad)" strokeWidth="1.2" fill="none" />
+        <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
+          <rect x="-24" y="-17" width="48" height="34" rx="5" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad)" strokeWidth="1.4" />
+          <path d="M -24 -14 L 0 4 L 24 -14" stroke="url(#sceneGrad)" strokeWidth="1.2" fill="none" />
+        </g>
       </g>
       <text x="300" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">
         {s.sent}

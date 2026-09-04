@@ -9,7 +9,7 @@ export function CGU({ lang }: { lang: Lang }) {
   return (
     <LegalPageShell lang={lang}>
     <LegalMeta
-      pageTitle={isEn ? 'Terms of Use — AgenticFactory' : "Conditions Générales d’Utilisation — AgenticFactory"}
+      pageTitle={isEn ? 'Terms of Use — agentic-factory.fr' : "Conditions Générales d’Utilisation — agentic-factory.fr"}
       canonicalPath={isEn ? '/en/terms' : '/fr/cgu'}
       lang={lang}
     />

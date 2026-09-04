@@ -9,7 +9,7 @@ export function MentionsLegales({ lang }: { lang: Lang }) {
   return (
     <LegalPageShell lang={lang}>
     <LegalMeta
-      pageTitle={isEn ? 'Legal Notice — AgenticFactory' : 'Mentions légales — AgenticFactory'}
+      pageTitle={isEn ? 'Legal Notice — agentic-factory.fr' : 'Mentions légales — agentic-factory.fr'}
       canonicalPath={isEn ? '/en/legal-notice' : '/fr/mentions-legales'}
       lang={lang}
     />
