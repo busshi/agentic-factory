@@ -49,44 +49,40 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
   const [counts, setCounts] = useState<number[]>(() => RANKED.map(() => 0))
 
   useEffect(() => {
-    const DURATION = 3600 // ms, matches the old dur="3.6s"
-    const TIMES = [0, 0.4, 0.5, 0.9, 1]
+    // Matches the traveling dot's own animateMotion below exactly: same
+    // 1.6s loop, same i*900ms per-row offset — so "the dot arrives" and
+    // "the score bumps" are the same event, not two independently-timed
+    // animations that happen to look related.
+    const DURATION = 1600 // ms, matches the dot's dur="1.6s"
+    const RAMP_START = 0.8 // fraction of the cycle where the bump starts — the
+    // dot's opacity fades out over 0.75–1 (see the animateMotion/animate
+    // pair below), so this lands the number's jump right as it disappears
+    // into the bar.
     let rafId: number
     const start = performance.now()
 
-    function valueAt(score: number, frac: number) {
-      const values = [0, 0, score, score, 0]
-      for (let k = 0; k < TIMES.length - 1; k++) {
-        const timeK = TIMES[k]
-        const timeNext = TIMES[k + 1]
-        if (timeK === undefined || timeNext === undefined) continue
-        if (frac >= timeK && frac <= timeNext) {
-          const span = timeNext - timeK || 1
-          const segFrac = (frac - timeK) / span
-          const valueK = values[k] ?? 0
-          const valueNext = values[k + 1] ?? 0
-          return valueK + (valueNext - valueK) * segFrac
-        }
-      }
-      return values[values.length - 1] ?? 0
-    }
-
-    // Each full cycle bumps that row's target by +1 over the last one —
-    // reads as the score genuinely climbing over time rather than the
-    // exact same number resetting on every loop. Wraps back to the base
-    // score every 8 cycles (capped a few points under 100) so it never
-    // grows without bound or overflows the bar's own width.
+    // Each arrival bumps that row's score by +1 over the last one — reads
+    // as the score genuinely climbing over time rather than resetting.
+    // Wraps back to the base score every 8 arrivals (capped a few points
+    // under 100) so it never grows without bound or overflows the bar.
     const CYCLE_BAND = 8
+    function targetAtCycle(r: RankedLead, n: number) {
+      return n === 0 ? 0 : Math.min(99, r.score + ((n - 1) % CYCLE_BAND))
+    }
 
     function tick(now: number) {
       const elapsed = now - start
       setCounts(
         RANKED.map((r, i) => {
-          const delay = i * 900 // ms, matches the old begin={i*0.9s}
-          const cycleIndex = Math.floor(Math.max(0, elapsed - delay) / DURATION)
-          const target = Math.min(99, r.score + (cycleIndex % CYCLE_BAND))
-          const local = ((elapsed - delay) % DURATION + DURATION) % DURATION
-          return Math.round(valueAt(target, local / DURATION))
+          const delay = i * 900 // ms, matches the dot's begin={i*0.9s}
+          const t = Math.max(0, elapsed - delay)
+          const cycleIndex = Math.floor(t / DURATION)
+          const frac = (t % DURATION) / DURATION
+          const prevTarget = targetAtCycle(r, cycleIndex)
+          if (frac < RAMP_START) return prevTarget
+          const nextTarget = targetAtCycle(r, cycleIndex + 1)
+          const rampFrac = (frac - RAMP_START) / (1 - RAMP_START)
+          return Math.round(prevTarget + (nextTarget - prevTarget) * rampFrac)
         })
       )
       rafId = requestAnimationFrame(tick)
