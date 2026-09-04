@@ -61,34 +61,49 @@ export function SceneExtraction({ lang = 'fr' }: SceneProps) {
           ))}
         </g>
 
-        {/* rail to structured output. begin=1.65s: the incoming-document
-            dot (above, dur="1.5s", begin=0 implicit) arrives at the chip
-            at 1.5s — this used to depart at 0.75s, before the document had
-            even arrived; now it waits until just after, and since both
-            share the same 1.5s period the "arrives, then departs" order
-            holds on every repeat. */}
-        <path d="M 208 100 C 240 100, 250 100, 262 100" stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
-        <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
-          <animateMotion dur="1.5s" begin="1.65s" repeatCount="indefinite" path="M 208 100 C 240 100, 250 100, 262 100" />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="1.5s" begin="1.65s" repeatCount="indefinite" />
-        </circle>
+        {/* structured fields appearing one by one, each with its own rail
+            + dot from the chip, instead of one generic line that didn't
+            point at anything in particular. A field's opacity reaches 1
+            at keyTime 0.3 of its own 3.2s cycle (FIELD_CYCLE *
+            FIELD_APPEAR_FRAC below) — each dot is timed to arrive exactly
+            then, repeating every field cycle via an explicit list of
+            begin times (not repeatCount="indefinite" with a matching
+            duration) so the travel itself can be quick — fast dots inside
+            a long, mostly-idle cycle — rather than forcing a slow crawl
+            across the whole 3.2s just to keep the repeat period matched
+            (the earlier keyPoints-based attempt at "fast within a long
+            cycle" wasn't visibly working in testing; explicit begin lists
+            are plain SMIL restart behavior, no keyPoints involved). */}
+        {fields.map((f, i) => {
+          const path = `M 208 100 C 230 100, 245 ${f.y}, 262 ${f.y}`
+          const FIELD_CYCLE = 3.2
+          const FIELD_APPEAR_FRAC = 0.3
+          const DOT_DUR = 0.5
+          const REPEATS = 20
+          const firstBegin = i * 0.5 + FIELD_CYCLE * FIELD_APPEAR_FRAC - DOT_DUR
+          const begin = Array.from({ length: REPEATS }, (_, n) => `${(firstBegin + n * FIELD_CYCLE).toFixed(2)}s`).join(';')
+          return (
+            <g key={i}>
+              <path d={path} stroke="rgb(var(--color-line))" strokeWidth="1.25" fill="none" />
+              <circle opacity="0" r="2.6" fill="rgb(var(--color-violet-soft))">
+                <animateMotion dur={`${DOT_DUR}s`} begin={begin} path={path} />
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur={`${DOT_DUR}s`} begin={begin} />
+              </circle>
 
-        {/* structured fields appearing one by one */}
-        {fields.map((f, i) => (
-          <g key={i}>
-            <rect x="262" y={f.y - 14} width="100" height="28" rx="6" fill="rgb(var(--color-surface2))" stroke="rgb(var(--color-line))" strokeWidth="1">
-              <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur="3.2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
-            </rect>
-            <text x="272" y={f.y - 2} fontFamily="JetBrains Mono, monospace" fontSize="8" fill="rgb(var(--color-muted2))">
-              <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur="3.2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
-              {f.label}
-            </text>
-            <text x="272" y={f.y + 10} fontFamily="JetBrains Mono, monospace" fontSize="10" fill="rgb(var(--color-violet-soft))">
-              <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur="3.2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
-              {f.value}
-            </text>
-          </g>
-        ))}
+              <rect x="262" y={f.y - 14} width="100" height="28" rx="6" fill="rgb(var(--color-surface2))" stroke="rgb(var(--color-line))" strokeWidth="1">
+                <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur={`${FIELD_CYCLE}s`} begin={`${i * 0.5}s`} repeatCount="indefinite" />
+              </rect>
+              <text x="272" y={f.y - 2} fontFamily="JetBrains Mono, monospace" fontSize="8" fill="rgb(var(--color-muted2))">
+                <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur={`${FIELD_CYCLE}s`} begin={`${i * 0.5}s`} repeatCount="indefinite" />
+                {f.label}
+              </text>
+              <text x="272" y={f.y + 10} fontFamily="JetBrains Mono, monospace" fontSize="10" fill="rgb(var(--color-violet-soft))">
+                <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.15;0.3;1" dur={`${FIELD_CYCLE}s`} begin={`${i * 0.5}s`} repeatCount="indefinite" />
+                {f.value}
+              </text>
+            </g>
+          )
+        })}
       </g>
     </svg>
   )
