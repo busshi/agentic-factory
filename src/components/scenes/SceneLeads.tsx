@@ -134,23 +134,18 @@ export function SceneLeads({ lang = 'fr' }: SceneProps) {
           )
         })}
 
-        {/* mini agent chip = the scoring engine. The 3D wobble
-            (animate-tilt3d) sits on its own inner <g> with no position of
-            its own — see SceneAppointment.tsx for why it can't share the
-            translate(...) <g>. */}
+        {/* mini agent chip = the scoring engine */}
         <g transform="translate(190 100)">
-          <g className="[transform-box:fill-box] [transform-origin:center] animate-tilt3d">
-            <circle r="30" fill="url(#coreGradScene2)" opacity="0.45" />
-            <circle r="21" fill="none" stroke="url(#sceneGrad4)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
-              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
-            </circle>
-            <rect x="-13" y="-13" width="26" height="26" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad4)" strokeWidth="1.4" />
-            {[-6, -1, 4].map((x, i) => (
-              <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
-                <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
-              </rect>
-            ))}
-          </g>
+          <circle r="30" fill="url(#coreGradScene2)" opacity="0.45" />
+          <circle r="21" fill="none" stroke="url(#sceneGrad4)" strokeWidth="1.1" strokeDasharray="2 6" opacity="0.55">
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-13" y="-13" width="26" height="26" rx="7" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad4)" strokeWidth="1.4" />
+          {[-6, -1, 4].map((x, i) => (
+            <rect key={i} x={x} y="-5" width="2" height="10" rx="1" fill="rgb(var(--color-violet-soft))">
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
+            </rect>
+          ))}
         </g>
         <text x="190" y="150" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">score()</text>
 
