@@ -2,9 +2,7 @@ import type { Translation } from '../../i18n'
 import { RevealSection } from '../ui/RevealSection'
 import laPosteLogo from '../../assets/logos/la-poste.webp'
 import ministereLogo from '../../assets/logos/ministere-education-nationale.webp'
-import noticeLogo from '../../assets/logos/notice.webp'
 import pricebeeLogo from '../../assets/logos/pricebee.webp'
-import stationFLogo from '../../assets/logos/station-f.webp'
 import { OctoloLogo } from './OctoloLogo'
 
 interface TrustLogo {
@@ -49,11 +47,17 @@ const LOGOS: TrustLogo[] = [
   // Keeping its own navy color (no grayscale, no invert — never goes
   // white) gives it enough contrast on its own.
   { name: 'PriceBee', src: pricebeeLogo, noGrayscale: true },
-  { name: 'Notice', src: noticeLogo, showLabel: true },
+  // Notice and Station F are served from public/logos instead of imported
+  // as modules: both files are under Vite's 4KB assetsInlineLimit, so as a
+  // module import they'd get base64-inlined into the page instead of
+  // emitted as their own cacheable file — and since the whole LOGOS list
+  // is rendered twice below (the marquee loop), that inlined payload was
+  // showing up twice in every page's HTML.
+  { name: 'Notice', src: '/logos/notice.webp', showLabel: true },
   { name: 'Octolo', Logo: OctoloLogo },
   { name: 'La Poste', src: laPosteLogo },
   { name: "Ministère de l'Éducation nationale", src: ministereLogo, scale: true, plate: true },
-  { name: 'Station F', src: stationFLogo, invert: true },
+  { name: 'Station F', src: '/logos/station-f.webp', invert: true },
 ]
 
 /* Trust bar — styled as a real logo wall (bordered chips, grayscale→color
