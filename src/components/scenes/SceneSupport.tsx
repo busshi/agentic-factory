@@ -125,8 +125,14 @@ export function SceneSupport({ lang = 'fr' }: SceneProps) {
           <rect x="282" y="66" width="76" height="42" rx="12" fill="rgb(var(--color-surface))" stroke="url(#sceneGrad3)" strokeWidth="1.4">
             <animate attributeName="opacity" values="0.25;0.25;1;1;0.25" keyTimes="0;0.45;0.55;0.9;1" dur="2.2s" repeatCount="indefinite" />
           </rect>
+          {/* begin=1.03s: the reply dot (above, begin=1.25s + dur=1.1s)
+              first arrives at 2.35s. This checkmark's own pace (dur=2.2s,
+              appearing at keyTime 0.6) is exactly double the dot's 1.1s
+              loop, so shifting its begin to land that appear-moment on
+              2.35s keeps it locked onto a real arrival forever (every
+              other one), instead of an unrelated schedule. */}
           <path d="M 307 87 l 8 8 l 16 -16" fill="none" stroke="#4ADE80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.5;0.6;0.9;1" dur="2.2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.5;0.6;0.9;1" dur="2.2s" begin="1.03s" repeatCount="indefinite" />
           </path>
         </g>
         <text x="320" y="128" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgb(var(--color-muted2))" textAnchor="middle">
