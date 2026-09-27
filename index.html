@@ -31,16 +31,20 @@
     <!-- Loaded non-blocking: the stylesheet applies once it arrives
          (media="print" doesn't match on load, then onload switches it to
          "all"), instead of holding up first paint for a third-party
-         round-trip. text stays in the fallback font until it swaps in
-         (font-display=swap), so nothing is invisible in the meantime. -->
+         round-trip. display=optional (not swap): text renders immediately
+         in the fallback font and only picks up the web font if it's
+         already available within a short block period, instead of
+         visibly swapping fonts once the download finishes later. Repeat
+         visits (font already cached) do pick it up, since "available in
+         time" is then trivially true. -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=optional"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=optional" />
     </noscript>
 
     <!-- Structured data (schema.org) — helps both classic search engines
